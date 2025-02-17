@@ -10,12 +10,12 @@ public class Simulation implements ISimulation {
 	
 	public Simulation() {}
 	
-	@Override
+	/*@Override
 	public Plateau createNetwork(ArrayList<Place> places, ArrayList<Transition> transitions, ArrayList<Jeton> jetons) {
 		return new Plateau(places,transitions,jetons);
 	}
 	
-    /*public static void main(String[] args){
+    public static void main(String[] args){
 
         System.out.println("in the main");
         ArrayList<Place> places = new ArrayList<Place>();
