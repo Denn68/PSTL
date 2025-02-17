@@ -113,7 +113,7 @@ public class Plateau implements IPlateau {
             System.out.print("Transition possible : ");
 
             for (Transition t : transitionsPossibles)
-                System.out.print("t" + t.numId() + " ");
+            	// A FAIRE afficher trans possible
 
             System.out.println();
 
@@ -125,7 +125,7 @@ public class Plateau implements IPlateau {
             List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
             Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
 
-            System.out.println("Transition choisie : t" + transitionChoisie.numId());
+            // A FAIRE afficher trans choisie
 
             activateTransition(transitionChoisie);
             showPlateau();
@@ -145,8 +145,7 @@ public class Plateau implements IPlateau {
         List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
         for (int i = 0; i < listeTransitions.size(); i++)
-            System.out.println((i + 1) + ". Transition " + listeTransitions.get(i).numId());
-
+        	// A FAIRE afficher trans possible
         System.out.print("Choisissez une transition : ");
         int choix = scanner.nextInt();
 

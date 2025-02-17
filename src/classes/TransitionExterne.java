@@ -1,15 +1,15 @@
 package classes;
 import java.util.ArrayList;
 
-import interfaces.ITransition;
+import interfaces.ITransitionExterne;
 
-public class Transition implements ITransition{
+public class TransitionExterne implements ITransitionExterne{
     private ArrayList<Place> placeEntre;
     private ArrayList<Place> placeSortie;
     private String uri;
 
     // Constructor
-    public Transition(String uri) {
+    public TransitionExterne(String uri) {
         this.placeEntre = new ArrayList<Place>();
         this.placeSortie = new ArrayList<Place>();
         this.uri = uri;

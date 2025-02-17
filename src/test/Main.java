@@ -20,6 +20,7 @@ public class Main {
         Transition t3 = new Transition(2, 3, new ArrayList<>(List.of(p1)), new ArrayList<>(List.of(p2, p4)));
         Transition t4 = new Transition(2, 4, new ArrayList<>(List.of(p3)), new ArrayList<>(List.of(p4)));
         Transition t5 = new Transition(2, 5, new ArrayList<>(List.of(p4)), new ArrayList<>(List.of(p3)));
+        
 
         // Ajouter les transitions aux places correspondantes
         p1.getTransSorties().add(t2);

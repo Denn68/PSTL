@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import classes.Place;
 
-public interface ITransition {
+public interface ITransitionExterne {
 	
 	public String getUri();
 	
