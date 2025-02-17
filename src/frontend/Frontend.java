@@ -2,7 +2,6 @@ package frontend;
 
 
 import Backend.IBackend;
-import classes.Place;
 
 public class Frontend 
 implements IFrontend{
@@ -21,13 +20,13 @@ implements IFrontend{
 	}
 
 	@Override
-	public void LinkPlaces(Place place1, Place place2, String transitionUri) {
-		this.backend.LinkPlaces(place1, place2, transitionUri);
+	public void LinkPlaces(String placeUri1, String placeUri2, String transitionUri) {
+		this.backend.LinkPlaces(placeUri1, placeUri2, transitionUri);
 	}
 
 	@Override
-	public void LinkPlaceCommuneEtReseau(Place place1, Place place2, String transitionUri) {
-		this.backend.LinkPlaceCommuneEtReseau(place1, place2, transitionUri);
+	public void LinkPlaceCommuneEtReseau(String placeUri1, String placeUri2, String transitionUri) {
+		this.backend.LinkPlaceCommuneEtReseau(placeUri1, placeUri2, transitionUri);
 	}
 
 	@Override

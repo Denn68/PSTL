@@ -7,7 +7,8 @@ import classes.Transition;
 
 public class Main {
     public static void main(String[] args) {
-
+    	// ICI tu test, t'appel les fonctions du frontend en initialisant un seul backend. puis tu simule comme tu le faisiais ici, base toi sur les interfaces
+    	/*
         // Créer les places
         Place p1 = new Place(1, 0, 1, new ArrayList<>(), new ArrayList<>());
         Place p2 = new Place(1, 1, 2, new ArrayList<>(), new ArrayList<>());
@@ -76,6 +77,7 @@ public class Main {
             }
         }
         scanner.close();
+        */
     }
 
 }
