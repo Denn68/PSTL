@@ -34,18 +34,22 @@ public interface IBackend {
     public ArrayList<Place> getPlaces();
 
     public ArrayList<Transition> getTransitions();
+    
+    public ArrayList<TransitionExterne> getTransitionsExternes();
 
     public ArrayList<Jeton> getJetons();
     
-    public void setPlaces(ArrayList<Place> places);
+    /*public void setPlaces(ArrayList<Place> places);
 
     public void setTransitions(ArrayList<Transition> transitions);
 
-    public void setJetons(ArrayList<Jeton> jetons);
+    public void setJetons(ArrayList<Jeton> jetons);*/
 
     public void activateTransition(Transition transition);
+    
+    public void activateTransition(TransitionExterne transitionExterne);
 
-    public Set<Transition> update();
+    public Set<Object> update();
 
     public void randomTransition(int maxTransitions);
 

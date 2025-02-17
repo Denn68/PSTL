@@ -181,6 +181,11 @@ implements IBackend{
     public ArrayList<Transition> getTransitions() {
         return transitions;
     }
+    
+    @Override
+    public ArrayList<TransitionExterne> getTransitionsExternes() {
+        return transitionsExternes;
+    }
 
     @Override
     public ArrayList<Jeton> getJetons() {
@@ -188,7 +193,7 @@ implements IBackend{
     }
 
     // Setters
-    @Override
+    /*@Override
     public void setPlaces(ArrayList<Place> places) {
         this.places = places;
     }
@@ -201,7 +206,7 @@ implements IBackend{
     @Override
     public void setJetons(ArrayList<Jeton> jetons) {
         this.jetons = jetons;
-    }
+    }*/
 
     @Override
     public void activateTransition(Transition transition) {
@@ -210,11 +215,19 @@ implements IBackend{
         for (Place place : transition.getPlacesSorties())
             place.setNbJeton(place.getNbJeton() + 1);
     }
+    
+    @Override
+    public void activateTransition(TransitionExterne transitionExterne) {
+        for (Place place : transitionExterne.getPlacesEntrees())
+            place.setNbJeton(place.getNbJeton() - 1);
+        for (Place place : transitionExterne.getPlacesSorties())
+            place.setNbJeton(place.getNbJeton() + 1);
+    }
 
     @Override
-    public Set<Transition> update() {
+    public Set<Object> update() {
 
-        Set<Transition> transitionsPossibles = new HashSet<>();
+        Set<Object> transitionsPossibles = new HashSet<>();
 
         for (Place place : places) {
 
@@ -233,6 +246,21 @@ implements IBackend{
                     if (appendTrans)
                         transitionsPossibles.add(tr_sortie);
                 }
+                
+                for (TransitionExterne tr_ex_sortie : place.getTransExterneSorties()) {
+
+                    boolean appendTransExterne = true;
+                    for (Place place_entree : tr_ex_sortie.getPlacesEntrees()) {
+
+                        if (place_entree.getNbJeton() == 0) {
+                        	appendTransExterne = false;
+                            break;
+                        }
+                    }
+
+                    if (appendTransExterne)
+                        transitionsPossibles.add(tr_ex_sortie);
+                }
             }
         }
 
@@ -244,25 +272,37 @@ implements IBackend{
         Random random = new Random();
 
         for (int i = 0; i < maxTransitions; i++) {
-            Set<Transition> transitionsPossibles = update();
-            System.out.print("Transition possible : ");
-
-            for (Transition t : transitionsPossibles)
-            	System.out.printf("Transition possible %s:", t.getUri());
-
-            System.out.println();
-
+            Set<Object> transitionsPossibles = update();
+            
             if (transitionsPossibles.isEmpty()) {
                 System.out.println("Aucune transition possible.");
                 break;
             }
+            
+            System.out.print("Transitions possibles : ");
 
-            List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
-            Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+            for (Object t : transitionsPossibles) {
+            	if (t instanceof Transition) {
+            		System.out.printf("Transition interne : %s", ((Transition) t).getUri());
+                } else if (t instanceof TransitionExterne) {
+                	System.out.printf("Transition externe : %s", ((TransitionExterne) t).getUri());
+                }
+            	System.out.println();
+            }
 
-            System.out.printf("Transition choisie %s:", transitionChoisie.getUri());
+            System.out.println();
 
-            activateTransition(transitionChoisie);
+            List<Object> listeTransitions = new ArrayList<>(transitionsPossibles);
+            Object transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+            
+            if (transitionChoisie instanceof Transition) {
+            	System.out.printf("Transition choisie %s:", ((Transition) transitionChoisie).getUri());
+                activateTransition((Transition)transitionChoisie);
+            } else if (transitionChoisie instanceof TransitionExterne) {
+            	System.out.printf("Transition choisie %s:", ((TransitionExterne) transitionChoisie).getUri());
+                activateTransition((TransitionExterne)transitionChoisie);
+            }
+            
             showPlateau();
         }
     }
@@ -270,17 +310,26 @@ implements IBackend{
     // Fonction pour afficher les transitions possibles et permettre le choix
     @Override
     public void manualTransition(Scanner scanner) {
-        Set<Transition> transitionsPossibles = update();
+        Set<Object> transitionsPossibles = update();
+        
         if (transitionsPossibles.isEmpty()) {
             System.out.println("Aucune transition possible.");
             return;
         }
 
         System.out.println("Transitions possibles :");
-        List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
-        for (int i = 0; i < listeTransitions.size(); i++)
-        	System.out.printf("Transition possible %s:", listeTransitions.get(i).getUri());
+        for (Object t : transitionsPossibles) {
+        	if (t instanceof Transition) {
+        		System.out.printf("Transition interne : %s", ((Transition) t).getUri());
+            } else if (t instanceof TransitionExterne) {
+            	System.out.printf("Transition externe : %s", ((TransitionExterne) t).getUri());
+            }
+        	System.out.println();
+        }
+        
+        List<Object> listeTransitions = new ArrayList<>(transitionsPossibles);
+        
         System.out.print("Choisissez une transition : ");
         int choix = scanner.nextInt();
 
@@ -289,8 +338,14 @@ implements IBackend{
             return;
         }
 
-        Transition transitionChoisie = listeTransitions.get(choix - 1);
-        activateTransition(transitionChoisie);
+        Object transitionChoisie = listeTransitions.get(choix - 1);
+        
+        if (transitionChoisie instanceof Transition) {
+            activateTransition((Transition)transitionChoisie);
+        } else if (transitionChoisie instanceof TransitionExterne) {
+            activateTransition((TransitionExterne)transitionChoisie);
+        }
+        
         showPlateau();
     }
 
