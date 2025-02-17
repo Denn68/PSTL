@@ -2,9 +2,6 @@ package test;
 import java.util.*;
 
 import Backend.Backend;
-import classes.Place;
-import classes.Plateau;
-import classes.Transition;
 import frontend.Frontend;
 
 public class Main {
