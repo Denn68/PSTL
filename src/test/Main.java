@@ -1,49 +1,45 @@
 package test;
 import java.util.*;
 
+import Backend.Backend;
 import classes.Place;
 import classes.Plateau;
 import classes.Transition;
+import frontend.Frontend;
 
 public class Main {
     public static void main(String[] args) {
-    	// ICI tu test, t'appel les fonctions du frontend en initialisant un seul backend. puis tu simule comme tu le faisiais ici, base toi sur les interfaces
-    	/*
-        // Créer les places
-        Place p1 = new Place(1, 0, 1, new ArrayList<>(), new ArrayList<>());
-        Place p2 = new Place(1, 1, 2, new ArrayList<>(), new ArrayList<>());
-        Place p3 = new Place(2, 0, 3, new ArrayList<>(), new ArrayList<>());
-        Place p4 = new Place(1, 1, 4, new ArrayList<>(), new ArrayList<>());
 
-        // Créer les transitions
-        Transition t1 = new Transition(2, 1, new ArrayList<>(List.of(p2, p3)), new ArrayList<>(List.of(p1)));
-        Transition t2 = new Transition(2, 2, new ArrayList<>(List.of(p1)), new ArrayList<>(List.of(p2)));
-        Transition t3 = new Transition(2, 3, new ArrayList<>(List.of(p1)), new ArrayList<>(List.of(p2, p4)));
-        Transition t4 = new Transition(2, 4, new ArrayList<>(List.of(p3)), new ArrayList<>(List.of(p4)));
-        Transition t5 = new Transition(2, 5, new ArrayList<>(List.of(p4)), new ArrayList<>(List.of(p3)));
-        
+    	Backend backend = new Backend();
+    	
+    	Frontend frontend = new Frontend(backend);
+    	
+    	String p1 = "p1";
+    	String p2 = "p2";
+    	String p3 = "p3";
+    	String p4 = "p4";
+    	
+    	String t1 = "t1";
+    	String t2 = "t2";
+    	String t3 = "t3";
+    	String t4 = "t4";
+    	String t5 = "t5";
+    	
+    	frontend.CreatePlace(p1);
+    	frontend.CreatePlace(p2);
+    	frontend.CreatePlace(p3);
+    	frontend.CreatePlace(p4);
+    	
+    	frontend.LinkPlaces(p2, p1, t1);
+    	frontend.LinkPlaces(p3, p1, t1);
+    	frontend.LinkPlaces(p1, p2, t2);
+    	frontend.LinkPlaces(p1, p2, t3);
+    	frontend.LinkPlaces(p1, p4, t3);
+    	frontend.LinkPlaces(p3, p4, t4);
+    	frontend.LinkPlaces(p4, p3, t5);
 
-        // Ajouter les transitions aux places correspondantes
-        p1.getTransSorties().add(t2);
-        p1.getTransSorties().add(t3);
-        p1.getTransEntrees().add(t1);
-
-        p2.getTransSorties().add(t1);
-        p2.getTransEntrees().add(t2);
-        p2.getTransEntrees().add(t3);
-
-        p3.getTransSorties().add(t1);
-        p3.getTransSorties().add(t4);
-        p3.getTransEntrees().add(t5);
-
-        p4.getTransSorties().add(t5);
-        p4.getTransEntrees().add(t3);
-        p4.getTransEntrees().add(t4);
-
-        // Créer le plateau
-        Plateau plateau = new Plateau(new ArrayList<>(List.of(p1, p2, p3, p4)),
-                new ArrayList<>(List.of(t1, t2)),
-                new ArrayList<>());
+    	frontend.InitializePlace(p2, 1);
+    	frontend.InitializePlace(p4, 1);
 
         // Lancer le menu
         Scanner scanner = new Scanner(System.in);
@@ -51,7 +47,7 @@ public class Main {
 
         while (continuer) {
             System.out.println("\nPlateau actuel :");
-            plateau.showPlateau();
+            frontend.showPlateau();
             System.out.println("\nMenu:");
             System.out.println("1. Transitions aléatoires");
             System.out.println("2. Choisir une transition");
@@ -64,10 +60,10 @@ public class Main {
                 case 1:
                     System.out.print("Nombre maximum de transitions aléatoires: ");
                     int maxTransitions = scanner.nextInt();
-                    plateau.randomTransition(maxTransitions);
+                    frontend.randomTransition(maxTransitions);
                     break;
                 case 2:
-                    plateau.manualTransition(scanner);
+                    frontend.manualTransition(scanner);
                     break;
                 case 3:
                     continuer = false;
@@ -77,7 +73,7 @@ public class Main {
             }
         }
         scanner.close();
-        */
+        
     }
 
 }

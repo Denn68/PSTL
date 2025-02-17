@@ -41,13 +41,16 @@ implements IBackend{
 	public void LinkPlaces(String placeUri1, String placeUri2, String transitionUri) {
 		boolean found = false;
 		for (Place p1 : this.places) {
-			if(p1.getUri() == placeUri1) {
+			if(p1.getUri().equals(placeUri1)) {
 				for (Place p2 : this.places) {
-					if(p2.getUri() == placeUri2) {
-						Transition transition = new Transition(transitionUri);
+					if(p2.getUri().equals(placeUri2)) {
+						Transition transition = this.getTransitionByUri(transitionUri);
+						if (transition == null) {
+							transition = new Transition(transitionUri);
+							this.transitions.add(transition);
+						}
 						transition.addPlaceEntree(p1);
 						transition.addPlaceSortie(p2);
-						this.transitions.add(transition);
 						this.addTransSortie(placeUri1, transition);
 						this.addTransEntree(placeUri2, transition);
 						found = true;
@@ -64,13 +67,16 @@ implements IBackend{
 	public void LinkPlaceCommuneEtReseau(String placeUri1, String placeUri2, String transitionUri) {
 		boolean found = false;
 		for (Place p1 : this.places) {
-			if(p1.getUri() == placeUri1) {
+			if(p1.getUri().equals(placeUri1)) {
 				for (Place p2 : this.places) {
-					if(p2.getUri() == placeUri2) {
-						TransitionExterne transitionExterne = new TransitionExterne(transitionUri);
+					if(p2.getUri().equals(placeUri2)) {
+						TransitionExterne transitionExterne = this.getTransitionExterneByUri(transitionUri);
+						if (transitionExterne == null) {
+							transitionExterne = new TransitionExterne(transitionUri);
+							this.transitionsExternes.add(transitionExterne);
+						}
 						transitionExterne.addPlaceEntree(p1);
 						transitionExterne.addPlaceSortie(p2);
-						this.transitionsExternes.add(transitionExterne);
 						this.addTransExterneSortie(placeUri1, transitionExterne);
 						this.addTransExterneEntree(placeUri2, transitionExterne);
 						found = true;
@@ -183,8 +189,26 @@ implements IBackend{
     }
     
     @Override
+    public Transition getTransitionByUri(String uri) {
+    	for (Transition t : transitions) {
+    		if(t.getUri() == uri)
+    			return t;
+    	}
+        return null;
+    }
+    
+    @Override
     public ArrayList<TransitionExterne> getTransitionsExternes() {
         return transitionsExternes;
+    }
+    
+    @Override
+    public TransitionExterne getTransitionExterneByUri(String uri) {
+    	for (TransitionExterne t : transitionsExternes) {
+    		if(t.getUri() == uri)
+    			return t;
+    	}
+        return null;
     }
 
     @Override

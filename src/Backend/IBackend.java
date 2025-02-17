@@ -35,7 +35,11 @@ public interface IBackend {
 
     public ArrayList<Transition> getTransitions();
     
+    public Transition getTransitionByUri(String uri);
+    
     public ArrayList<TransitionExterne> getTransitionsExternes();
+    
+    public TransitionExterne getTransitionExterneByUri(String uri);
 
     public ArrayList<Jeton> getJetons();
     

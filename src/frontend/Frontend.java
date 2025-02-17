@@ -1,6 +1,8 @@
 package frontend;
 
 
+import java.util.Scanner;
+
 import Backend.IBackend;
 
 public class Frontend 
@@ -33,6 +35,21 @@ implements IFrontend{
 	public void InitializePlace(String placeUri, int nbJeton) {
 		this.backend.InitializePlace(placeUri, nbJeton);
 		
+	}
+	
+	@Override
+	public void showPlateau() {
+		this.backend.showPlateau();
+	}
+	
+	@Override
+    public void randomTransition(int maxTransitions) {
+		this.backend.randomTransition(maxTransitions);
+	}
+	
+	@Override
+    public void manualTransition(Scanner scanner) {
+		this.backend.manualTransition(scanner);
 	}
 
 }
