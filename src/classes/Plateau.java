@@ -13,12 +13,10 @@ public class Plateau implements IPlateau {
     ArrayList<Transition> transitions;
     ArrayList<Jeton> jetons;
 
-    public Plateau(ArrayList<Place> places,
-            ArrayList<Transition> transitions,
-            ArrayList<Jeton> jetons) {
-        this.places = places;
-        this.transitions = transitions;
-        this.jetons = jetons;
+    public Plateau() {
+        this.places = new ArrayList<Place>();
+        this.transitions = new ArrayList<Transition>();
+        this.jetons = new ArrayList<Jeton>();
     }
 
     @Override

@@ -29,18 +29,18 @@ implements IBackend{
 	}
 
 	@Override
-	public void LinkPlaceCommuneEtReseau(Place placeCommune, Place place, String transitionUri) {
+	public void LinkPlaceCommuneEtReseau(Place place1, Place place2, String transitionUri) {
 		TransitionExterne transition = new TransitionExterne(transitionUri);
 		transition.addPlaceEntree(place1);
 		transition.addPlaceSortie(place2);
-		placeCommune.addTransSortie(transition);
-		place.addTransEntree(transition);
+		place1.addTransExterneSortie(transition);
+		place2.addTransExterneEntree(transition);
 		
 	}
 
 	@Override
 	public void InitializePlace(String placeUri, int nbJeton) {
-		// TODO Auto-generated method stub
+		this.petriNetwork.initializePlace(placeUri, nbJeton);
 		
 	}
 

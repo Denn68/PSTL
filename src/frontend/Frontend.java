@@ -26,8 +26,8 @@ implements IFrontend{
 	}
 
 	@Override
-	public void LinkPlaceCommuneEtReseau(Place placeCommune, Place place, String transitionUri) {
-		this.backend.LinkPlaceCommuneEtReseau(placeCommune, place, transitionUri);
+	public void LinkPlaceCommuneEtReseau(Place place1, Place place2, String transitionUri) {
+		this.backend.LinkPlaceCommuneEtReseau(place1, place2, transitionUri);
 	}
 
 	@Override
