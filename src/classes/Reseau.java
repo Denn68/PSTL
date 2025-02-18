@@ -67,27 +67,19 @@ extends Thread{
     public Set<Transition> update() {
 
         Set<Transition> transitionsPossibles = new HashSet<>();
-
-        for (Place place : places) {
-
-            if (place.getNbJeton() > 0) {
-                for (Transition tr_sortie : place.getTransSorties()) {
-
-                    boolean appendTrans = true;
-                    for (Place place_entree : tr_sortie.getPlacesEntrees()) {
-
-                        if (place_entree.getNbJeton() == 0) {
-                            appendTrans = false;
-                            break;
-                        }
-                    }
-
-                    if (appendTrans && tr_sortie.isActivable())
-                        transitionsPossibles.add(tr_sortie);
-                }
-            }
+        
+        for (Transition transition: this.transitions) {
+        	boolean appendTrans = true;
+        	for(Place p: transition.getPlacesEntrees()) {
+        		if(p.getNbJeton() == 0) {
+        			appendTrans = false;
+        		}
+        	}
+        		
+    		if (appendTrans && transition.isActivable())
+                transitionsPossibles.add(transition);
         }
-
+       
         return transitionsPossibles;
     }
 
