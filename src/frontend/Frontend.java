@@ -3,7 +3,7 @@ package frontend;
 
 import java.util.Scanner;
 
-import Backend.IBackend;
+import backend.IBackend;
 
 public class Frontend 
 implements IFrontend{

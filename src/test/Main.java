@@ -1,7 +1,7 @@
 package test;
 import java.util.*;
 
-import Backend.Backend;
+import backend.Backend;
 import frontend.Frontend;
 
 public class Main {
