@@ -57,9 +57,6 @@ public class PlaceCommune extends Thread implements IPlace {
     @Override
     public void setNbJeton(int nbJeton) {
         this.nbJeton = nbJeton;
-        if(nbJeton > 0) {
-        	this.updatingAvailability.release();
-        }
     }
 
     @Override

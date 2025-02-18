@@ -60,7 +60,7 @@ public class Transition{
     
     public void addPlacesSortie(ArrayList<Place> sorties) {
     	for(Place p : sorties) {
-    		this.placeEntrees.add(p);
+    		this.placeSorties.add(p);
     	}
     }
     
@@ -91,7 +91,6 @@ public class Transition{
     public void activateTransition() {
     	if (this.isActivable()) {
     		boolean skip = false;
-    		System.out.println(this.getPlacesCommuneEntrees().size());
     		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
 				skip = this.updatingJetons.get(placeCommune).tryAcquire();
 	        }

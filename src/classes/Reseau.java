@@ -71,6 +71,9 @@ extends Thread{
         for (Transition transition: this.transitions) {
         	boolean appendTrans = true;
         	for(Place p: transition.getPlacesEntrees()) {
+        		if(transition.getUri() == "t8") {
+        			System.out.println("ETAT T8" + transition.isActivable());
+        		}
         		if(p.getNbJeton() == 0) {
         			appendTrans = false;
         		}
@@ -79,14 +82,14 @@ extends Thread{
     		if (appendTrans && transition.isActivable())
                 transitionsPossibles.add(transition);
         }
-       
+        
         return transitionsPossibles;
     }
 
     public void randomTransition() {
         Random random = new Random();
-        StringBuilder sb = new StringBuilder();
         while(true) {
+        	StringBuilder sb = new StringBuilder();
             Set<Transition> transitionsPossibles = update();
             sb.append("Transitions possible : ");
             String message = new String();
