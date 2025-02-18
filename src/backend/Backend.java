@@ -24,6 +24,10 @@ public class Backend{
 	public void CreatePlace(String placeUri, String reseauUri) {
 		this.reseaux.get(reseauUri).addPlace(new Place(placeUri));
 	}
+	
+	public void CreatePlaceCommune(String placeUri) {
+		this.placesCommunes.put(placeUri, new PlaceCommune(placeUri));
+	}
 
 	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri) {
 		boolean notFound = false;
