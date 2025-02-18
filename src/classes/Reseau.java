@@ -1,26 +1,23 @@
 package classes;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-import interfaces.IPlateau;
-
-public class Plateau implements IPlateau {
+public class Reseau {
     ArrayList<Place> places;
     ArrayList<Transition> transitions;
-    ArrayList<Jeton> jetons;
 
-    public Plateau() {
+    public Reseau() {
         this.places = new ArrayList<Place>();
         this.transitions = new ArrayList<Transition>();
-        this.jetons = new ArrayList<Jeton>();
     }
 
-    @Override
-    public void showPlateau() {
+    public void showReseau() {
         int i = 0;
         System.out.print("(");
         for (Place p : places) {
@@ -35,46 +32,24 @@ public class Plateau implements IPlateau {
     }
 
     // Getters
-    @Override
     public ArrayList<Place> getPlaces() {
         return places;
     }
 
-    @Override
     public ArrayList<Transition> getTransitions() {
         return transitions;
     }
 
-    @Override
-    public ArrayList<Jeton> getJetons() {
-        return jetons;
-    }
 
     // Setters
-    @Override
     public void setPlaces(ArrayList<Place> places) {
         this.places = places;
     }
 
-    @Override
     public void setTransitions(ArrayList<Transition> transitions) {
         this.transitions = transitions;
     }
 
-    @Override
-    public void setJetons(ArrayList<Jeton> jetons) {
-        this.jetons = jetons;
-    }
-
-    @Override
-    public void activateTransition(Transition transition) {
-        for (Place place : transition.getPlacesEntrees())
-            place.setNbJeton(place.getNbJeton() - 1);
-        for (Place place : transition.getPlacesSorties())
-            place.setNbJeton(place.getNbJeton() + 1);
-    }
-
-    @Override
     public Set<Transition> update() {
 
         Set<Transition> transitionsPossibles = new HashSet<>();
@@ -102,7 +77,6 @@ public class Plateau implements IPlateau {
         return transitionsPossibles;
     }
 
-    @Override
     public void randomTransition(int maxTransitions) {
         Random random = new Random();
 
@@ -131,7 +105,6 @@ public class Plateau implements IPlateau {
     }
 
     // Fonction pour afficher les transitions possibles et permettre le choix
-    @Override
     public void manualTransition(Scanner scanner) {
         Set<Transition> transitionsPossibles = update();
         if (transitionsPossibles.isEmpty()) {

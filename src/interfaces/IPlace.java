@@ -20,14 +20,6 @@ public interface IPlace {
     public void addTransSortie(Transition sortie);
 
     public ArrayList<Transition> getTransSorties();
-    
-    public ArrayList<TransitionExterne> getTransExterneEntrees();
-    
-    public void addTransExterneEntree(TransitionExterne entree);
-    
-    public void addTransExterneSortie(TransitionExterne sortie);
-
-    public ArrayList<TransitionExterne> getTransExterneSorties();
 }
 
 

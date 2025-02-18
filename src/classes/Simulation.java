@@ -1,12 +1,11 @@
 package classes;
 import java.util.ArrayList;
 
-import interfaces.ISimulation;
 
 // compile with : javac --release 17 *.java
 //execute with : java Simulation
 
-public class Simulation implements ISimulation {
+public class Simulation {
 	
 	public Simulation() {}
 	

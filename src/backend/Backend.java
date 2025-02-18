@@ -12,8 +12,7 @@ import classes.Place;
 import classes.Transition;
 import classes.TransitionExterne;
 
-public class Backend 
-implements IBackend{
+public class Backend{
 	ArrayList<Place> places;
     ArrayList<Transition> transitions;
     ArrayList<TransitionExterne> transitionsExternes;
@@ -31,13 +30,13 @@ implements IBackend{
 	// Temporaire
 	public void setNext(Backend next) {
 		this.next = next;
-	}
-	@Override
+	}
+
 	public void CreatePlace(String uri) {
 		this.places.add(new Place(uri));
 	}
+
 
-	@Override
 	public void LinkPlaces(String placeUri1, String placeUri2, String transitionUri) {
 		boolean found = false;
 		for (Place p1 : this.places) {
@@ -63,7 +62,6 @@ implements IBackend{
 		}
 	}
 
-	@Override
 	public void LinkPlaceCommuneEtReseau(String placeUri1, String placeUri2, String transitionUri) {
 		boolean found = false;
 		for (Place p1 : this.places) {
@@ -90,7 +88,6 @@ implements IBackend{
 		
 	}
 
-	@Override
 	public void InitializePlace(String placeUri, int nbJeton) {
 		boolean found = false;
 		for (Place p : this.places) {
@@ -104,7 +101,6 @@ implements IBackend{
 		}
 	}
 	
-	@Override
 	public void addTransSortie(String uri, Transition transition) {
 		boolean found = false;
 		for (Place p : this.places) {
@@ -118,7 +114,6 @@ implements IBackend{
 		}
 	}
 	
-	@Override
 	public void addTransEntree(String uri, Transition transition) {
 		boolean found = false;
 		for (Place p : this.places) {
@@ -132,7 +127,6 @@ implements IBackend{
 		}
 	}
 	
-	@Override
 	public void addTransExterneSortie(String uri, TransitionExterne transitionExterne) {
 		boolean found = false;
 		for (Place p : this.places) {
@@ -146,7 +140,6 @@ implements IBackend{
 		}
 	}
 	
-	@Override
 	public void addTransExterneEntree(String uri, TransitionExterne transitionExterne) {
 		boolean found = false;
 		for (Place p : this.places) {
@@ -162,7 +155,6 @@ implements IBackend{
 	
 	// PARTIE PLATEAU
 	
-	@Override
     public void showPlateau() {
         int i = 0;
         System.out.print("(");
@@ -177,18 +169,15 @@ implements IBackend{
         System.out.print(")\n");
     }
 	
-	// Getters
-    @Override
+	// Getters
     public ArrayList<Place> getPlaces() {
         return places;
     }
-
-    @Override
+
     public ArrayList<Transition> getTransitions() {
         return transitions;
     }
-    
-    @Override
+    
     public Transition getTransitionByUri(String uri) {
     	for (Transition t : transitions) {
     		if(t.getUri() == uri)
@@ -196,13 +185,11 @@ implements IBackend{
     	}
         return null;
     }
-    
-    @Override
+    
     public ArrayList<TransitionExterne> getTransitionsExternes() {
         return transitionsExternes;
     }
-    
-    @Override
+    
     public TransitionExterne getTransitionExterneByUri(String uri) {
     	for (TransitionExterne t : transitionsExternes) {
     		if(t.getUri() == uri)
@@ -210,8 +197,7 @@ implements IBackend{
     	}
         return null;
     }
-
-    @Override
+
     public ArrayList<Jeton> getJetons() {
         return jetons;
     }
@@ -232,7 +218,6 @@ implements IBackend{
         this.jetons = jetons;
     }*/
 
-    @Override
     public void activateTransition(Transition transition) {
         for (Place place : transition.getPlacesEntrees())
             place.setNbJeton(place.getNbJeton() - 1);
@@ -240,7 +225,6 @@ implements IBackend{
             place.setNbJeton(place.getNbJeton() + 1);
     }
     
-    @Override
     public void activateTransition(TransitionExterne transitionExterne) {
         for (Place place : transitionExterne.getPlacesEntrees())
             place.setNbJeton(place.getNbJeton() - 1);
@@ -248,7 +232,6 @@ implements IBackend{
             place.setNbJeton(place.getNbJeton() + 1);
     }
 
-    @Override
     public Set<Object> update() {
 
         Set<Object> transitionsPossibles = new HashSet<>();
@@ -291,7 +274,6 @@ implements IBackend{
         return transitionsPossibles;
     }
 
-    @Override
     public void randomTransition(int maxTransitions) {
         Random random = new Random();
 
@@ -332,7 +314,6 @@ implements IBackend{
     }
 
     // Fonction pour afficher les transitions possibles et permettre le choix
-    @Override
     public void manualTransition(Scanner scanner) {
         Set<Object> transitionsPossibles = update();
         

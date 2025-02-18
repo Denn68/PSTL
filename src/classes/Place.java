@@ -8,14 +8,10 @@ public class Place implements IPlace {
     private String uri;
     private ArrayList<Transition> transEntrees;
     private ArrayList<Transition> transSorties;
-    private ArrayList <TransitionExterne> transExterneEntrees;
-    private ArrayList <TransitionExterne> transExterneSorties;
 
     public Place(String uri) {
     	this.transEntrees = new ArrayList<Transition>();
     	this.transSorties = new ArrayList<Transition>();
-    	this.transExterneEntrees = new ArrayList<TransitionExterne>();
-    	this.transExterneSorties = new ArrayList<TransitionExterne>();
     	this.nbJeton = 0;
     	this.uri = uri;
     }
@@ -55,23 +51,12 @@ public class Place implements IPlace {
         transSorties.add(sortie);
     }
     
-    @Override
-    public ArrayList<TransitionExterne> getTransExterneEntrees() {
-        return transExterneEntrees;
+    public void addJeton() {
+    	this.nbJeton ++;
     }
     
-    @Override
-    public void addTransExterneEntree(TransitionExterne entree) {
-        transExterneEntrees.add(entree);
-    }
-
-    @Override
-    public ArrayList<TransitionExterne> getTransExterneSorties() {
-        return transExterneSorties;
+    public void retrieveJeton() {
+    	this.nbJeton--;
     }
     
-    @Override
-    public void addTransExterneSortie(TransitionExterne sortie) {
-        transExterneSorties.add(sortie);
-    }
 }
