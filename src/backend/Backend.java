@@ -21,7 +21,7 @@ public class Backend{
 		this.reseaux.put(uri, new Reseau(uri));
 	}
 
-	public void CreatePlace(String placeUri, String reseauUri) {
+	public void CreatePlace(String reseauUri, String placeUri) {
 		this.reseaux.get(reseauUri).addPlace(new Place(placeUri));
 	}
 	
@@ -113,12 +113,16 @@ public class Backend{
 			}
 		}
 		if(!found) {
-			if(this.placesCommunes.containsKey(placeUri)) {
-				this.placesCommunes.get(placeUri).setNbJeton(nbJeton);
-			}
-			else {
-				System.out.println("Il n'existe aucune place avec cette uri");
-			}
+			System.out.println("Il n'existe aucune place avec cette uri");
+		}
+	}
+	
+	public void InitializePlaceCommune(String placeUri, int nbJeton) {
+		if(this.placesCommunes.containsKey(placeUri)) {
+			this.placesCommunes.get(placeUri).setNbJeton(nbJeton);
+		}
+		else {
+			System.out.println("Il n'existe aucune place commune avec cette uri");
 		}
 	}
 	

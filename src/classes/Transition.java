@@ -22,6 +22,7 @@ public class Transition{
         this.placeCommuneSorties = new ArrayList<PlaceCommune>();
         this.activable = new HashMap<PlaceCommune, Boolean>();
         this.updatingJetons = new HashMap<PlaceCommune, Semaphore>();
+        this.updatingAvailability = new HashMap<PlaceCommune, Semaphore>();
         this.uri = uri;
     }
 
@@ -90,25 +91,28 @@ public class Transition{
     public void activateTransition() {
     	if (this.isActivable()) {
     		boolean skip = false;
+    		System.out.println(this.getPlacesCommuneEntrees().size());
     		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
 				skip = this.updatingJetons.get(placeCommune).tryAcquire();
 	        }
     		if(!skip) {
-			for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
-				placeCommune.retrieveJeton();
-				this.updatingAvailability.get(placeCommune).release();
-				this.updatingJetons.get(placeCommune).release();
-	        }
-	        for (Place place : this.getPlacesEntrees())
-	        	place.retrieveJeton();
-	        for (Place place : this.getPlacesSorties())
-	        	place.addJeton();
-	        for (PlaceCommune placeCommune : this.getPlacesCommuneSorties()) {
-	        	placeCommune.addJeton();
-	        	this.updatingAvailability.get(placeCommune).release();
+    			System.out.printf("Not Skip - %s\n", uri);
+				for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
+					placeCommune.retrieveJeton();
+					this.updatingAvailability.get(placeCommune).release();
+					this.updatingJetons.get(placeCommune).release();
+		        }
+		        for (Place place : this.getPlacesEntrees())
+		        	place.retrieveJeton();
+		        for (Place place : this.getPlacesSorties())
+		        	place.addJeton();
+		        for (PlaceCommune placeCommune : this.getPlacesCommuneSorties()) {
+		        	placeCommune.addJeton();
+		        	this.updatingAvailability.get(placeCommune).release();
 	        	}
+    		} else {
+    			System.out.println("La transition a été prise par un autre thread");
     		}
-    		System.out.println("La transition a été prise par un autre thread");
     	}
     	else {
     		System.out.println("La transition n'est pas activable, la place commune n'a pas de jeton");

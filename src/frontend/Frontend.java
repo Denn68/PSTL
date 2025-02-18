@@ -17,8 +17,25 @@ public class Frontend{
 	public void CreateNetwork(String uri) {
 		this.backend.CreateNetwork(uri);
 	}
-	public void CreatePlace(String placeUri, String reseauUri) {
-		this.backend.CreatePlace(placeUri, reseauUri);
+	
+	public void CreatePlace(String reseauUri, String placeUri) {
+		this.backend.CreatePlace(reseauUri, placeUri);
+	}
+	
+	public void CreatePlaceCommune(String placeUri) {
+		this.backend.CreatePlaceCommune(placeUri);
+	}
+	
+	public void CreatePlaces(String reseauUri, ArrayList<String> placeUri) {
+		for (String uri : placeUri) {
+			this.CreatePlace(reseauUri, uri);
+		}
+	}
+	
+	public void CreatePlacesCommunes(ArrayList<String> placeUri) {
+		for (String uri : placeUri) {
+			this.CreatePlaceCommune(uri);
+		}
 	}
 
 	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri) {
@@ -27,6 +44,10 @@ public class Frontend{
 
 	public void InitializePlace(String reseauUri, String placeUri, int nbJeton) {
 		this.backend.InitializePlace(reseauUri, placeUri, nbJeton);
+	}
+	
+	public void InitializePlaceCommune(String placeUri, int nbJeton) {
+		this.backend.InitializePlaceCommune(placeUri, nbJeton);
 	}
 	
 	public void startPetriNetwork() {

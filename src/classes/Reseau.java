@@ -1,10 +1,7 @@
 package classes;
-import java.sql.Time;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
@@ -23,6 +20,8 @@ extends Thread{
     
     @Override
     public void run() {
+    	System.out.println("------- DEBUT -------");
+    	showReseau();
         this.randomTransition();
     }
     
@@ -32,16 +31,18 @@ extends Thread{
 
     public void showReseau() {
         int i = 0;
-        System.out.println("Réseau " + uri + "(");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Réseau ").append(uri).append("(");
         for (Place p : places) {
             if (i != (places.size() - 1)) {
-                System.out.print(p.getNbJeton() + ", ");
+            	sb.append(p.getNbJeton()).append(", ");
             } else {
-                System.out.print(p.getNbJeton());
+            	sb.append(p.getNbJeton());
             }
             i++;
         }
-        System.out.print(")\n");
+        sb.append(")");
+        System.out.println(sb.toString());
     }
 
     // Getters
@@ -92,31 +93,42 @@ extends Thread{
 
     public void randomTransition() {
         Random random = new Random();
-
+        StringBuilder sb = new StringBuilder();
         while(true) {
             Set<Transition> transitionsPossibles = update();
-            System.out.print("Transitions possible : ");
+            sb.append("Transitions possible : ");
+            String message = new String();
+            
+            for (Transition t : transitionsPossibles) {
+            	message = String.format("%s,", t.getUri());
+            	sb.append(message);
+            }
+            
+            sb.append("\n");
 
-            for (Transition t : transitionsPossibles)
-            	System.out.printf("%s,\n", t.getUri());
-
-            System.out.println();
 
             if (transitionsPossibles.isEmpty()) {
-                System.out.println("Aucune transition possible.");
+            	sb.append("Aucune transition possible.");
                 try {
 					Thread.sleep(300);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+            } else {
+            	List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
+
+                Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+
+                message = String.format("Transition choisie : %s\n", transitionChoisie.getUri());
+                sb.append(message);
+
+                transitionChoisie.activateTransition();
             }
-
-            List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
-            Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
-
-            System.out.printf("Transition choisie : %s", transitionChoisie.getUri());
-
-            transitionChoisie.activateTransition();
+            
+            sb.append("\n");
+            
+            System.out.println(sb.toString());
+            
             showReseau();
         }
     }

@@ -91,10 +91,12 @@ public class PlaceCommune extends Thread implements IPlace {
     }
     
     public void addJeton() {
+    	System.out.printf("Add dans %s\n", uri);
     	this.nbJeton ++;
     }
     
     public void retrieveJeton() {
+    	System.out.printf("Retrieve dans %s\n", uri);
     	this.nbJeton--;
     }
 }
