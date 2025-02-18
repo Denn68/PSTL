@@ -9,7 +9,8 @@ public class PlaceCommune extends Thread implements IPlace {
     private String uri;
     private ArrayList<Transition> transEntrees;
     private ArrayList<Transition> transSorties;
-    private Semaphore semaphore;
+    private Semaphore updatingAvailability;
+    private Semaphore updatingJetons;
     //private volatile boolean running = true;
 
     public PlaceCommune(String uri) {
@@ -17,7 +18,8 @@ public class PlaceCommune extends Thread implements IPlace {
         this.transSorties = new ArrayList<>();
         this.nbJeton = 0;
         this.uri = uri;
-        this.semaphore = new Semaphore(0);
+        this.updatingAvailability = new Semaphore(0);
+        this.updatingJetons = new Semaphore(1);
     }
 
     @Override
@@ -29,9 +31,8 @@ public class PlaceCommune extends Thread implements IPlace {
         		}
         	}
             while (true) {
-                semaphore.acquire(); // Attente ici, pas d'attente active
-                //if (!running) break; // Vérifie si on doit s'arrêter
-                System.out.println("Thread actif : " + uri);
+            	updatingAvailability.acquire(); // Attente ici, pas d'attente active
+                System.out.println("Mise à jour des possibilités de transitions: " + uri);
 
                 for(Transition t: this.transSorties) {
                 	t.updateIsActivable(this);
@@ -41,22 +42,6 @@ public class PlaceCommune extends Thread implements IPlace {
             Thread.currentThread().interrupt();
         }
         System.out.println("Thread stoppé proprement : " + uri);
-    }
-
-    public void pauseThread() {
-        System.out.println("Pause du thread...");
-        semaphore.drainPermits(); // Bloque le thread
-    }
-
-    public void resumeThread() {
-        System.out.println("Reprise du thread...");
-        semaphore.release(); // Libère un permis pour redémarrer
-    }
-
-    public void stopThread() {
-        System.out.println("Arrêt du thread...");
-        running = false;
-        semaphore.release(); // Libère un permis pour sortir de `acquire()`
     }
 
     @Override
@@ -72,7 +57,9 @@ public class PlaceCommune extends Thread implements IPlace {
     @Override
     public void setNbJeton(int nbJeton) {
         this.nbJeton = nbJeton;
-        this.semaphore.release();
+        if(nbJeton > 0) {
+        	this.updatingAvailability.release();
+        }
     }
 
     @Override
@@ -93,6 +80,14 @@ public class PlaceCommune extends Thread implements IPlace {
     @Override
     public void addTransSortie(Transition sortie) {
         transSorties.add(sortie);
+    }
+    
+    public Semaphore getUpdatingAvailability() {
+    	return this.updatingAvailability;
+    }
+    
+    public Semaphore getUpdatingJetons() {
+    	return this.updatingJetons;
     }
     
     public void addJeton() {

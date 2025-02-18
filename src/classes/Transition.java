@@ -10,7 +10,8 @@ public class Transition{
     private ArrayList<PlaceCommune> placeCommuneEntrees;
     private ArrayList<PlaceCommune> placeCommuneSorties;
     private Map<PlaceCommune, Boolean> activable;
-    private Map<PlaceCommune, Semaphore> semaphores;
+    private Map<PlaceCommune, Semaphore> updatingAvailability;
+    private Map<PlaceCommune, Semaphore> updatingJetons;
     private String uri;
 
     // Constructor
@@ -20,7 +21,7 @@ public class Transition{
         this.placeCommuneEntrees = new ArrayList<PlaceCommune>();
         this.placeCommuneSorties = new ArrayList<PlaceCommune>();
         this.activable = new HashMap<PlaceCommune, Boolean>();
-        this.semaphores = new HashMap<PlaceCommune, Semaphore>();
+        this.updatingJetons = new HashMap<PlaceCommune, Semaphore>();
         this.uri = uri;
     }
 
@@ -46,55 +47,71 @@ public class Transition{
         return this.placeEntrees;
     }
     
-    public void addPlaceEntree(Place entree) {
-        this.placeEntrees.add(entree);
+    public void addPlacesEntree(ArrayList<Place> entrees) {
+    	for(Place p : entrees) {
+    		this.placeEntrees.add(p);
+    	}
     }
 
     public ArrayList<Place> getPlacesSorties() {
         return this.placeSorties;
     }
     
-    public void addPlaceSortie(Place sortie) {
-        this.placeSorties.add(sortie);
+    public void addPlacesSortie(ArrayList<Place> sorties) {
+    	for(Place p : sorties) {
+    		this.placeEntrees.add(p);
+    	}
     }
     
     public ArrayList<PlaceCommune> getPlacesCommuneEntrees() {
         return this.placeCommuneEntrees;
     }
     
-    public void addPlaceCommuneEntree(PlaceCommune entree) {
-        this.placeCommuneEntrees.add(entree);
-        this.activable.put(entree, true);
+    public void addPlacesCommuneEntree(ArrayList<PlaceCommune> entrees) {
+    	for(PlaceCommune p: entrees) {        
+    		this.placeCommuneEntrees.add(p);
+    		this.activable.put(p, true);
+            this.updatingAvailability.put(p, p.getUpdatingAvailability());
+            this.updatingJetons.put(p, p.getUpdatingJetons());
+    	}
     }
 
     public ArrayList<PlaceCommune> getPlacesCommuneSorties() {
         return this.placeCommuneSorties;
     }
     
-    public void addPlaceCommuneSortie(PlaceCommune sortie) {
-        this.placeCommuneSorties.add(sortie);
+    public void addPlacesCommuneSortie(ArrayList<PlaceCommune> sorties) {
+    	for(PlaceCommune p: sorties) {        
+    		this.placeCommuneSorties.add(p);
+    		this.updatingAvailability.put(p, p.getUpdatingAvailability());
+    	}
     }
     
     public void activateTransition() {
     	if (this.isActivable()) {
+    		boolean skip = false;
+    		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
+				skip = this.updatingJetons.get(placeCommune).tryAcquire();
+	        }
+    		if(!skip) {
+			for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
+				placeCommune.retrieveJeton();
+				this.updatingAvailability.get(placeCommune).release();
+				this.updatingJetons.get(placeCommune).release();
+	        }
 	        for (Place place : this.getPlacesEntrees())
 	        	place.retrieveJeton();
-	        for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
-	        	placeCommune.retrieveJeton();
-	        	try {
-					this.semaphores.get(placeCommune).acquire();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-	        }
 	        for (Place place : this.getPlacesSorties())
 	        	place.addJeton();
 	        for (PlaceCommune placeCommune : this.getPlacesCommuneSorties()) {
 	        	placeCommune.addJeton();
-	        	this.semaphores.get(placeCommune).release();
-	        }
-	        	
-	        
+	        	this.updatingAvailability.get(placeCommune).release();
+	        	}
+    		}
+    		System.out.println("La transition a été prise par un autre thread");
+    	}
+    	else {
+    		System.out.println("La transition n'est pas activable, la place commune n'a pas de jeton");
     	}
     }
 }

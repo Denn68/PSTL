@@ -1,4 +1,5 @@
 package classes;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,18 +9,30 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Reseau {
+public class Reseau 
+extends Thread{
     ArrayList<Place> places;
     ArrayList<Transition> transitions;
+    String uri;
 
-    public Reseau() {
+    public Reseau(String uri) {
         this.places = new ArrayList<Place>();
         this.transitions = new ArrayList<Transition>();
+        this.uri = uri;
+    }
+    
+    @Override
+    public void run() {
+        this.randomTransition();
+    }
+    
+    public String getUri() {
+    	return this.uri;
     }
 
     public void showReseau() {
         int i = 0;
-        System.out.print("(");
+        System.out.println("Réseau " + uri + "(");
         for (Place p : places) {
             if (i != (places.size() - 1)) {
                 System.out.print(p.getNbJeton() + ", ");
@@ -42,12 +55,12 @@ public class Reseau {
 
 
     // Setters
-    public void setPlaces(ArrayList<Place> places) {
-        this.places = places;
+    public void addPlace(Place place) {
+        this.places.add(place);
     }
 
-    public void setTransitions(ArrayList<Transition> transitions) {
-        this.transitions = transitions;
+    public void addTransition(Transition transition) {
+        this.transitions.add(transition);
     }
 
     public Set<Transition> update() {
@@ -68,7 +81,7 @@ public class Reseau {
                         }
                     }
 
-                    if (appendTrans)
+                    if (appendTrans && tr_sortie.isActivable())
                         transitionsPossibles.add(tr_sortie);
                 }
             }
@@ -77,30 +90,34 @@ public class Reseau {
         return transitionsPossibles;
     }
 
-    public void randomTransition(int maxTransitions) {
+    public void randomTransition() {
         Random random = new Random();
 
-        for (int i = 0; i < maxTransitions; i++) {
+        while(true) {
             Set<Transition> transitionsPossibles = update();
-            System.out.print("Transition possible : ");
+            System.out.print("Transitions possible : ");
 
             for (Transition t : transitionsPossibles)
-            	// A FAIRE afficher trans possible
+            	System.out.printf("%s,\n", t.getUri());
 
             System.out.println();
 
             if (transitionsPossibles.isEmpty()) {
                 System.out.println("Aucune transition possible.");
-                break;
+                try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
             }
 
             List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
             Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
 
-            // A FAIRE afficher trans choisie
+            System.out.printf("Transition choisie : %s", transitionChoisie.getUri());
 
-            activateTransition(transitionChoisie);
-            showPlateau();
+            transitionChoisie.activateTransition();
+            showReseau();
         }
     }
 
@@ -116,7 +133,7 @@ public class Reseau {
         List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
         for (int i = 0; i < listeTransitions.size(); i++)
-        	// A FAIRE afficher trans possible
+        	System.out.printf("%s,\n", listeTransitions.get(i).getUri());
         System.out.print("Choisissez une transition : ");
         int choix = scanner.nextInt();
 
@@ -126,8 +143,8 @@ public class Reseau {
         }
 
         Transition transitionChoisie = listeTransitions.get(choix - 1);
-        activateTransition(transitionChoisie);
-        showPlateau();
+        transitionChoisie.activateTransition();
+        showReseau();
     }
 
 }

@@ -3,7 +3,6 @@ package interfaces;
 import java.util.ArrayList;
 
 import classes.Transition;
-import classes.TransitionExterne;
 
 public interface IPlace {
 	
@@ -19,7 +18,6 @@ public interface IPlace {
     
     public void addTransSortie(Transition sortie);
 
-    public ArrayList<Transition> getTransSorties();
-}
+    public ArrayList<Transition> getTransSorties();}
 
 

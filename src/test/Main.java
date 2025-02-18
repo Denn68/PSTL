@@ -7,9 +7,11 @@ import frontend.Frontend;
 public class Main {
     public static void main(String[] args) {
 
+    	// FAIS LE RESEAU QUE LE PROF A DONNER
     	Backend backend = new Backend();
     	
     	Frontend frontend = new Frontend(backend);
+    	String r1 = "r1";
     	
     	String p1 = "p1";
     	String p2 = "p2";
@@ -22,13 +24,23 @@ public class Main {
     	String t4 = "t4";
     	String t5 = "t5";
     	
-    	frontend.CreatePlace(p1);
-    	frontend.CreatePlace(p2);
-    	frontend.CreatePlace(p3);
-    	frontend.CreatePlace(p4);
+    	frontend.CreatePlace(r1, p1);
+    	frontend.CreatePlace(r1, p2);
+    	frontend.CreatePlace(r1, p3);
+    	frontend.CreatePlace(r1, p4);
     	
-    	frontend.LinkPlaces(p2, p1, t1);
-    	frontend.LinkPlaces(p3, p1, t1);
+    	ArrayList<String> placesEntreesPourT1 = new ArrayList<String>();
+    	placesEntreesPourT1.add(p2);
+    	placesEntreesPourT1.add(p3);
+    	ArrayList<String> placesSortiesPourT1 = new ArrayList<String>();
+    	placesSortiesPourT1.add(p1);
+    	frontend.LinkPlaces(r1, placesEntreesPourT1, placesSortiesPourT1, t1);
+    	
+    	ArrayList<String> placesEntreesPourT2 = new ArrayList<String>();
+    	placesEntreesPourT2.add(p1);
+    	ArrayList<String> placesSortiesPourT2 = new ArrayList<String>();
+    	placesSortiesPourT1.add(p1);
+    	frontend.LinkPlaces(r1, placesEntreesPourT1, placesSortiesPourT1, t1);
     	frontend.LinkPlaces(p1, p2, t2);
     	frontend.LinkPlaces(p1, p2, t3);
     	frontend.LinkPlaces(p1, p4, t3);

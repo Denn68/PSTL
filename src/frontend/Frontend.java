@@ -1,7 +1,7 @@
 package frontend;
 
 
-import java.util.Scanner;
+import java.util.ArrayList;
 
 import backend.Backend;
 
@@ -14,34 +14,23 @@ public class Frontend{
 	
 	private Backend backend;
 	
-	
-	public void CreatePlace(String uri) {
-		this.backend.CreatePlace(uri);
+	public void CreateNetwork(String uri) {
+		this.backend.CreateNetwork(uri);
+	}
+	public void CreatePlace(String placeUri, String reseauUri) {
+		this.backend.CreatePlace(placeUri, reseauUri);
 	}
 
-	public void LinkPlaces(String placeUri1, String placeUri2, String transitionUri) {
-		this.backend.LinkPlaces(placeUri1, placeUri2, transitionUri);
+	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri) {
+		this.backend.LinkPlaces(reseauUri, listOfEnterPlaceUri, listOfExitPlaceUri, transitionUri);
 	}
 
-	public void LinkPlaceCommuneEtReseau(String placeUri1, String placeUri2, String transitionUri) {
-		this.backend.LinkPlaceCommuneEtReseau(placeUri1, placeUri2, transitionUri);
-	}
-
-	public void InitializePlace(String placeUri, int nbJeton) {
-		this.backend.InitializePlace(placeUri, nbJeton);
-		
+	public void InitializePlace(String reseauUri, String placeUri, int nbJeton) {
+		this.backend.InitializePlace(reseauUri, placeUri, nbJeton);
 	}
 	
-	public void showPlateau() {
-		this.backend.showPlateau();
-	}
-	
-    public void randomTransition(int maxTransitions) {
-		this.backend.randomTransition(maxTransitions);
-	}
-	
-    public void manualTransition(Scanner scanner) {
-		this.backend.manualTransition(scanner);
+	public void startPetriNetwork() {
+		this.backend.startPetriNetwork();
 	}
 
 }
