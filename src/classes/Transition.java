@@ -3,8 +3,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
+import java.util.function.Function;
 
-public class Transition{
+public class Transition<R>{
     private ArrayList<Place> placeEntrees;
     private ArrayList<Place> placeSorties;
     private ArrayList<PlaceCommune> placeCommuneEntrees;
@@ -88,7 +89,7 @@ public class Transition{
     	}
     }
     
-    public void activateTransition() {
+    public <T> void activateTransition(Function<T, String> activableFunction, T input) {
     	if (this.isActivable()) {
     		boolean skip = false;
     		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
@@ -109,6 +110,7 @@ public class Transition{
 		        	placeCommune.addJeton();
 		        	this.updatingAvailability.get(placeCommune).release();
 	        	}
+		        System.out.println(activableFunction.apply(input));
     		} else {
     			System.out.println("La transition a été prise par un autre thread");
     		}

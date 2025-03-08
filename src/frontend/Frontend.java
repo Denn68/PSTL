@@ -2,6 +2,7 @@ package frontend;
 
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
 import backend.Backend;
 
@@ -14,8 +15,8 @@ public class Frontend{
 	
 	private Backend backend;
 	
-	public void CreateNetwork(String uri) {
-		this.backend.CreateNetwork(uri);
+	public void CreateNetwork(String uri, Function<String, String> activableFunction) {
+		this.backend.CreateNetwork(uri, activableFunction);
 	}
 	
 	public void CreatePlace(String reseauUri, String placeUri) {

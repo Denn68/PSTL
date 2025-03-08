@@ -3,6 +3,7 @@ package backend;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import classes.Place;
 import classes.PlaceCommune;
@@ -17,8 +18,8 @@ public class Backend{
 		this.reseaux = new HashMap<String, Reseau>();
 		this.placesCommunes = new HashMap<String, PlaceCommune>();
     }
-	public void CreateNetwork(String uri) {
-		this.reseaux.put(uri, new Reseau(uri));
+	public void CreateNetwork(String uri, Function<String, String> activableFunction) {
+		this.reseaux.put(uri, new Reseau(uri, activableFunction));
 	}
 
 	public void CreatePlace(String reseauUri, String placeUri) {
@@ -76,7 +77,7 @@ public class Backend{
 				}
 			}
 			if(!notFound) {
-				Transition transition = new Transition(transitionUri);
+				Transition<String> transition = new Transition<>(transitionUri);
 				transition.addPlacesEntree(placeEntrees);
 				transition.addPlacesSortie(placeSorties);
 				transition.addPlacesCommuneEntree(placeCommuneEntrees);

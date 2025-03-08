@@ -5,16 +5,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.function.Function;
 
 public class Reseau 
 extends Thread{
     ArrayList<Place> places;
-    ArrayList<Transition> transitions;
+    ArrayList<Transition<String>> transitions;
+    Function<String, String> activableFunction;
     String uri;
 
-    public Reseau(String uri) {
+    public Reseau(String uri, Function<String, String> function) {
         this.places = new ArrayList<Place>();
-        this.transitions = new ArrayList<Transition>();
+        this.transitions = new ArrayList<Transition<String>>();
+        this.activableFunction = function;
         this.uri = uri;
     }
     
@@ -50,7 +53,7 @@ extends Thread{
         return places;
     }
 
-    public ArrayList<Transition> getTransitions() {
+    public ArrayList<Transition<String>> getTransitions() {
         return transitions;
     }
 
@@ -60,15 +63,15 @@ extends Thread{
         this.places.add(place);
     }
 
-    public void addTransition(Transition transition) {
+    public void addTransition(Transition<String> transition) {
         this.transitions.add(transition);
     }
 
-    public Set<Transition> update() {
+    public Set<Transition<String>> update() {
 
-        Set<Transition> transitionsPossibles = new HashSet<>();
+        Set<Transition<String>> transitionsPossibles = new HashSet<>();
         
-        for (Transition transition: this.transitions) {
+        for (Transition<String> transition: this.transitions) {
         	boolean appendTrans = true;
         	for(Place p: transition.getPlacesEntrees()) {
         		if(transition.getUri() == "t8") {
@@ -90,11 +93,11 @@ extends Thread{
         Random random = new Random();
         while(true) {
         	StringBuilder sb = new StringBuilder();
-            Set<Transition> transitionsPossibles = update();
+            Set<Transition<String>> transitionsPossibles = update();
             sb.append("Transitions possible : ");
             String message = new String();
             
-            for (Transition t : transitionsPossibles) {
+            for (Transition<String> t : transitionsPossibles) {
             	message = String.format("%s,", t.getUri());
             	sb.append(message);
             }
@@ -110,14 +113,14 @@ extends Thread{
 					e.printStackTrace();
 				}
             } else {
-            	List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
+            	List<Transition<String>> listeTransitions = new ArrayList<>(transitionsPossibles);
 
-                Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+            	Transition<String> transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
 
                 message = String.format("Transition choisie : %s\n", transitionChoisie.getUri());
                 sb.append(message);
 
-                transitionChoisie.activateTransition();
+                transitionChoisie.activateTransition(this.activableFunction, transitionChoisie.getUri());
             }
             
             sb.append("\n");
@@ -130,14 +133,14 @@ extends Thread{
 
     // Fonction pour afficher les transitions possibles et permettre le choix
     public void manualTransition(Scanner scanner) {
-        Set<Transition> transitionsPossibles = update();
+        Set<Transition<String>> transitionsPossibles = update();
         if (transitionsPossibles.isEmpty()) {
             System.out.println("Aucune transition possible.");
             return;
         }
 
         System.out.println("Transitions possibles :");
-        List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
+        List<Transition<String>> listeTransitions = new ArrayList<>(transitionsPossibles);
 
         for (int i = 0; i < listeTransitions.size(); i++)
         	System.out.printf("%s,\n", listeTransitions.get(i).getUri());
@@ -149,8 +152,8 @@ extends Thread{
             return;
         }
 
-        Transition transitionChoisie = listeTransitions.get(choix - 1);
-        transitionChoisie.activateTransition();
+        Transition<String> transitionChoisie = listeTransitions.get(choix - 1);
+        transitionChoisie.activateTransition(this.activableFunction, transitionChoisie.getUri());
         showReseau();
     }
 
