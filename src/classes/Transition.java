@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 
-public class Transition<R>{
+public class Transition<T, R>{
     private ArrayList<Place> placeEntrees;
     private ArrayList<Place> placeSorties;
     private ArrayList<PlaceCommune> placeCommuneEntrees;
@@ -14,9 +14,10 @@ public class Transition<R>{
     private Map<PlaceCommune, Semaphore> updatingAvailability;
     private Map<PlaceCommune, Semaphore> updatingJetons;
     private String uri;
+    Function<T, R> activableFunction;
 
     // Constructor
-    public Transition(String uri) {
+    public Transition(String uri, Function<T, R> function) {
         this.placeEntrees = new ArrayList<Place>();
         this.placeSorties = new ArrayList<Place>();
         this.placeCommuneEntrees = new ArrayList<PlaceCommune>();
@@ -25,7 +26,9 @@ public class Transition<R>{
         this.updatingJetons = new HashMap<PlaceCommune, Semaphore>();
         this.updatingAvailability = new HashMap<PlaceCommune, Semaphore>();
         this.uri = uri;
+        this.activableFunction = function;
     }
+   
 
     public String getUri() {
         return uri;
@@ -89,7 +92,7 @@ public class Transition<R>{
     	}
     }
     
-    public <T> void activateTransition(Function<T, String> activableFunction, T input) {
+    public void activateTransition(T input) {
     	if (this.isActivable()) {
     		boolean skip = false;
     		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
@@ -110,7 +113,7 @@ public class Transition<R>{
 		        	placeCommune.addJeton();
 		        	this.updatingAvailability.get(placeCommune).release();
 	        	}
-		        System.out.println(activableFunction.apply(input));
+		        this.activableFunction.apply(input);
     		} else {
     			System.out.println("La transition a été prise par un autre thread");
     		}

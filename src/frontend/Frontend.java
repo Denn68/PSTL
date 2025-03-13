@@ -15,8 +15,8 @@ public class Frontend{
 	
 	private Backend backend;
 	
-	public void CreateNetwork(String uri, Function<String, String> activableFunction) {
-		this.backend.CreateNetwork(uri, activableFunction);
+	public void CreateNetwork(String uri) {
+		this.backend.CreateNetwork(uri);
 	}
 	
 	public void CreatePlace(String reseauUri, String placeUri) {
@@ -39,8 +39,8 @@ public class Frontend{
 		}
 	}
 
-	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri) {
-		this.backend.LinkPlaces(reseauUri, listOfEnterPlaceUri, listOfExitPlaceUri, transitionUri);
+	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri, Function <String, String> activableFunction) {
+		this.backend.LinkPlaces(reseauUri, listOfEnterPlaceUri, listOfExitPlaceUri, transitionUri, activableFunction);
 	}
 
 	public void InitializePlace(String reseauUri, String placeUri, int nbJeton) {

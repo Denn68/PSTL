@@ -11,15 +11,15 @@ import classes.Reseau;
 import classes.Transition;
 
 public class Backend{
-	Map<String, Reseau> reseaux;
+	Map<String, Reseau<String, String>> reseaux;
     Map<String, PlaceCommune> placesCommunes;
 
 	public Backend() {
-		this.reseaux = new HashMap<String, Reseau>();
+		this.reseaux = new HashMap<String, Reseau<String, String>>();
 		this.placesCommunes = new HashMap<String, PlaceCommune>();
     }
-	public void CreateNetwork(String uri, Function<String, String> activableFunction) {
-		this.reseaux.put(uri, new Reseau(uri, activableFunction));
+	public void CreateNetwork(String uri) {
+		this.reseaux.put(uri, new Reseau<String, String>(uri));
 	}
 
 	public void CreatePlace(String reseauUri, String placeUri) {
@@ -30,7 +30,7 @@ public class Backend{
 		this.placesCommunes.put(placeUri, new PlaceCommune(placeUri));
 	}
 
-	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri) {
+	public void LinkPlaces(String reseauUri, ArrayList<String> listOfEnterPlaceUri, ArrayList<String> listOfExitPlaceUri, String transitionUri, Function<String, String> activablefunction) {
 		boolean notFound = false;
 		String notFoundUri = "";
 		ArrayList<Place> placeEntrees = new ArrayList<Place>();
@@ -77,7 +77,7 @@ public class Backend{
 				}
 			}
 			if(!notFound) {
-				Transition<String> transition = new Transition<>(transitionUri);
+				Transition<String, String> transition = new Transition<String, String>(transitionUri, activablefunction);
 				transition.addPlacesEntree(placeEntrees);
 				transition.addPlacesSortie(placeSorties);
 				transition.addPlacesCommuneEntree(placeCommuneEntrees);

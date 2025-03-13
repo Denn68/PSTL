@@ -40,24 +40,27 @@ public class Main {
     	String t7 = "t7";
     	String t8 = "t8";
     	String t9 = "t9";
-    	Function<String, String> fonction = input -> "Transition activée: " + input;
-    	frontend.CreateNetwork(r1, fonction);
-    	frontend.CreateNetwork(r2, fonction);
+    	Function<String, String> fonction = input -> {
+    	    System.out.println("Fonction activable de la transition: " + input);
+    	    return "Transition activée: " + input;
+    	};
+    	frontend.CreateNetwork(r1);
+    	frontend.CreateNetwork(r2);
     	
     	frontend.CreatePlacesCommunes(new ArrayList<>(Arrays.asList(pc1,pc2,pc3,pc4)));
     	
     	frontend.CreatePlaces(r1, new ArrayList<>(Arrays.asList(p1,p2,p3,p4)));
     	frontend.CreatePlaces(r2, new ArrayList<>(Arrays.asList(p5,p6,p7,p8,p9)));
 
-    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p1)), new ArrayList<>(Arrays.asList(pc1)), t1);
-    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(pc3)), new ArrayList<>(Arrays.asList(p2)), t2);
-    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p2,pc4)), new ArrayList<>(Arrays.asList(p3)), t3);
-    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p3)), new ArrayList<>(Arrays.asList(pc4,p4)), t4);
-    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p5)), new ArrayList<>(Arrays.asList(pc2)), t5);
-    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(pc1,pc2)), new ArrayList<>(Arrays.asList(p6,pc3)), t6);
-    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p6)), new ArrayList<>(Arrays.asList(p7)), t7);
-    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p7,pc4)), new ArrayList<>(Arrays.asList(p8)), t8);
-    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p8)), new ArrayList<>(Arrays.asList(pc4,p9)), t9);
+    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p1)), new ArrayList<>(Arrays.asList(pc1)), t1, fonction);
+    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(pc3)), new ArrayList<>(Arrays.asList(p2)), t2, fonction);
+    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p2,pc4)), new ArrayList<>(Arrays.asList(p3)), t3, fonction);
+    	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p3)), new ArrayList<>(Arrays.asList(pc4,p4)), t4, fonction);
+    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p5)), new ArrayList<>(Arrays.asList(pc2)), t5, fonction);
+    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(pc1,pc2)), new ArrayList<>(Arrays.asList(p6,pc3)), t6, fonction);
+    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p6)), new ArrayList<>(Arrays.asList(p7)), t7, fonction);
+    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p7,pc4)), new ArrayList<>(Arrays.asList(p8)), t8, fonction);
+    	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p8)), new ArrayList<>(Arrays.asList(pc4,p9)), t9, fonction);
 
 
     	frontend.InitializePlace(r1, p1, 1);
