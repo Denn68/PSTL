@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 
-public class Transition<T, R>{
+public class Transition<I, R>{
     private ArrayList<Place> placeEntrees;
     private ArrayList<Place> placeSorties;
     private ArrayList<PlaceCommune> placeCommuneEntrees;
@@ -14,10 +14,10 @@ public class Transition<T, R>{
     private Map<PlaceCommune, Semaphore> updatingAvailability;
     private Map<PlaceCommune, Semaphore> updatingJetons;
     private String uri;
-    Function<T, R> activableFunction;
+    Function<I, R> activableFunction;
 
     // Constructor
-    public Transition(String uri, Function<T, R> function) {
+    public Transition(String uri, Function<I, R> function) {
         this.placeEntrees = new ArrayList<Place>();
         this.placeSorties = new ArrayList<Place>();
         this.placeCommuneEntrees = new ArrayList<PlaceCommune>();
@@ -92,7 +92,7 @@ public class Transition<T, R>{
     	}
     }
     
-    public void activateTransition(T input) {
+    public void activateTransition(I input) {
     	if (this.isActivable()) {
     		boolean skip = false;
     		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {

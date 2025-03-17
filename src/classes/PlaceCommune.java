@@ -2,13 +2,13 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
-import interfaces.IPlace;
+import interfaces.PlaceI;
 
-public class PlaceCommune extends Thread implements IPlace {
+public class PlaceCommune<I, R> extends Thread implements PlaceI<Transition<I, R>> {
     private int nbJeton;
     private String uri;
-    private ArrayList<Transition> transEntrees;
-    private ArrayList<Transition> transSorties;
+    private ArrayList<Transition<I, R>> transEntrees;
+    private ArrayList<Transition<I, R>> transSorties;
     private Semaphore updatingAvailability;
     private Semaphore updatingJetons;
     //private volatile boolean running = true;
@@ -26,7 +26,7 @@ public class PlaceCommune extends Thread implements IPlace {
     public void run() {
         try {
         	if(this.nbJeton == 0) {
-        		for(Transition t : this.transSorties) {
+        		for(Transition<I, R> t : this.transSorties) {
         			t.updateIsActivable(this);
         		}
         	}
@@ -34,7 +34,7 @@ public class PlaceCommune extends Thread implements IPlace {
             	updatingAvailability.acquire(); // Attente ici, pas d'attente active
                 System.out.println("Mise à jour des possibilités de transitions: " + uri);
 
-                for(Transition t: this.transSorties) {
+                for(Transition<I, R> t: this.transSorties) {
                 	t.updateIsActivable(this);
                 }
             }
@@ -60,22 +60,22 @@ public class PlaceCommune extends Thread implements IPlace {
     }
 
     @Override
-    public ArrayList<Transition> getTransEntrees() {
+    public ArrayList<Transition<I, R>> getTransEntrees() {
         return transEntrees;
     }
 
     @Override
-    public void addTransEntree(Transition entree) {
+    public void addTransEntree(Transition<I, R> entree) {
         transEntrees.add(entree);
     }
 
     @Override
-    public ArrayList<Transition> getTransSorties() {
+    public ArrayList<Transition<I, R>> getTransSorties() {
         return transSorties;
     }
 
     @Override
-    public void addTransSortie(Transition sortie) {
+    public void addTransSortie(Transition<I, R> sortie) {
         transSorties.add(sortie);
     }
     

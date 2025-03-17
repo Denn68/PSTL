@@ -1,17 +1,17 @@
 package classes;
 import java.util.ArrayList;
 
-import interfaces.IPlace;
+import interfaces.PlaceI;
 
-public class Place implements IPlace {
+public class Place<T, R> implements PlaceI<Transition<T, R>> {
     private int nbJeton; // should be replace by ArrayList<Jeton>
     private String uri;
-    private ArrayList<Transition> transEntrees;
-    private ArrayList<Transition> transSorties;
+    private ArrayList<Transition<T, R>> transEntrees;
+    private ArrayList<Transition<T, R>> transSorties;
 
     public Place(String uri) {
-    	this.transEntrees = new ArrayList<Transition>();
-    	this.transSorties = new ArrayList<Transition>();
+    	this.transEntrees = new ArrayList<Transition<T, R>>();
+    	this.transSorties = new ArrayList<Transition<T, R>>();
     	this.nbJeton = 0;
     	this.uri = uri;
     }
@@ -32,22 +32,22 @@ public class Place implements IPlace {
     }
 
     @Override
-    public ArrayList<Transition> getTransEntrees() {
+    public ArrayList<Transition<T, R>> getTransEntrees() {
         return transEntrees;
     }
     
     @Override
-    public void addTransEntree(Transition entree) {
+    public void addTransEntree(Transition<T, R> entree) {
         transEntrees.add(entree);
     }
 
     @Override
-    public ArrayList<Transition> getTransSorties() {
+    public ArrayList<Transition<T, R>> getTransSorties() {
         return transSorties;
     }
     
     @Override
-    public void addTransSortie(Transition sortie) {
+    public void addTransSortie(Transition<T, R> sortie) {
         transSorties.add(sortie);
     }
     

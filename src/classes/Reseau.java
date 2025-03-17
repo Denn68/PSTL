@@ -7,15 +7,15 @@ import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Function;
 
-public class Reseau<T, R> 
+public class Reseau<I, R, Place> 
 extends Thread{
     ArrayList<Place> places;
-    ArrayList<Transition<T, R>> transitions;
+    ArrayList<Transition<I, R>> transitions;
     String uri;
 
     public Reseau(String uri) {
         this.places = new ArrayList<Place>();
-        this.transitions = new ArrayList<Transition<T, R>>();
+        this.transitions = new ArrayList<Transition<I, R>>();
         this.uri = uri;
     }
     
@@ -36,9 +36,9 @@ extends Thread{
         sb.append("Réseau ").append(uri).append("(");
         for (Place p : places) {
             if (i != (places.size() - 1)) {
-            	sb.append(p.getNbJeton()).append(", ");
+            	sb.append(((classes.Place) p).getNbJeton()).append(", ");
             } else {
-            	sb.append(p.getNbJeton());
+            	sb.append(((classes.Place) p).getNbJeton());
             }
             i++;
         }
@@ -51,7 +51,7 @@ extends Thread{
         return places;
     }
 
-    public ArrayList<Transition<T, R>> getTransitions() {
+    public ArrayList<Transition<I, R>> getTransitions() {
         return transitions;
     }
 
@@ -61,17 +61,17 @@ extends Thread{
         this.places.add(place);
     }
 
-    public void addTransition(Transition<T, R> transition) {
+    public void addTransition(Transition<I, R> transition) {
         this.transitions.add(transition);
     }
 
-    public Set<Transition<T, R>> update() {
+    public Set<Transition<I, R>> update() {
 
-        Set<Transition<T, R>> transitionsPossibles = new HashSet<>();
+        Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
         
-        for (Transition<T, R> transition: this.transitions) {
+        for (Transition<I, R> transition: this.transitions) {
         	boolean appendTrans = true;
-        	for(Place p: transition.getPlacesEntrees()) {
+        	for(classes.Place p: transition.getPlacesEntrees()) {
         		if(transition.getUri() == "t8") {
         			System.out.println("ETAT T8" + transition.isActivable());
         		}
@@ -91,11 +91,11 @@ extends Thread{
         Random random = new Random();
         while(true) {
         	StringBuilder sb = new StringBuilder();
-            Set<Transition<T, R>> transitionsPossibles = update();
+            Set<Transition<I, R>> transitionsPossibles = update();
             sb.append("Transitions possible : ");
             String message = new String();
             
-            for (Transition<T, R> t : transitionsPossibles) {
+            for (Transition<I, R> t : transitionsPossibles) {
             	message = String.format("%s,", t.getUri());
             	sb.append(message);
             }
@@ -111,14 +111,14 @@ extends Thread{
 					e.printStackTrace();
 				}
             } else {
-            	List<Transition<T, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
+            	List<Transition<I, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
 
-            	Transition<T, R> transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+            	Transition<I, R> transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
 
                 message = String.format("Transition choisie : %s\n", transitionChoisie.getUri());
                 sb.append(message);
 
-                transitionChoisie.activateTransition((T) transitionChoisie.getUri());
+                transitionChoisie.activateTransition((I) transitionChoisie.getUri());
             }
             
             sb.append("\n");
@@ -131,14 +131,14 @@ extends Thread{
 
     // Fonction pour afficher les transitions possibles et permettre le choix
     public void manualTransition(Scanner scanner) {
-        Set<Transition<T, R>> transitionsPossibles = update();
+        Set<Transition<I, R>> transitionsPossibles = update();
         if (transitionsPossibles.isEmpty()) {
             System.out.println("Aucune transition possible.");
             return;
         }
 
         System.out.println("Transitions possibles :");
-        List<Transition<T, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
+        List<Transition<I, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
 
         for (int i = 0; i < listeTransitions.size(); i++)
         	System.out.printf("%s,\n", listeTransitions.get(i).getUri());
@@ -150,8 +150,8 @@ extends Thread{
             return;
         }
 
-        Transition<T, R> transitionChoisie = listeTransitions.get(choix - 1);
-        transitionChoisie.activateTransition((T) transitionChoisie.getUri());
+        Transition<I, R> transitionChoisie = listeTransitions.get(choix - 1);
+        transitionChoisie.activateTransition((I) transitionChoisie.getUri());
         showReseau();
     }
 

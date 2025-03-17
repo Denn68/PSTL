@@ -10,16 +10,16 @@ import classes.PlaceCommune;
 import classes.Reseau;
 import classes.Transition;
 
-public class Backend{
-	Map<String, Reseau<String, String>> reseaux;
+public class Backend<I, R>{
+	Map<String, Reseau<I, R, Place>> reseaux;
     Map<String, PlaceCommune> placesCommunes;
 
 	public Backend() {
-		this.reseaux = new HashMap<String, Reseau<String, String>>();
+		this.reseaux = new HashMap<String, Reseau<I, R, Place>>();
 		this.placesCommunes = new HashMap<String, PlaceCommune>();
     }
 	public void CreateNetwork(String uri) {
-		this.reseaux.put(uri, new Reseau<String, String>(uri));
+		this.reseaux.put(uri, new Reseau<I, R, Place>(uri));
 	}
 
 	public void CreatePlace(String reseauUri, String placeUri) {
@@ -94,7 +94,7 @@ public class Backend{
 				for(PlaceCommune p: placeCommuneSorties) {
 					p.addTransEntree(transition);
 				}
-				this.reseaux.get(reseauUri).addTransition(transition);
+				this.reseaux.get(reseauUri).addTransition((Transition<I, R>) transition);
 			}
 			else {
 				System.out.printf("L'uri %s n'a pas été trouvée", notFoundUri);
