@@ -1,4 +1,4 @@
-package classes;
+package placeCommune;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import test.CVM;

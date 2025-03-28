@@ -1,8 +1,9 @@
-package classes;
+package placeCommune;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+import classes.Transition;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import interfaces.PlaceCI;
@@ -13,7 +14,7 @@ extends 	AbstractPlugin
 implements PlaceI<Transition<I, R>>{
 	private static final long serialVersionUID = 1L;
 
-	protected PlaceCommuneInboundPortForPlugin<I, R>	pcip;
+	protected PlaceCommuneInboundPort<I, R>	pcip;
 
 	private int nbJeton;
     private String uri;
@@ -50,7 +51,7 @@ implements PlaceI<Transition<I, R>>{
         this.updatingJetons = new Semaphore(1);
 
 		// Create the inbound port
-		this.pcip = new PlaceCommuneInboundPortForPlugin<I, R>(this.getOwner(),
+		this.pcip = new PlaceCommuneInboundPort<I, R>(this.getOwner(),
 													this.getPluginURI());
 		this.pcip.publishPort();
 	}

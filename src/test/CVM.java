@@ -1,14 +1,14 @@
 package test;
 
-import classes.PlaceCommuneComponent;
-import classes.ReseauComponent;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import placeCommune.PlaceCommuneComponent;
+import reseau.ReseauComponent;
 
 public class CVM
 extends		AbstractCVM {
 	public final static String	RESEAU_COMPONENT_RIBP_URI = "reseau-ibp-uri";
-	public final static String	PLACE_COMMUNE_COMPONENT_RIBP_URI = "reseau-ibp-uri";
+	public final static String	PLACE_COMMUNE_COMPONENT_RIBP_URI = "place-commune-ibp-uri";
 
 	public				CVM() throws Exception
 	{

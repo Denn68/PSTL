@@ -1,48 +1,39 @@
-package classes;
+package reseau;
 
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Set;
 
+import classes.Transition;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.PlaceCI;
+import interfaces.ReseauCI;
 
-public class PlaceCommuneInboundPortForPlugin<I, R>
+public class ReseauInboundPortForPlugin<I, R, P>
 extends		AbstractInboundPort
-implements	PlaceCI<Transition<I, R>>{
+implements	ReseauCI<I, R, P>{
 	private static final long serialVersionUID = 1L;
 
-	public				PlaceCommuneInboundPortForPlugin(
+	public				ReseauInboundPortForPlugin(
 		ComponentI owner,
 		String pluginURI
 		) throws Exception
 	{
-		super(PlaceCI.class, owner, pluginURI, null);
+		super(ReseauCI.class, owner, pluginURI, null);
 
 		assert	owner.isInstalled(pluginURI);
 	}
 
-	public				PlaceCommuneInboundPortForPlugin(
+	public				ReseauInboundPortForPlugin(
 		String uri,
 		ComponentI owner,
 		String pluginURI
 		) throws Exception
 	{
-		super(uri, PlaceCI.class, owner, pluginURI, null);
+		super(uri, ReseauCI.class, owner, pluginURI, null);
 
 		assert	owner.isInstalled(pluginURI);
-	}
-
-	@Override
-	public int getNbJeton() throws Exception {
-		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<Integer>(this.getPluginURI()) {
-				@SuppressWarnings("unchecked")
-				@Override
-				public Integer call() throws Exception {
-					return ((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).getNbJeton();
-				}
-			});
 	}
 
 	@Override
@@ -52,19 +43,43 @@ implements	PlaceCI<Transition<I, R>>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public String call() throws Exception {
-					return ((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).getUri();
+					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).getUri();
 				}
 			});
 	}
 
 	@Override
-	public void setNbJeton(int nbJeton) throws Exception {
+	public ArrayList<P> getPlaces() throws Exception {
+		return this.getOwner().handleRequest(
+			new AbstractComponent.AbstractService<ArrayList<P>>(this.getPluginURI()) {
+				@SuppressWarnings("unchecked")
+				@Override
+				public ArrayList<P> call() throws Exception {
+					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).getPlaces();
+				}
+			});
+	}
+
+	@Override
+	public ArrayList<Transition<I, R>> getTransitions() throws Exception {
+		return this.getOwner().handleRequest(
+			new AbstractComponent.AbstractService<ArrayList<Transition<I, R>>>(this.getPluginURI()) {
+				@SuppressWarnings("unchecked")
+				@Override
+				public ArrayList<Transition<I, R>> call() throws Exception {
+					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).getTransitions();
+				}
+			});
+	}
+
+	@Override
+	public void addPlace(P place) throws Exception {
 		this.getOwner().handleRequest(
 			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).setNbJeton(nbJeton);
+					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).addPlace(place);
 					return null;
 				}
 			});
@@ -72,78 +87,67 @@ implements	PlaceCI<Transition<I, R>>{
 	}
 
 	@Override
-	public ArrayList<Transition<I, R>> getTransEntrees() throws Exception {
+	public void addTransition(Transition<I, R> transition) throws Exception {
+		this.getOwner().handleRequest(
+			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+				@SuppressWarnings("unchecked")
+				@Override
+				public Void call() throws Exception {
+					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).addTransition(transition);
+					return null;
+				}
+			});
+	}
+
+	@Override
+	public Set<Transition<I, R>> update() throws Exception {
 		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<ArrayList<Transition<I, R>>>(this.getPluginURI()) {
+			new AbstractComponent.AbstractService<Set<Transition<I, R>>>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
-				public ArrayList<Transition<I, R>> call() throws Exception {
-					return ((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).getTransEntrees();
+				public Set<Transition<I, R>> call() throws Exception {
+					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).update();
 				}
 			});
 	}
 
 	@Override
-	public void addTransEntree(Transition<I, R> entree) throws Exception {
+	public void showReseau() throws Exception {
 		this.getOwner().handleRequest(
 			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).addTransEntree(entree);
+					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).showReseau();
 					return null;
 				}
 			});
 	}
 
 	@Override
-	public void addTransSortie(Transition<I, R> sortie) throws Exception {
+	public void randomTransition() throws Exception {
 		this.getOwner().handleRequest(
 			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).addTransSortie(sortie);
+					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).randomTransition();
 					return null;
 				}
 			});
 	}
 
 	@Override
-	public ArrayList<Transition<I, R>> getTransSorties() throws Exception {
-		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<ArrayList<Transition<I, R>>>(this.getPluginURI()) {
-				@SuppressWarnings("unchecked")
-				@Override
-				public ArrayList<Transition<I, R>> call() throws Exception {
-					return ((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).getTransSorties();
-				}
-			});
-	}
-
-	@Override
-	public void addJeton() throws Exception {
+	public void manualTransition(Scanner scanner) throws Exception {
 		this.getOwner().handleRequest(
 			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).addJeton();
+					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).manualTransition(scanner);
 					return null;
 				}
 			});
 	}
 
-	@Override
-	public void retrieveJeton() throws Exception {
-		this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
-				@SuppressWarnings("unchecked")
-				@Override
-				public Void call() throws Exception {
-					((PlaceCommunePlugin<I, R>) this.getServiceProviderReference()).retrieveJeton();
-					return null;
-				}
-			});
-	}
 }

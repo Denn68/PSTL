@@ -8,7 +8,6 @@ import frontend.Frontend;
 public class Main {
     public static void main(String[] args) {
 
-    	// FAIS LE RESEAU QUE LE PROF A DONNER
     	Backend backend = new Backend();
     	
     	Frontend frontend = new Frontend(backend);

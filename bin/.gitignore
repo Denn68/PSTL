@@ -1,4 +1,6 @@
 /classes/
-/backend/
-/frontend/
 /test/
+/interfaces/
+/backend/
+/reseau/
+/placeCommune/

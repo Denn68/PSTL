@@ -1,4 +1,4 @@
-package classes;
+package reseau;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import test.CVM;
@@ -19,4 +19,6 @@ extends AbstractComponent{
 		assert	this.isInstalled(RESEAU_PLUGIN_URI);
 		assert	this.getPlugin(RESEAU_PLUGIN_URI) == plugin;
 	}
+
+	
 }

@@ -1,4 +1,4 @@
-package classes;
+package reseau;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,19 +7,25 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
 
+import classes.Place;
+import classes.Transition;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import interfaces.ReseauCI;
 import interfaces.ReseauI;
 
-public class ReseauPlugin<I, R, Place>
+@OfferedInterfaces(offered = { ReseauCI.class})
+@RequiredInterfaces(required = {  })
+public class ReseauPlugin<I, R, P>
 extends 	AbstractPlugin
-implements ReseauI<I, R, Place>{
+implements ReseauI<I, R, P>{
 	private static final long serialVersionUID = 1L;
 
-	protected ReseauInboundPortForPlugin<I, R, Place>	rip;
+	protected ReseauInboundPortForPlugin<I, R, P>	rip;
 
-	protected ArrayList<Place> 				places;
+	protected ArrayList<P> 				places;
 	protected ArrayList<Transition<I, R>> 	transitions;
 	protected String 						uri;
 
@@ -48,7 +54,7 @@ implements ReseauI<I, R, Place>{
 		this.transitions = new ArrayList<>();
 
 		// Create the inbound port
-		this.rip = new ReseauInboundPortForPlugin<I, R, Place>(this.getOwner(),
+		this.rip = new ReseauInboundPortForPlugin<I, R, P>(this.getOwner(),
 													this.getPluginURI());
 		this.rip.publishPort();
 	}
@@ -81,7 +87,7 @@ implements ReseauI<I, R, Place>{
 
 
 	@Override
-	public ArrayList<Place> getPlaces() throws Exception {
+	public ArrayList<P> getPlaces() throws Exception {
 		return places;
 	}
 
@@ -93,7 +99,7 @@ implements ReseauI<I, R, Place>{
 
 
 	@Override
-	public void addPlace(Place place) throws Exception {
+	public void addPlace(P place) throws Exception {
 		this.places.add(place);		
 	}
 
@@ -105,13 +111,14 @@ implements ReseauI<I, R, Place>{
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public Set<Transition<I, R>> update() throws Exception {
 Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
         
         for (Transition<I, R> transition: this.transitions) {
         	boolean appendTrans = true;
-        	for(classes.Place p: transition.getPlacesEntrees()) {
+        	for(Place p: transition.getPlacesEntrees()) {
         		if(transition.getUri() == "t8") {
         			System.out.println("ETAT T8" + transition.isActivable());
         		}
@@ -128,16 +135,17 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
 	}
 
 
+	@SuppressWarnings("rawtypes")
 	@Override
 	public void showReseau() throws Exception {
 		int i = 0;
         StringBuilder sb = new StringBuilder();
         sb.append("Réseau ").append(uri).append("(");
-        for (Place p : places) {
+        for (P p : places) {
             if (i != (places.size() - 1)) {
-            	sb.append(((classes.Place) p).getNbJeton()).append(", ");
+            	sb.append(((Place) p).getNbJeton()).append(", ");
             } else {
-            	sb.append(((classes.Place) p).getNbJeton());
+            	sb.append(((Place) p).getNbJeton());
             }
             i++;
         }
@@ -146,6 +154,7 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void randomTransition() throws Exception {
 		Random random = new Random();
@@ -190,6 +199,7 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
 	}
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void manualTransition(Scanner scanner) throws Exception {
 		Set<Transition<I, R>> transitionsPossibles = update();
