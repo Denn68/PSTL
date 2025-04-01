@@ -8,62 +8,68 @@ import classes.Transition;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.ReseauCI;
 
-public class ReseauConnector<I, R, P>
+public class ReseauConnector<P>
 extends AbstractConnector
-implements ReseauCI<I, R, P>{
+implements ReseauCI<P>{
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getUri() throws Exception {
-		return ((ReseauCI<I, R, P>)this.offering).getUri();
+		return ((ReseauCI<P>)this.offering).getUri();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<P> getPlaces() throws Exception {
-		return ((ReseauCI<I, R, P>)this.offering).getPlaces();
+		return ((ReseauCI<P>)this.offering).getPlaces();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Transition<I, R>> getTransitions() throws Exception {
-		return ((ReseauCI<I, R, P>)this.offering).getTransitions();
+	public ArrayList<Transition> getTransitions() throws Exception {
+		return ((ReseauCI<P>)this.offering).getTransitions();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addPlace(P place) throws Exception {
-		((ReseauCI<I, R, P>)this.offering).addPlace(place);
+		((ReseauCI<P>)this.offering).addPlace(place);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addTransition(Transition<I, R> transition) throws Exception {
-		((ReseauCI<I, R, P>)this.offering).addTransition(transition);
+	public void addTransition(Transition transition) throws Exception {
+		((ReseauCI<P>)this.offering).addTransition(transition);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Transition<I, R>> update() throws Exception {
-		return ((ReseauCI<I, R, P>)this.offering).update();
+	public Set<Transition> update() throws Exception {
+		return ((ReseauCI<P>)this.offering).update();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void showReseau() throws Exception {
-		((ReseauCI<I, R, P>)this.offering).showReseau();
+		((ReseauCI<P>)this.offering).showReseau();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void randomTransition() throws Exception {
-		((ReseauCI<I, R, P>)this.offering).randomTransition();
+		((ReseauCI<P>)this.offering).randomTransition();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void manualTransition(Scanner scanner) throws Exception {
-		((ReseauCI<I, R, P>)this.offering).manualTransition(scanner);
+		((ReseauCI<P>)this.offering).manualTransition(scanner);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception {
+		((ReseauCI<P>)this.offering).linkPlacesTransition(entrees, t, sorties);
 	}
 
 	

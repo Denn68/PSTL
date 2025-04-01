@@ -55,6 +55,7 @@ public class Main {
     	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(pc3)), new ArrayList<>(Arrays.asList(p2)), t2, fonction);
     	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p2,pc4)), new ArrayList<>(Arrays.asList(p3)), t3, fonction);
     	frontend.LinkPlaces(r1, new ArrayList<>(Arrays.asList(p3)), new ArrayList<>(Arrays.asList(pc4,p4)), t4, fonction);
+    	
     	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p5)), new ArrayList<>(Arrays.asList(pc2)), t5, fonction);
     	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(pc1,pc2)), new ArrayList<>(Arrays.asList(p6,pc3)), t6, fonction);
     	frontend.LinkPlaces(r2, new ArrayList<>(Arrays.asList(p6)), new ArrayList<>(Arrays.asList(p7)), t7, fonction);

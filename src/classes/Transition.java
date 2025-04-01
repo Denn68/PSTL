@@ -5,19 +5,20 @@ import java.util.Map;
 import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 
-public class Transition<I, R>{
+@SuppressWarnings("rawtypes")
+public class Transition{
     private ArrayList<Place> placeEntrees;
     private ArrayList<Place> placeSorties;
-    private ArrayList<PlaceCommune> placeCommuneEntrees;
+	private ArrayList<PlaceCommune> placeCommuneEntrees;
     private ArrayList<PlaceCommune> placeCommuneSorties;
     private Map<PlaceCommune, Boolean> activable;
     private Map<PlaceCommune, Semaphore> updatingAvailability;
     private Map<PlaceCommune, Semaphore> updatingJetons;
     private String uri;
-    Function<I, R> activableFunction;
+    Function activableFunction;
 
     // Constructor
-    public Transition(String uri, Function<I, R> function) {
+    public Transition(String uri, Function function) {
         this.placeEntrees = new ArrayList<Place>();
         this.placeSorties = new ArrayList<Place>();
         this.placeCommuneEntrees = new ArrayList<PlaceCommune>();
@@ -92,7 +93,8 @@ public class Transition<I, R>{
     	}
     }
     
-    public void activateTransition(I input) {
+    @SuppressWarnings("unchecked")
+	public void activateTransition() {
     	if (this.isActivable()) {
     		boolean skip = false;
     		for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
@@ -113,7 +115,7 @@ public class Transition<I, R>{
 		        	placeCommune.addJeton();
 		        	this.updatingAvailability.get(placeCommune).release();
 	        	}
-		        this.activableFunction.apply(input);
+		        this.activableFunction.apply(null);
     		} else {
     			System.out.println("La transition a été prise par un autre thread");
     		}

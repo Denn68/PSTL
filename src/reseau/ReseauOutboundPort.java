@@ -10,9 +10,9 @@ import fr.sorbonne_u.components.interfaces.RequiredCI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
 import interfaces.ReseauCI;
 
-public class ReseauOutboundPort<I, R, P>
+public class ReseauOutboundPort<P>
 extends AbstractOutboundPort
-implements ReseauCI<I, R, P>{
+implements ReseauCI<P>{
 
 	public ReseauOutboundPort(ComponentI owner) throws Exception {
 		super(ReseauCI.class, owner);
@@ -31,55 +31,61 @@ implements ReseauCI<I, R, P>{
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getUri() throws Exception {
-		return ((ReseauCI<I, R, P>) this.getConnector()).getUri();
+		return ((ReseauCI<P>) this.getConnector()).getUri();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<P> getPlaces() throws Exception {
-		return ((ReseauCI<I, R, P>) this.getConnector()).getPlaces();
+		return ((ReseauCI<P>) this.getConnector()).getPlaces();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Transition<I, R>> getTransitions() throws Exception {
-		return ((ReseauCI<I, R, P>) this.getConnector()).getTransitions();
+	public ArrayList<Transition> getTransitions() throws Exception {
+		return ((ReseauCI<P>) this.getConnector()).getTransitions();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addPlace(P place) throws Exception {
-		((ReseauCI<I, R, P>) this.getConnector()).addPlace(place);
+		((ReseauCI<P>) this.getConnector()).addPlace(place);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addTransition(Transition<I, R> transition) throws Exception {
-		((ReseauCI<I, R, P>) this.getConnector()).addTransition(transition);
+	public void addTransition(Transition transition) throws Exception {
+		((ReseauCI<P>) this.getConnector()).addTransition(transition);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Set<Transition<I, R>> update() throws Exception {
-		return ((ReseauCI<I, R, P>) this.getConnector()).update();
+	public Set<Transition> update() throws Exception {
+		return ((ReseauCI<P>) this.getConnector()).update();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void showReseau() throws Exception {
-		((ReseauCI<I, R, P>) this.getConnector()).showReseau();
+		((ReseauCI<P>) this.getConnector()).showReseau();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void randomTransition() throws Exception {
-		((ReseauCI<I, R, P>) this.getConnector()).randomTransition();
+		((ReseauCI<P>) this.getConnector()).randomTransition();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void manualTransition(Scanner scanner) throws Exception {
-		((ReseauCI<I, R, P>) this.getConnector()).manualTransition(scanner);
+		((ReseauCI<P>) this.getConnector()).manualTransition(scanner);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception {
+		((ReseauCI<P>) this.getConnector()).linkPlacesTransition(entrees, t, sorties);
 	}
 
 	

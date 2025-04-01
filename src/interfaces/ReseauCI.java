@@ -8,28 +8,30 @@ import classes.Transition;
 import fr.sorbonne_u.components.interfaces.OfferedCI;
 import fr.sorbonne_u.components.interfaces.RequiredCI;
 
-public interface ReseauCI<I, R, P>
+public interface ReseauCI<P>
 extends OfferedCI,
 RequiredCI,
-ReseauI<I, R, P>{
+ReseauI<P>{
 	
 	// Getters
 	public String getUri() throws Exception;
 
     public ArrayList<P> getPlaces() throws Exception;
 
-    public ArrayList<Transition<I, R>> getTransitions() throws Exception;
+    public ArrayList<Transition> getTransitions() throws Exception;
 
     // Setters
     public void addPlace(P place) throws Exception;
 
-    public void addTransition(Transition<I, R> transition) throws Exception;
+    public void addTransition(Transition transition) throws Exception;
 
-    public Set<Transition<I, R>> update() throws Exception;
+    public Set<Transition> update() throws Exception;
     
     public void showReseau() throws Exception;
 
     public void randomTransition() throws Exception;
 
     public void manualTransition(Scanner scanner) throws Exception;
+    
+    public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception;
 }

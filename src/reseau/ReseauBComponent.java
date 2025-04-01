@@ -6,16 +6,30 @@ import java.util.function.Function;
 
 import classes.Place;
 import classes.Transition;
+import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 
-public class ReseauBComponent<T, I, R, P>
-extends ReseauComponent<T, I, R, P>{
+public class ReseauBComponent<T, P>
+extends ReseauComponent<T, P>{
 	
-	public static final String		RESEAU_PLUGIN_URI = "reseau-plugin-uri";
+	public static final String		RESEAU_B_PLUGIN_URI = "reseau-b-plugin-uri";
+	private String uri;
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected			ReseauBComponent(String uri) throws Exception
+	@SuppressWarnings("unchecked")
+	protected			ReseauBComponent(String uri,
+			String semaphorePluginAjoutInboundPortURI,
+			String semaphorePluginRetraitInboundPortURI,
+			ReseauEndpoint endPointServer,
+			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
-		super(uri);
+		super(uri,
+				RESEAU_B_PLUGIN_URI,
+				semaphorePluginAjoutInboundPortURI,
+				semaphorePluginRetraitInboundPortURI,
+				endPointServer,
+				endPointClient);
+		
+		this.uri = uri;
+		
 		String p5 = "p5";
     	String p6 = "p6";
     	String p7 = "p7";
@@ -39,11 +53,11 @@ extends ReseauComponent<T, I, R, P>{
     	    return "Transition activée: " + input;
     	};
     	
-    	Transition<I, R> T5 = new Transition<I, R>(t5, (Function<I, R>) fonction);
-    	Transition<I, R> T6 = new Transition<I, R>(t6, (Function<I, R>) fonction);
-    	Transition<I, R> T7 = new Transition<I, R>(t7, (Function<I, R>) fonction);
-    	Transition<I, R> T8 = new Transition<I, R>(t8, (Function<I, R>) fonction);
-    	Transition<I, R> T9 = new Transition<I, R>(t9, (Function<I, R>) fonction);
+    	Transition T5 = new Transition(t5, (Function) fonction);
+    	Transition T6 = new Transition(t6, (Function) fonction);
+    	Transition T7 = new Transition(t7, (Function) fonction);
+    	Transition T8 = new Transition(t8, (Function) fonction);
+    	Transition T9 = new Transition(t9, (Function) fonction);
     	
     	T5.addPlacesEntree(new ArrayList<>(Arrays.asList(P5)));
     	T6.addPlacesSortie(new ArrayList<>(Arrays.asList(P6)));
@@ -53,18 +67,18 @@ extends ReseauComponent<T, I, R, P>{
     	T8.addPlacesSortie(new ArrayList<>(Arrays.asList(P8)));
     	T9.addPlacesEntree(new ArrayList<>(Arrays.asList(P8)));
     	T9.addPlacesSortie(new ArrayList<>(Arrays.asList(P9)));
-    	
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addPlace((P) P5);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addPlace((P) P6);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addPlace((P) P7);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addPlace((P) P8);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addPlace((P) P9);
+
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P5);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P6);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P7);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P8);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P9);
 		
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addTransition(T5);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addTransition(T6);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addTransition(T7);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addTransition(T8);
-		((ReseauPlugin<I, R, P>) this.getPlugin(uri)).addTransition(T9);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T5);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T6);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T7);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T8);
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T9);
 	}
 
 	

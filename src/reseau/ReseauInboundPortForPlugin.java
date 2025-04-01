@@ -10,9 +10,9 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.ReseauCI;
 
-public class ReseauInboundPortForPlugin<I, R, P>
+public class ReseauInboundPortForPlugin<P>
 extends		AbstractInboundPort
-implements	ReseauCI<I, R, P>{
+implements	ReseauCI<P>{
 	private static final long serialVersionUID = 1L;
 
 	public				ReseauInboundPortForPlugin(
@@ -43,7 +43,7 @@ implements	ReseauCI<I, R, P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public String call() throws Exception {
-					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).getUri();
+					return ((ReseauPlugin<P>) this.getServiceProviderReference()).getUri();
 				}
 			});
 	}
@@ -55,19 +55,19 @@ implements	ReseauCI<I, R, P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public ArrayList<P> call() throws Exception {
-					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).getPlaces();
+					return ((ReseauPlugin<P>) this.getServiceProviderReference()).getPlaces();
 				}
 			});
 	}
 
 	@Override
-	public ArrayList<Transition<I, R>> getTransitions() throws Exception {
+	public ArrayList<Transition> getTransitions() throws Exception {
 		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<ArrayList<Transition<I, R>>>(this.getPluginURI()) {
+			new AbstractComponent.AbstractService<ArrayList<Transition>>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
-				public ArrayList<Transition<I, R>> call() throws Exception {
-					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).getTransitions();
+				public ArrayList<Transition> call() throws Exception {
+					return ((ReseauPlugin<P>) this.getServiceProviderReference()).getTransitions();
 				}
 			});
 	}
@@ -79,7 +79,7 @@ implements	ReseauCI<I, R, P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).addPlace(place);
+					((ReseauPlugin<P>) this.getServiceProviderReference()).addPlace(place);
 					return null;
 				}
 			});
@@ -87,26 +87,26 @@ implements	ReseauCI<I, R, P>{
 	}
 
 	@Override
-	public void addTransition(Transition<I, R> transition) throws Exception {
+	public void addTransition(Transition transition) throws Exception {
 		this.getOwner().handleRequest(
 			new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).addTransition(transition);
+					((ReseauPlugin<P>) this.getServiceProviderReference()).addTransition(transition);
 					return null;
 				}
 			});
 	}
 
 	@Override
-	public Set<Transition<I, R>> update() throws Exception {
+	public Set<Transition> update() throws Exception {
 		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<Set<Transition<I, R>>>(this.getPluginURI()) {
+			new AbstractComponent.AbstractService<Set<Transition>>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
-				public Set<Transition<I, R>> call() throws Exception {
-					return ((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).update();
+				public Set<Transition> call() throws Exception {
+					return ((ReseauPlugin<P>) this.getServiceProviderReference()).update();
 				}
 			});
 	}
@@ -118,7 +118,7 @@ implements	ReseauCI<I, R, P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).showReseau();
+					((ReseauPlugin<P>) this.getServiceProviderReference()).showReseau();
 					return null;
 				}
 			});
@@ -131,7 +131,7 @@ implements	ReseauCI<I, R, P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).randomTransition();
+					((ReseauPlugin<P>) this.getServiceProviderReference()).randomTransition();
 					return null;
 				}
 			});
@@ -144,10 +144,23 @@ implements	ReseauCI<I, R, P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<I, R, P>) this.getServiceProviderReference()).manualTransition(scanner);
+					((ReseauPlugin<P>) this.getServiceProviderReference()).manualTransition(scanner);
 					return null;
 				}
 			});
+	}
+
+	@Override
+	public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception {
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@SuppressWarnings("unchecked")
+					@Override
+					public Void call() throws Exception {
+						((ReseauPlugin<P>) this.getServiceProviderReference()).linkPlacesTransition(entrees, t, sorties);
+						return null;
+					}
+				});
 	}
 
 }

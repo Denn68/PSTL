@@ -1,4 +1,4 @@
-package placeCommune;
+package reseauPlaceCommune;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.AbstractPort;
@@ -8,14 +8,14 @@ import fr.sorbonne_u.exceptions.ImplementationInvariantException;
 import fr.sorbonne_u.exceptions.InvariantException;
 import fr.sorbonne_u.exceptions.PostconditionException;
 import fr.sorbonne_u.exceptions.PreconditionException;
-import interfaces.PlaceCI;
+import interfaces.ReseauPlaceCommuneCI;
 
 @SuppressWarnings("rawtypes")
-public class PlaceCommuneEndpoint 
-extends BCMEndPoint<PlaceCI>{
+public class ReseauPlaceCommuneEndpoint 
+extends BCMEndPoint<ReseauPlaceCommuneCI>{
 
-	public PlaceCommuneEndpoint() {
-		super(PlaceCI.class, PlaceCI.class);
+	public ReseauPlaceCommuneEndpoint() {
+		super(ReseauPlaceCommuneCI.class, ReseauPlaceCommuneCI.class);
 	}
 
 	/**
@@ -31,8 +31,8 @@ extends BCMEndPoint<PlaceCI>{
 				new PreconditionException(
 						"inboundPortURI != null && !inboundPortURI.isEmpty()");
 
-		PlaceCommuneInboundPort p =
-				new PlaceCommuneInboundPort(c, this.inboundPortURI);
+		ReseauPlaceCommuneInboundPort p =
+				new ReseauPlaceCommuneInboundPort(c, this.inboundPortURI);
 		p.publishPort();
 
 		// Postconditions checking
@@ -47,28 +47,28 @@ extends BCMEndPoint<PlaceCI>{
 						"getOfferedComponentInterface()."
 						+ "isAssignableFrom(return.getClass())");
 		// Invariant checking
-		assert	PlaceCommuneEndpoint.implementationInvariants(this) :
+		assert	ReseauPlaceCommuneEndpoint.implementationInvariants(this) :
 				new ImplementationInvariantException(
 						"PlaceCommuneEndpoint.implementationInvariants(this)");
-		assert	PlaceCommuneEndpoint.invariants(this) :
+		assert	ReseauPlaceCommuneEndpoint.invariants(this) :
 				new InvariantException("PlaceCommuneEndpoint.invariants(this)");
 		
 		return p;
 	}
 
 	@Override
-	protected PlaceCommuneOutboundPort makeOutboundPort(AbstractComponent c, String inboundPortURI)
+	protected ReseauPlaceCommuneOutboundPort makeOutboundPort(AbstractComponent c, String inboundPortURI)
 			throws Exception {
 		// Preconditions checking
 				assert	c != null : new PreconditionException("c != null");
 
-				PlaceCommuneOutboundPort p =
-						new PlaceCommuneOutboundPort(c);
+				ReseauPlaceCommuneOutboundPort p =
+						new ReseauPlaceCommuneOutboundPort(c);
 				p.publishPort();
 				c.doPortConnection(
 						p.getPortURI(),
 						this.inboundPortURI,
-						PlaceCommuneConnector.class.getCanonicalName());
+						ReseauPlaceCommuneConnector.class.getCanonicalName());
 
 				// Postconditions checking
 				assert	p != null && p.isPublished() && p.connected() :

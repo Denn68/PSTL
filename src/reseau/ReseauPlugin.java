@@ -8,31 +8,50 @@ import java.util.Scanner;
 import java.util.Set;
 
 import classes.Place;
+import classes.PlaceCommune;
 import classes.Transition;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.exceptions.ConnectionException;
 import interfaces.ReseauCI;
+import interfaces.ReseauPlaceCommuneCI;
+import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 import interfaces.ReseauI;
 
-@OfferedInterfaces(offered = { ReseauCI.class})
-@RequiredInterfaces(required = {  })
-public class ReseauPlugin<I, R, P>
+public class ReseauPlugin<P>
 extends 	AbstractPlugin
-implements ReseauI<I, R, P>{
+implements ReseauI<P>{
 	private static final long serialVersionUID = 1L;
 
-	protected ReseauInboundPortForPlugin<I, R, P>	rip;
+	protected ReseauInboundPortForPlugin<P>	rip;
 
 	protected ArrayList<P> 				places;
-	protected ArrayList<Transition<I, R>> 	transitions;
-	protected String 						uri;
+	protected ArrayList<Transition> 	transitions;
+	protected String 					uri;
+	
+	private String semaphorePluginAjoutInboundPortURI;
+	private String semaphorePluginRetraitInboundPortURI;
+	private ReseauPlaceCommuneEndpoint endPointClient;
 
-	public				ReseauPlugin(String uri)
+	public				ReseauPlugin(String uri) throws Exception
 	{
 		super();
 		this.uri = uri;
+	}
+	
+	public				ReseauPlugin(String uri,
+			String semaphorePluginAjoutInboundPortURI,
+			String semaphorePluginRetraitInboundPortURI,
+			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
+	{
+		super();
+		System.out.println(endPointClient.getClass());
+		this.uri = uri;
+		this.semaphorePluginAjoutInboundPortURI = semaphorePluginAjoutInboundPortURI;
+		this.semaphorePluginRetraitInboundPortURI = semaphorePluginRetraitInboundPortURI;
+		this.endPointClient = endPointClient;
 	}
 
 
@@ -49,12 +68,20 @@ implements ReseauI<I, R, P>{
 	public void			initialise() throws Exception
 	{
 		super.initialise();
+		
+		if(!endPointClient.clientSideInitialised()) {
+			try {
+				endPointClient.initialiseClientSide(this);
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
+		}
 
 		this.places = new ArrayList<>();
 		this.transitions = new ArrayList<>();
 
 		// Create the inbound port
-		this.rip = new ReseauInboundPortForPlugin<I, R, P>(this.getOwner(),
+		this.rip = new ReseauInboundPortForPlugin<P>(this.getOwner(),
 													this.getPluginURI());
 		this.rip.publishPort();
 	}
@@ -93,7 +120,7 @@ implements ReseauI<I, R, P>{
 
 
 	@Override
-	public ArrayList<Transition<I, R>> getTransitions() throws Exception {
+	public ArrayList<Transition> getTransitions() throws Exception {
 		return transitions;
 	}
 
@@ -105,7 +132,7 @@ implements ReseauI<I, R, P>{
 
 
 	@Override
-	public void addTransition(Transition<I, R> transition) throws Exception {
+	public void addTransition(Transition transition) throws Exception {
 		this.transitions.add(transition);
 		
 	}
@@ -113,10 +140,10 @@ implements ReseauI<I, R, P>{
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public Set<Transition<I, R>> update() throws Exception {
-Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
+	public Set<Transition> update() throws Exception {
+		Set<Transition> transitionsPossibles = new HashSet<>();
         
-        for (Transition<I, R> transition: this.transitions) {
+        for (Transition transition: this.transitions) {
         	boolean appendTrans = true;
         	for(Place p: transition.getPlacesEntrees()) {
         		if(transition.getUri() == "t8") {
@@ -153,24 +180,21 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
         System.out.println(sb.toString());		
 	}
 
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public void randomTransition() throws Exception {
 		Random random = new Random();
         while(true) {
         	StringBuilder sb = new StringBuilder();
-            Set<Transition<I, R>> transitionsPossibles = update();
+            Set<Transition> transitionsPossibles = update();
             sb.append("Transitions possible : ");
             String message = new String();
             
-            for (Transition<I, R> t : transitionsPossibles) {
+            for (Transition t : transitionsPossibles) {
             	message = String.format("%s,", t.getUri());
             	sb.append(message);
             }
             
             sb.append("\n");
-
 
             if (transitionsPossibles.isEmpty()) {
             	sb.append("Aucune transition possible.");
@@ -180,14 +204,14 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
 					e.printStackTrace();
 				}
             } else {
-            	List<Transition<I, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
+            	List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
-            	Transition<I, R> transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+            	Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
 
                 message = String.format("Transition choisie : %s\n", transitionChoisie.getUri());
                 sb.append(message);
 
-                transitionChoisie.activateTransition((I) transitionChoisie.getUri());
+                transitionChoisie.activateTransition();
             }
             
             sb.append("\n");
@@ -198,18 +222,16 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
         }
 	}
 
-
-	@SuppressWarnings("unchecked")
 	@Override
 	public void manualTransition(Scanner scanner) throws Exception {
-		Set<Transition<I, R>> transitionsPossibles = update();
+		Set<Transition> transitionsPossibles = update();
         if (transitionsPossibles.isEmpty()) {
             System.out.println("Aucune transition possible.");
             return;
         }
 
         System.out.println("Transitions possibles :");
-        List<Transition<I, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
+        List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
         for (int i = 0; i < listeTransitions.size(); i++)
         	System.out.printf("%s,\n", listeTransitions.get(i).getUri());
@@ -221,8 +243,26 @@ Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
             return;
         }
 
-        Transition<I, R> transitionChoisie = listeTransitions.get(choix - 1);
-        transitionChoisie.activateTransition((I) transitionChoisie.getUri());
+        Transition transitionChoisie = listeTransitions.get(choix - 1);
+        transitionChoisie.activateTransition();
         showReseau();		
+	}
+
+	@Override
+	public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception {
+		
+		
+		for(Transition tr : transitions) {
+			if(tr.getUri().equals(t)) {
+				tr.addPlacesCommuneEntree((ArrayList<PlaceCommune>) entrees);
+				tr.addPlacesCommuneSortie((ArrayList<PlaceCommune>) sorties);
+				for(P p : entrees) {
+					((PlaceCommune) p).addTransSortie(tr);
+				}
+				for(P p : sorties) {
+					((PlaceCommune) p).addTransEntree(tr);
+				}
+			}
+		}
 	}
 }

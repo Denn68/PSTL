@@ -1,6 +1,6 @@
-/classes/
-/test/
-/interfaces/
-/backend/
-/reseau/
 /placeCommune/
+/reseauPlaceCommune/
+/test/
+/reseau/
+/interfaces/
+/classes/
