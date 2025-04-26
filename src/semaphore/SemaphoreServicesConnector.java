@@ -11,71 +11,71 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#acquire()
 	 */
 	@Override
-	public void			acquire() throws Exception
+	public void			acquire(String uri) throws Exception
 	{
-		((SemaphoreCI)this.offering).acquire();
+		((SemaphoreCI)this.offering).acquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#acquire(int)
 	 */
 	@Override
-	public void			acquire(int permits) throws Exception
+	public void			acquire(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.offering).acquire(permits);
+		((SemaphoreCI)this.offering).acquire(uri, permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#availablePermits()
 	 */
 	@Override
-	public int			availablePermits() throws Exception
+	public int			availablePermits(String uri) throws Exception
 	{
-		return ((SemaphoreCI)this.offering).availablePermits();
+		return ((SemaphoreCI)this.offering).availablePermits(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#hasQueuedThreads()
 	 */
 	@Override
-	public boolean		hasQueuedThreads() throws Exception
+	public boolean		hasQueuedThreads(String uri) throws Exception
 	{
-		return ((SemaphoreCI)this.offering).hasQueuedThreads();
+		return ((SemaphoreCI)this.offering).hasQueuedThreads(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#release()
 	 */
 	@Override
-	public void			release() throws Exception
+	public void			release(String uri) throws Exception
 	{
-		((SemaphoreCI)this.offering).release();
+		((SemaphoreCI)this.offering).release(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#release(int)
 	 */
 	@Override
-	public void			release(int permits) throws Exception
+	public void			release(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.offering).release(permits);
+		((SemaphoreCI)this.offering).release(uri, permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire() throws Exception
+	public void			tryAcquire(String uri) throws Exception
 	{
-		((SemaphoreCI)this.offering).tryAcquire();
+		((SemaphoreCI)this.offering).tryAcquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(int permits) throws Exception
+	public void			tryAcquire(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.offering).tryAcquire(permits);
+		((SemaphoreCI)this.offering).tryAcquire(uri, permits);
 	}
 }

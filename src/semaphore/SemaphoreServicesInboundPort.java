@@ -61,13 +61,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#acquire()
 	 */
 	@Override
-	public void			acquire() throws Exception
+	public void			acquire(String uri) throws Exception
 	{
 		this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).acquire();
+					((SemaphoreI)this.getServiceOwner()).acquire(uri);
 					return null;
 				}
 			});
@@ -77,13 +77,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#acquire(int)
 	 */
 	@Override
-	public void			acquire(int permits) throws Exception
+	public void			acquire(String uri, int permits) throws Exception
 	{
 		this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).acquire(permits);
+					((SemaphoreI)this.getServiceOwner()).acquire(uri, permits);
 					return null;
 				}
 			});
@@ -93,14 +93,14 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#availablePermits()
 	 */
 	@Override
-	public int			availablePermits() throws Exception
+	public int			availablePermits(String uri) throws Exception
 	{
 		return this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Integer>() {
 				@Override
 				public Integer call() throws Exception {
 					return ((SemaphoreI)this.getServiceOwner()).
-															availablePermits();
+															availablePermits(uri);
 				}
 			});
 	}
@@ -109,14 +109,14 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#hasQueuedThreads()
 	 */
 	@Override
-	public boolean		hasQueuedThreads() throws Exception
+	public boolean		hasQueuedThreads(String uri) throws Exception
 	{
 		return this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Boolean>() {
 				@Override
 				public Boolean call() throws Exception {
 					return ((SemaphoreI)this.getServiceOwner()).
-															hasQueuedThreads();
+															hasQueuedThreads(uri);
 				}
 			});
 	}
@@ -125,13 +125,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#release()
 	 */
 	@Override
-	public void			release() throws Exception
+	public void			release(String uri) throws Exception
 	{
 		this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).release();
+					((SemaphoreI)this.getServiceOwner()).release(uri);
 					return null;
 				}
 			});
@@ -141,13 +141,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#release(int)
 	 */
 	@Override
-	public void			release(int permits) throws Exception
+	public void			release(String uri, int permits) throws Exception
 	{
 		this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).release(permits);
+					((SemaphoreI)this.getServiceOwner()).release(uri, permits);
 					return null;
 				}
 			});
@@ -157,13 +157,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire() throws Exception
+	public void			tryAcquire(String uri) throws Exception
 	{
 		this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).tryAcquire();
+					((SemaphoreI)this.getServiceOwner()).tryAcquire(uri);
 					return null;
 				}
 			});
@@ -173,13 +173,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(int permits) throws Exception
+	public void			tryAcquire(String uri, int permits) throws Exception
 	{
 		this.owner.handleRequest(
 			new AbstractComponent.AbstractService<Void>() {
 				@Override
 				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).tryAcquire(permits);
+					((SemaphoreI)this.getServiceOwner()).tryAcquire(uri, permits);
 					return null;
 				}
 			});

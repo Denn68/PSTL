@@ -1,21 +1,30 @@
 package classes;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-public class Reseau<I, R, Place> 
+public class Reseau<I, R> 
 extends Thread{
-    ArrayList<Place> places;
-    ArrayList<Transition<I, R>> transitions;
+	Map<String, Place> places;
+    ArrayList<Transition> transitions;
+    private Map<String, String> updatingAvailability;
+    private Map<String, String> updatingJetons;
     String uri;
 
     public Reseau(String uri) {
-        this.places = new ArrayList<Place>();
-        this.transitions = new ArrayList<Transition<I, R>>();
+        this.places = new HashMap<String, Place>();
+        this.transitions = new ArrayList<Transition>();
+        this.updatingJetons = new HashMap<String, String>();
+        this.updatingAvailability = new HashMap<String, String>();
         this.uri = uri;
     }
     
@@ -31,71 +40,122 @@ extends Thread{
     }
 
     public void showReseau() {
-        int i = 0;
         StringBuilder sb = new StringBuilder();
         sb.append("Réseau ").append(uri).append("(");
-        for (Place p : places) {
-            if (i != (places.size() - 1)) {
-            	sb.append(((classes.Place) p).getNbJeton()).append(", ");
-            } else {
-            	sb.append(((classes.Place) p).getNbJeton());
-            }
-            i++;
+
+        Iterator<Place> it = places.values().iterator();
+        while (it.hasNext()) {
+            Place p = it.next();
+            sb.append(((classes.Place) p).getNbJeton());
+            if (it.hasNext()) sb.append(", ");
         }
+
         sb.append(")");
         System.out.println(sb.toString());
     }
 
+
+
     // Getters
-    public ArrayList<Place> getPlaces() {
-        return places;
+    public Collection<Place> getPlaces() {
+        return places.values();
     }
 
-    public ArrayList<Transition<I, R>> getTransitions() {
+    public ArrayList<Transition> getTransitions() {
         return transitions;
     }
 
 
     // Setters
     public void addPlace(Place place) {
-        this.places.add(place);
+        this.places.put(place.getUri(), place);
     }
 
-    public void addTransition(Transition<I, R> transition) {
+    public void addTransition(Transition transition) {
         this.transitions.add(transition);
     }
 
-    public Set<Transition<I, R>> update() {
+    public Set<Transition> update() {
 
-        Set<Transition<I, R>> transitionsPossibles = new HashSet<>();
+        Set<Transition> transitionsPossibles = new HashSet<>();
         
-        for (Transition<I, R> transition: this.transitions) {
-        	boolean appendTrans = true;
-        	for(classes.Place p: transition.getPlacesEntrees()) {
-        		if(transition.getUri() == "t8") {
-        			System.out.println("ETAT T8" + transition.isActivable());
-        		}
-        		if(p.getNbJeton() == 0) {
-        			appendTrans = false;
-        		}
-        	}
-        		
-    		if (appendTrans && transition.isActivable())
+        for (Transition transition: this.transitions) {
+            AtomicBoolean appendTrans = new AtomicBoolean(true);
+
+            for(String place: transition.getPlacesEntrees()) {
+                if(transition.getUri().equals("t8")) {
+                    System.out.println("ETAT T8 " + transition.isActivable());
+                }
+
+                this.places.forEach((key, value) -> {
+                    if(key.equals(place)) {
+                        if(value.getNbJeton() == 0) {
+                            appendTrans.set(false);
+                        }
+                    }
+                });
+            }
+
+            if (appendTrans.get() && transition.isActivable())
                 transitionsPossibles.add(transition);
         }
+
         
         return transitionsPossibles;
+    }
+    
+    public void activeTransition(Transition tr) {
+    	if(tr.isActivable()) {
+    		boolean skip = false;
+    		for (String placeCommune : tr.getPlacesCommuneEntrees()) {
+				// skip = this.updatingJetons.get(placeCommune).tryAcquire();
+    			// => tryAcquire dans le composant Semaphore updatingJeton avec l'URI placeCommune
+    			// transition -> uriPlacesCommunes -> ReseauPlaceCommune-> Semaphore correspondante
+	        }
+    		if(!skip) {
+    			System.out.printf("Not Skip - %s\n", uri);
+				for (String placeCommune : tr.getPlacesCommuneEntrees()) {
+					// placeCommune.retrieveJeton(uri); => retrieveJeton dans le composant ReseauPlaceCommune
+					
+					// this.updatingAvailability.get(placeCommune).release();
+					// => release dans le composant Semaphore updatingAvailability avec l'URI placeCommune
+	    			// transition -> uriPlacesCommunes -> ReseauPlaceCommune-> Semaphore correspondante
+					
+					// this.updatingJetons.get(placeCommune).release();
+	    			// => release dans le composant Semaphore updatingJeton avec l'URI placeCommune
+	    			// transition -> uriPlacesCommunes -> ReseauPlaceCommune-> Semaphore correspondante
+		        }
+				
+		        for (String place : tr.getPlacesEntrees())
+		        	places.get(place).retrieveJeton();
+		        
+		        for (String place : tr.getPlacesSorties())
+		        	places.get(place).addJeton();
+		        
+		        for (String placeCommune : tr.getPlacesCommuneSorties()) {
+		        	// placeCommune.addJeton(); => addJeton dans le composant ReseauPlaceCommune
+		        	// this.updatingAvailability.get(placeCommune).release();
+					// => release dans le composant Semaphore updatingAvailability avec l'URI placeCommune
+	    			// transition -> uriPlacesCommunes -> ReseauPlaceCommune-> Semaphore correspondante
+	        	}
+		        
+		        
+		        tr.getActivableFunction().apply(null);
+    		} else {
+    			System.out.println("La transition a été prise par un autre thread");
+    		}
+    	}
     }
 
     public void randomTransition() {
         Random random = new Random();
         while(true) {
         	StringBuilder sb = new StringBuilder();
-            Set<Transition<I, R>> transitionsPossibles = update();
+            Set<Transition> transitionsPossibles = update();
             sb.append("Transitions possible : ");
             String message = new String();
             
-            for (Transition<I, R> t : transitionsPossibles) {
+            for (Transition t : transitionsPossibles) {
             	message = String.format("%s,", t.getUri());
             	sb.append(message);
             }
@@ -111,14 +171,15 @@ extends Thread{
 					e.printStackTrace();
 				}
             } else {
-            	List<Transition<I, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
+            	List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
-            	Transition<I, R> transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
+            	Transition transitionChoisie = listeTransitions.get(random.nextInt(listeTransitions.size()));
 
                 message = String.format("Transition choisie : %s\n", transitionChoisie.getUri());
                 sb.append(message);
-
-                transitionChoisie.activateTransition((I) transitionChoisie.getUri());
+                
+                activeTransition(transitionChoisie);
+                //transitionChoisie.activateTransition((I) transitionChoisie.getUri());
             }
             
             sb.append("\n");
@@ -130,15 +191,15 @@ extends Thread{
     }
 
     // Fonction pour afficher les transitions possibles et permettre le choix
-    public void manualTransition(Scanner scanner) {
-        Set<Transition<I, R>> transitionsPossibles = update();
+    /*public void manualTransition(Scanner scanner) {
+        Set<Transition> transitionsPossibles = update();
         if (transitionsPossibles.isEmpty()) {
             System.out.println("Aucune transition possible.");
             return;
         }
 
         System.out.println("Transitions possibles :");
-        List<Transition<I, R>> listeTransitions = new ArrayList<>(transitionsPossibles);
+        List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
         for (int i = 0; i < listeTransitions.size(); i++)
         	System.out.printf("%s,\n", listeTransitions.get(i).getUri());
@@ -150,9 +211,9 @@ extends Thread{
             return;
         }
 
-        Transition<I, R> transitionChoisie = listeTransitions.get(choix - 1);
-        transitionChoisie.activateTransition((I) transitionChoisie.getUri());
+        Transition transitionChoisie = listeTransitions.get(choix - 1);
+        transitionChoisie.activateTransition();
         showReseau();
-    }
+    }*/
 
 }

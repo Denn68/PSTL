@@ -55,71 +55,71 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#acquire()
 	 */
 	@Override
-	public void			acquire() throws Exception
+	public void			acquire(String uri) throws Exception
 	{
-		((SemaphoreCI)this.getConnector()).acquire();
+		((SemaphoreCI)this.getConnector()).acquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#acquire(int)
 	 */
 	@Override
-	public void			acquire(int permits) throws Exception
+	public void			acquire(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.getConnector()).acquire(permits);
+		((SemaphoreCI)this.getConnector()).acquire(uri, permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#availablePermits()
 	 */
 	@Override
-	public int			availablePermits() throws Exception
+	public int			availablePermits(String uri) throws Exception
 	{
-		return ((SemaphoreCI)this.getConnector()).availablePermits();
+		return ((SemaphoreCI)this.getConnector()).availablePermits(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#hasQueuedThreads()
 	 */
 	@Override
-	public boolean		hasQueuedThreads() throws Exception
+	public boolean		hasQueuedThreads(String uri) throws Exception
 	{
-		return ((SemaphoreCI)this.getConnector()).hasQueuedThreads();
+		return ((SemaphoreCI)this.getConnector()).hasQueuedThreads(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#release()
 	 */
 	@Override
-	public void			release() throws Exception
+	public void			release(String uri) throws Exception
 	{
-		((SemaphoreCI)this.getConnector()).release();
+		((SemaphoreCI)this.getConnector()).release(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#release(int)
 	 */
 	@Override
-	public void			release(int permits) throws Exception
+	public void			release(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.getConnector()).release(permits);
+		((SemaphoreCI)this.getConnector()).release(uri, permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire() throws Exception
+	public void			tryAcquire(String uri) throws Exception
 	{
-		((SemaphoreCI)this.getConnector()).tryAcquire();
+		((SemaphoreCI)this.getConnector()).tryAcquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(int permits) throws Exception
+	public void			tryAcquire(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.getConnector()).tryAcquire(permits);
+		((SemaphoreCI)this.getConnector()).tryAcquire(uri, permits);
 	}
 }

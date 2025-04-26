@@ -1,6 +1,6 @@
 package reseau;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -36,13 +36,13 @@ implements ReseauCI<P>{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<P> getPlaces() throws Exception {
+	public Collection<P> getPlaces() throws Exception {
 		return ((ReseauCI<P>) this.getConnector()).getPlaces();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Transition> getTransitions() throws Exception {
+	public Collection<Transition> getTransitions() throws Exception {
 		return ((ReseauCI<P>) this.getConnector()).getTransitions();
 	}
 
@@ -84,8 +84,22 @@ implements ReseauCI<P>{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception {
-		((ReseauCI<P>) this.getConnector()).linkPlacesTransition(entrees, t, sorties);
+	public void activeTransition(Transition tr) throws Exception {
+		((ReseauCI<P>) this.getConnector()).activeTransition(tr);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+			String updatingJetons) throws Exception {
+		((ReseauCI<P>) this.getConnector()).linkEntreePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void linkSortiePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+			String updatingJetons) throws Exception {
+		((ReseauCI<P>) this.getConnector()).linkSortiePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
 	}
 
 	

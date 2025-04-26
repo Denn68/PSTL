@@ -19,7 +19,7 @@ implements	ReseauPlaceCommuneCI<Transition>{
 		String URI
 		) throws Exception
 	{
-		super(ReseauPlaceCommuneCI.class, owner, URI, null);
+		super(URI, ReseauPlaceCommuneCI.class, owner);
 	}
 
 	public				ReseauPlaceCommuneInboundPort(

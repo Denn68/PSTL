@@ -2,6 +2,9 @@ package reseauPlaceCommune;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import classes.Place;
 import classes.PlaceCommune;
@@ -16,6 +19,7 @@ import interfaces.ReseauPlaceCommuneI;
 import interfaces.ReseauPlaceCommuneCI;
 import interfaces.ReseauCI;
 import reseau.ReseauEndpoint;
+import reseau.ReseauPlugin;
 import semaphore.SemaphoreClientPlugin;
 
 @OfferedInterfaces(offered = { ReseauPlaceCommuneCI.class })
@@ -23,61 +27,58 @@ import semaphore.SemaphoreClientPlugin;
 public class ReseauPlaceCommuneComponent
 extends AbstractComponent
 implements ReseauPlaceCommuneI<Transition>{
-	
-	protected final static String	SEMAPHORE_PLUGIN_AJOUT_A_URI = "semaphore-client-plugin-ajout-a";
-	protected final static String	SEMAPHORE_PLUGIN_RETRAIT_A_URI = "semaphore-client-plugin-retrait-a";
-	protected final static String	SEMAPHORE_PLUGIN_AJOUT_B_URI = "semaphore-client-plugin-ajout-b";
-	protected final static String	SEMAPHORE_PLUGIN_RETRAIT_B_URI = "semaphore-client-plugin-retrait-b";
 
 	protected			ReseauPlaceCommuneComponent(String uri,
-			String semaphorePluginAjout_A_InboundPortURI,
-			String semaphorePluginRetrait_A_InboundPortURI,
-			String semaphorePluginAjout_B_InboundPortURI,
-			String semaphorePluginRetrait_B_InboundPortURI,
+			String semaphoreReflectionInboundPortURI,
+			ArrayList<String> semAvailabilityUriList,
+			ArrayList<String> semJetonUriList,
 			ReseauPlaceCommuneEndpoint endPointServer,
 			ArrayList<ReseauEndpoint> endPointClients) throws Exception
 	{
 		super(1, 0);
 		
         this.uri = uri;
-        this.placesCommunes = new ArrayList<PlaceCommune>();
+        this.placesCommunes = new HashMap<>();
 		endPointServer.initialiseServerSide(this);
 		this.endPointServer = endPointServer;
 		this.endPointClients = endPointClients;
 		
-		this.semaphorePluginAjout_A = new SemaphoreClientPlugin(SEMAPHORE_PLUGIN_AJOUT_A_URI,
-				semaphorePluginAjout_A_InboundPortURI);
-		this.semaphorePluginRetrait_A = new SemaphoreClientPlugin(SEMAPHORE_PLUGIN_RETRAIT_A_URI,
-				semaphorePluginRetrait_A_InboundPortURI);
+		this.updatingAvailability = new HashMap<String, String>();
+		this.updatingJetons = new HashMap<String, String>();
 		
-		this.semaphorePluginAjout_B = new SemaphoreClientPlugin(SEMAPHORE_PLUGIN_AJOUT_B_URI,
-				semaphorePluginAjout_B_InboundPortURI);
-		this.semaphorePluginRetrait_B = new SemaphoreClientPlugin(SEMAPHORE_PLUGIN_RETRAIT_B_URI,
-				semaphorePluginRetrait_B_InboundPortURI);
+		this.semAvailabilityUriList = semAvailabilityUriList;
+		this.semJetonUriList = semJetonUriList;
+		
+		this.semaphoreReflectionInboundPortURI =
+				semaphoreReflectionInboundPortURI;
+		
+		this.semaphorePlugin =
+				new SemaphoreClientPlugin(SEMAPHORE_PLUGIN_URI,
+										  this.semaphoreReflectionInboundPortURI);
+		
 	}
 	
 	private ReseauPlaceCommuneEndpoint endPointServer;
 	private ArrayList<ReseauEndpoint> endPointClients;
-	private ArrayList<PlaceCommune> placesCommunes;
+	private Map<String, PlaceCommune> placesCommunes;
     private String uri;
     private String id;
-    private SemaphoreClientPlugin semaphorePluginAjout_A;
-    private SemaphoreClientPlugin semaphorePluginRetrait_A;
-    private SemaphoreClientPlugin semaphorePluginAjout_B;
-    private SemaphoreClientPlugin semaphorePluginRetrait_B;
+    private SemaphoreClientPlugin semaphorePlugin;
+    private Map<String, String> updatingAvailability;
+    private Map<String, String> updatingJetons;
+    
+    private ArrayList<String> semAvailabilityUriList;
+    private ArrayList<String> semJetonUriList;
+    
+    protected String	semaphoreReflectionInboundPortURI;
+    protected final static String	SEMAPHORE_PLUGIN_URI =
+			"semaphore-client-plugin";
 	
 	@Override
 	public void start() {
 		try {
 			super.start();
-			try {
-				this.installPlugin(semaphorePluginAjout_A);
-				this.installPlugin(semaphorePluginRetrait_A);
-				this.installPlugin(semaphorePluginAjout_B);
-				this.installPlugin(semaphorePluginRetrait_B);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
 		} catch (ComponentStartException e) {
 			e.printStackTrace();
 		}
@@ -91,49 +92,97 @@ implements ReseauPlaceCommuneI<Transition>{
 			}
 		}
 		
+		/*try {
+			this.installPlugin(semaphorePluginAjout_A);
+			this.installPlugin(semaphorePluginRetrait_A);
+			this.installPlugin(semaphorePluginAjout_B);
+			this.installPlugin(semaphorePluginRetrait_B);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}*/
+		
 		String pc1 = "pc1";
     	String pc2 = "pc2";
     	String pc3 = "pc3";
     	String pc4 = "pc4";
-    	
-    	String t1 = "t1";
-    	String t2 = "t2";
-    	String t3 = "t3";
-    	String t4 = "t4";
-    	String t5 = "t5";
-    	String t6 = "t6";
-    	String t7 = "t7";
-    	String t8 = "t8";
-    	String t9 = "t9";
     	
     	PlaceCommune PC1 = new PlaceCommune(pc1);
     	PlaceCommune PC2 = new PlaceCommune(pc2);
     	PlaceCommune PC3 = new PlaceCommune(pc3);
     	PlaceCommune PC4 = new PlaceCommune(pc4);
     	
-    	ReseauEndpoint ep1 = endPointClients.get(0);
-    	ReseauEndpoint ep2 = endPointClients.get(1);
+    	this.placesCommunes.put(pc1, PC1);
+    	this.placesCommunes.put(pc2, PC2);
+    	this.placesCommunes.put(pc3, PC3);
+    	this.placesCommunes.put(pc4, PC4);
     	
-    	try {
-			ep1.getClientSideReference().linkPlacesTransition(null, t1, new ArrayList<>(Arrays.asList(PC1)));
-			ep1.getClientSideReference().linkPlacesTransition(new ArrayList<>(Arrays.asList(PC3)), t2, null);
-			ep1.getClientSideReference().linkPlacesTransition(new ArrayList<>(Arrays.asList(PC4)), t3, null);
-			ep1.getClientSideReference().linkPlacesTransition(null, t4, new ArrayList<>(Arrays.asList(PC4)));
-			
-			ep2.getClientSideReference().linkPlacesTransition(null, t5, new ArrayList<>(Arrays.asList(PC2)));
-			ep2.getClientSideReference().linkPlacesTransition(new ArrayList<>(Arrays.asList(PC2)), t6, new ArrayList<>(Arrays.asList(PC3)));
-			ep2.getClientSideReference().linkPlacesTransition(new ArrayList<>(Arrays.asList(PC4)), t8, null);
-			ep2.getClientSideReference().linkPlacesTransition(null, t9, new ArrayList<>(Arrays.asList(PC4)));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+    	this.updatingAvailability.put(pc1, this.semAvailabilityUriList.get(0));
+    	this.updatingAvailability.put(pc2, this.semAvailabilityUriList.get(1));
+    	this.updatingAvailability.put(pc3, this.semAvailabilityUriList.get(2));
+    	this.updatingAvailability.put(pc4, this.semAvailabilityUriList.get(3));
+    	
+    	this.updatingJetons.put(pc1, this.semJetonUriList.get(0));
+    	this.updatingJetons.put(pc2, this.semJetonUriList.get(1));
+    	this.updatingJetons.put(pc3, this.semJetonUriList.get(2));
+    	this.updatingJetons.put(pc4, this.semJetonUriList.get(3));
 		
 		this.id = URIGenerator.generateURI();
 	}
 	
 	@Override
 	public void execute() throws Exception {
-		this.runTask(new AbstractComponent.AbstractTask() {
+		
+		this.installPlugin(semaphorePlugin);
+
+		System.out.println("Dans ReseauPLaceCommune.java, le plugin " + semaphorePlugin.getPluginURI() + " est installé");
+		
+		String pc1 = "pc1";
+    	String pc2 = "pc2";
+    	String pc3 = "pc3";
+    	String pc4 = "pc4";
+    	
+		try {
+			
+			System.out.println("Connexion en réseau A et réseau PlaceCommune...");
+    		endPointClients.get(0).getClientSideReference()
+    		.linkSortiePlaceCommuneTransition("t1", pc1, this.updatingAvailability.get(pc1), this.updatingJetons.get(pc1));
+    		endPointClients.get(0).getClientSideReference()
+    		.linkEntreePlaceCommuneTransition("t2", pc3, this.updatingAvailability.get(pc3), this.updatingJetons.get(pc3));
+    		endPointClients.get(0).getClientSideReference()
+    		.linkEntreePlaceCommuneTransition("t3", pc4, this.updatingAvailability.get(pc4), this.updatingJetons.get(pc4));
+    		endPointClients.get(0).getClientSideReference()
+    		.linkSortiePlaceCommuneTransition("t4", pc4, this.updatingAvailability.get(pc4), this.updatingJetons.get(pc4));
+    		
+    		
+    		System.out.println("Connexion en réseau B et réseau PlaceCommune...");
+    		endPointClients.get(1).getClientSideReference()
+    		.linkSortiePlaceCommuneTransition("t5", pc2, this.updatingAvailability.get(pc2), this.updatingJetons.get(pc2));
+    		endPointClients.get(1).getClientSideReference()
+    		.linkEntreePlaceCommuneTransition("t6", pc1, this.updatingAvailability.get(pc1), this.updatingJetons.get(pc1));
+    		endPointClients.get(1).getClientSideReference()
+    		.linkEntreePlaceCommuneTransition("t6", pc2, this.updatingAvailability.get(pc2), this.updatingJetons.get(pc2));
+    		endPointClients.get(1).getClientSideReference()
+    		.linkEntreePlaceCommuneTransition("t8", pc4, this.updatingAvailability.get(pc4), this.updatingJetons.get(pc4));
+    		endPointClients.get(1).getClientSideReference()
+    		.linkSortiePlaceCommuneTransition("t9", pc4, this.updatingAvailability.get(pc4), this.updatingJetons.get(pc4));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println("Les semaphores :");
+		System.out.println(this.updatingAvailability);
+		System.out.println(this.updatingJetons);
+		
+
+		
+		/*System.out.println("Reseau A");
+		endPointClients.get(0).getClientSideReference().showReseau();
+		
+		
+		
+		System.out.println("Reseau A");
+		endPointClients.get(1).getClientSideReference().showReseau();*/
+		/*this.runTask(new AbstractComponent.AbstractTask() {
 			
 			@Override
 		    public void run() {
@@ -159,16 +208,17 @@ implements ReseauPlaceCommuneI<Transition>{
 				}
 		    }
 
-		});
+		});*/
 	}
 
 	@Override
 	public int getNbJeton(String uri) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				return p.getNbJeton();
-			}
-        }
+		for (Map.Entry<String, PlaceCommune> entry : this.placesCommunes.entrySet()) {
+		    if (entry.getValue().getUri().equals(uri)) {
+		        return entry.getValue().getNbJeton();
+		    }
+		}
+
 		return 0;
 	}
 
@@ -179,67 +229,69 @@ implements ReseauPlaceCommuneI<Transition>{
 
 	@Override
 	public void setNbJeton(String uri, int nbJeton) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				p.setNbJeton(nbJeton);
+		this.placesCommunes.forEach((key, value) -> {
+			if(value.getUri().equals(uri)) {
+				value.setNbJeton(nbJeton);
 			}
-        }
+        });
 	}
 
 	@Override
 	public ArrayList<Transition> getTransEntrees(String uri) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				return p.getTransEntrees();
-			}
-        }
+		for (Map.Entry<String, PlaceCommune> entry : this.placesCommunes.entrySet()) {
+		    if (entry.getValue().getUri().equals(uri)) {
+		        return entry.getValue().getTransEntrees();
+		    }
+		}
+
 		return null;
 	}
 
 	@Override
 	public void addTransEntree(String uri, Transition entree) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				p.addTransEntree(entree);
+		this.placesCommunes.forEach((key, value) -> {
+			if(value.getUri().equals(uri)) {
+				value.addTransEntree(entree);
 			}
-        }
+        });
 	}
 
 	@Override
 	public void addTransSortie(String uri, Transition sortie) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				p.addTransSortie(sortie);
+		this.placesCommunes.forEach((key, value) -> {
+			if(value.getUri().equals(uri)) {
+				value.addTransSortie(sortie);
 			}
-        }
+        });
 	}
 
 	@Override
 	public ArrayList<Transition> getTransSorties(String uri) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				return p.getTransSorties();
-			}
-        }
+		for (Map.Entry<String, PlaceCommune> entry : this.placesCommunes.entrySet()) {
+		    if (entry.getValue().getUri().equals(uri)) {
+		        return entry.getValue().getTransSorties();
+		    }
+		}
+
 		return null;
 	}
 
 	@Override
 	public void addJeton(String uri) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				p.addJeton();
+		this.placesCommunes.forEach((key, value) -> {
+			if(value.getUri().equals(uri)) {
+				value.addJeton();
 			}
-        }
+        });
 	}
 
 	@Override
 	public void retrieveJeton(String uri) throws Exception {
-		for(PlaceCommune p: this.placesCommunes) {
-			if(p.getUri().equals(uri)) {
-				p.retrieveJeton();
+		this.placesCommunes.forEach((key, value) -> {
+			if(value.getUri().equals(uri)) {
+				value.retrieveJeton();
 			}
-        }
+        });
 	}
 	
 }

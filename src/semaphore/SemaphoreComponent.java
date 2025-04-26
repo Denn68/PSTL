@@ -1,5 +1,8 @@
 package semaphore;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -20,7 +23,7 @@ implements	SemaphoreI
 	// -------------------------------------------------------------------------
 
 	/** The Java semaphore object to which all calls are delegated.			*/
-	protected Semaphore						semaphore;
+	protected Map<String, Semaphore>						semaphoreMap;
 	/** The inbound port exposing the semaphore services.					*/
 	protected SemaphoreServicesInboundPort	ssip;
 
@@ -49,7 +52,7 @@ implements	SemaphoreI
 		super(0, 0);
 
 		assert	permits > 0 : new PreconditionException("permits > 0");
-		this.init(permits);
+		//this.init(permits);
 	}
 
 	/**
@@ -69,13 +72,16 @@ implements	SemaphoreI
 	 */
 	protected			SemaphoreComponent(
 		String reflectionInboundPortURI,
-		int permits
+		ArrayList<String> semAvailabilityUriList,
+		ArrayList<String> semJetonUriList
 		) throws Exception
 	{
 		super(reflectionInboundPortURI, 0, 0);
+		
+		this.semaphoreMap = new HashMap<String, Semaphore>();
 
-		assert	permits > 0 : new PreconditionException("permits > 0");
-		this.init(permits);
+		//assert	permits > 0 : new PreconditionException("permits > 0");
+		this.init(/*permits*/semAvailabilityUriList, semJetonUriList);
 	}
 
 	/**
@@ -91,9 +97,17 @@ implements	SemaphoreI
 	 * @param permits		number of permits in the semaphore.
 	 * @throws Exception	<i>to do</i>.
 	 */
-	protected void		init(int permits) throws Exception
+	protected void		init(/*int permits*/
+							ArrayList<String> semAvailabilityUriList,
+							ArrayList<String> semJetonUriList) throws Exception
 	{
-		this.semaphore = new Semaphore(permits);
+		for (String sem : semAvailabilityUriList) {
+			this.semaphoreMap.put(sem, new Semaphore(0));
+		}
+		for (String sem : semJetonUriList) {
+			this.semaphoreMap.put(sem, new Semaphore(1));
+		}
+		
 		this.ssip = new SemaphoreServicesInboundPort(this);
 		this.ssip.publishPort();
 	}
@@ -126,71 +140,71 @@ implements	SemaphoreI
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#acquire()
 	 */
 	@Override
-	public void			acquire() throws Exception
+	public void			acquire(String uri) throws Exception
 	{
-		this.semaphore.acquire();
+		this.semaphoreMap.get(uri).acquire();
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#acquire(int)
 	 */
 	@Override
-	public void			acquire(int permits) throws Exception
+	public void			acquire(String uri, int permits) throws Exception
 	{
-		this.semaphore.acquire(permits);
+		this.semaphoreMap.get(uri).acquire(permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#availablePermits()
 	 */
 	@Override
-	public int			availablePermits() throws Exception
+	public int			availablePermits(String uri) throws Exception
 	{
-		return this.semaphore.availablePermits();
+		return this.semaphoreMap.get(uri).availablePermits();
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#hasQueuedThreads()
 	 */
 	@Override
-	public boolean		hasQueuedThreads() throws Exception
+	public boolean		hasQueuedThreads(String uri) throws Exception
 	{
-		return this.semaphore.hasQueuedThreads();
+		return this.semaphoreMap.get(uri).hasQueuedThreads();
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#release()
 	 */
 	@Override
-	public void			release() throws Exception
+	public void			release(String uri) throws Exception
 	{
-		this.semaphore.release();
+		this.semaphoreMap.get(uri).release();
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#release(int)
 	 */
 	@Override
-	public void			release(int permits) throws Exception
+	public void			release(String uri, int permits) throws Exception
 	{
-		this.semaphore.release(permits);
+		this.semaphoreMap.get(uri).release(permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire() throws Exception
+	public void			tryAcquire(String uri) throws Exception
 	{
-		this.semaphore.tryAcquire();
+		this.semaphoreMap.get(uri).tryAcquire();
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(int permits) throws Exception
+	public void			tryAcquire(String uri, int permits) throws Exception
 	{
-		this.semaphore.tryAcquire(permits);
+		this.semaphoreMap.get(uri).tryAcquire(permits);
 	}
 }

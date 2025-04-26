@@ -2,34 +2,45 @@ package reseau;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.util.Set;
 import java.util.function.Function;
 
 import classes.Place;
 import classes.Transition;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.exceptions.ConnectionException;
+import interfaces.ReseauCI;
+import interfaces.ReseauI;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 
+@OfferedInterfaces(offered = { ReseauCI.class})
+@RequiredInterfaces(required = { ReseauCI.class})
 public class ReseauAComponent<T, P>
-extends ReseauComponent<T, P>{
+extends ReseauComponent<T, P>
+implements ReseauI<P>{
 	
 	public static final String		RESEAU_A_PLUGIN_URI = "reseau-a-plugin-uri";
 	private String uri;
 	
 	@SuppressWarnings("unchecked")
 	protected			ReseauAComponent(String uri,
-			String semaphorePluginAjoutInboundPortURI,
-			String semaphorePluginRetraitInboundPortURI,
+			String reflectionInboundPortURI,
+			//String semaphorePluginAjoutInboundPortURI,
+			//String semaphorePluginRetraitInboundPortURI,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
 		
 		super(uri,
+				reflectionInboundPortURI,
 				RESEAU_A_PLUGIN_URI,
-				semaphorePluginAjoutInboundPortURI,
-				semaphorePluginRetraitInboundPortURI,
+				//semaphorePluginAjoutInboundPortURI,
+				//semaphorePluginRetraitInboundPortURI,
 				endPointServer,
 				endPointClient);
-		
-		System.out.println(endPointClient.getClass());
 		
 		this.uri = uri;
 		
@@ -58,12 +69,12 @@ extends ReseauComponent<T, P>{
     	Transition T3 = new Transition(t3, (Function) fonction);
     	Transition T4 = new Transition(t4, (Function) fonction);
     	
-    	T1.addPlacesEntree(new ArrayList<>(Arrays.asList(P1)));
-    	T2.addPlacesSortie(new ArrayList<>(Arrays.asList(P2)));
-    	T3.addPlacesEntree(new ArrayList<>(Arrays.asList(P2)));
-    	T3.addPlacesSortie(new ArrayList<>(Arrays.asList(P3)));
-    	T4.addPlacesEntree(new ArrayList<>(Arrays.asList(P3)));
-    	T4.addPlacesSortie(new ArrayList<>(Arrays.asList(P4)));
+    	T1.addPlaceEntree(P1);
+    	T2.addPlaceSortie(P2);
+    	T3.addPlaceEntree(P2);
+    	T3.addPlaceSortie(P3);
+    	T4.addPlaceEntree(P3);
+    	T4.addPlaceSortie(P4);
 	
 	
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addPlace((P) P1);
@@ -77,6 +88,5 @@ extends ReseauComponent<T, P>{
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T4);
 		
 	}
-
 	
 }

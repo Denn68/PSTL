@@ -186,64 +186,64 @@ implements	SemaphoreI
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#acquire()
 	 */
 	@Override
-	public void			acquire() throws Exception {
-		this.ssop.acquire();
+	public void			acquire(String uri) throws Exception {
+		this.ssop.acquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#acquire(int)
 	 */
 	@Override
-	public void			acquire(int permits) throws Exception {
-		this.ssop.acquire(permits);
+	public void			acquire(String uri, int permits) throws Exception {
+		this.ssop.acquire(uri, permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#availablePermits()
 	 */
 	@Override
-	public int			availablePermits() throws Exception {
-		return this.ssop.availablePermits();
+	public int			availablePermits(String uri) throws Exception {
+		return this.ssop.availablePermits(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#hasQueuedThreads()
 	 */
 	@Override
-	public boolean		hasQueuedThreads() throws Exception {
-		return this.ssop.hasQueuedThreads();
+	public boolean		hasQueuedThreads(String uri) throws Exception {
+		return this.ssop.hasQueuedThreads(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#release()
 	 */
 	@Override
-	public void			release() throws Exception {
-		this.ssop.release();
+	public void			release(String uri) throws Exception {
+		this.ssop.release(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#release(int)
 	 */
 	@Override
-	public void			release(int permits) throws Exception {
-		this.ssop.release(permits);
+	public void			release(String uri, int permits) throws Exception {
+		this.ssop.release(uri, permits);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire() throws Exception {
-		this.ssop.tryAcquire();
+	public void			tryAcquire(String uri) throws Exception {
+		this.ssop.tryAcquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(int permits) throws Exception {
-		this.ssop.tryAcquire(permits);
+	public void			tryAcquire(String uri, int permits) throws Exception {
+		this.ssop.tryAcquire(uri, permits);
 	}
 }
 // -----------------------------------------------------------------------------

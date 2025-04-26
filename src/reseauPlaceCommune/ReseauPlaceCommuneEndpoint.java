@@ -32,7 +32,7 @@ extends BCMEndPoint<ReseauPlaceCommuneCI>{
 						"inboundPortURI != null && !inboundPortURI.isEmpty()");
 
 		ReseauPlaceCommuneInboundPort p =
-				new ReseauPlaceCommuneInboundPort(c, this.inboundPortURI);
+				new ReseauPlaceCommuneInboundPort(c, inboundPortURI);
 		p.publishPort();
 
 		// Postconditions checking
@@ -67,7 +67,7 @@ extends BCMEndPoint<ReseauPlaceCommuneCI>{
 				p.publishPort();
 				c.doPortConnection(
 						p.getPortURI(),
-						this.inboundPortURI,
+						inboundPortURI,
 						ReseauPlaceCommuneConnector.class.getCanonicalName());
 
 				// Postconditions checking

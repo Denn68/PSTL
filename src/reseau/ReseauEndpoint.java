@@ -14,14 +14,16 @@ import interfaces.ReseauCI;
 public class ReseauEndpoint
 extends BCMEndPoint<ReseauCI>{
 
-	public ReseauEndpoint() {
+	public ReseauEndpoint(String pluginURI) {
 		super(ReseauCI.class, ReseauCI.class);
+		this.pluginURI = pluginURI;
 	}
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String pluginURI;
 
 	@Override
 	protected AbstractInboundPort makeInboundPort(AbstractComponent c, String inboundPortURI) throws Exception {
@@ -30,9 +32,9 @@ extends BCMEndPoint<ReseauCI>{
 		assert	inboundPortURI != null && !inboundPortURI.isEmpty() :
 				new PreconditionException(
 						"inboundPortURI != null && !inboundPortURI.isEmpty()");
-
+		
 		ReseauInboundPortForPlugin p =
-				new ReseauInboundPortForPlugin(c, this.inboundPortURI);
+				new ReseauInboundPortForPlugin(this.inboundPortURI, c, this.pluginURI);
 		p.publishPort();
 
 		// Postconditions checking
@@ -68,7 +70,7 @@ extends BCMEndPoint<ReseauCI>{
 				c.doPortConnection(
 						p.getPortURI(),
 						this.inboundPortURI,
-						ReseauOutboundPort.class.getCanonicalName());
+						ReseauConnector.class.getCanonicalName());
 
 				// Postconditions checking
 				assert	p != null && p.isPublished() && p.connected() :

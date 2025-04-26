@@ -6,25 +6,35 @@ import java.util.function.Function;
 
 import classes.Place;
 import classes.Transition;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
+import interfaces.ReseauCI;
+import interfaces.ReseauI;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 
+@OfferedInterfaces(offered = { ReseauCI.class})
+@RequiredInterfaces(required = { ReseauCI.class})
 public class ReseauBComponent<T, P>
-extends ReseauComponent<T, P>{
+extends ReseauComponent<T, P>
+implements ReseauI<P>{
 	
 	public static final String		RESEAU_B_PLUGIN_URI = "reseau-b-plugin-uri";
 	private String uri;
 
 	@SuppressWarnings("unchecked")
 	protected			ReseauBComponent(String uri,
-			String semaphorePluginAjoutInboundPortURI,
-			String semaphorePluginRetraitInboundPortURI,
+			String reflectionInboundPortURI,
+			//String semaphorePluginAjoutInboundPortURI,
+			//String semaphorePluginRetraitInboundPortURI,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
+		
 		super(uri,
+				reflectionInboundPortURI,
 				RESEAU_B_PLUGIN_URI,
-				semaphorePluginAjoutInboundPortURI,
-				semaphorePluginRetraitInboundPortURI,
+				//semaphorePluginAjoutInboundPortURI,
+				//semaphorePluginRetraitInboundPortURI,
 				endPointServer,
 				endPointClient);
 		
@@ -59,14 +69,14 @@ extends ReseauComponent<T, P>{
     	Transition T8 = new Transition(t8, (Function) fonction);
     	Transition T9 = new Transition(t9, (Function) fonction);
     	
-    	T5.addPlacesEntree(new ArrayList<>(Arrays.asList(P5)));
-    	T6.addPlacesSortie(new ArrayList<>(Arrays.asList(P6)));
-    	T7.addPlacesEntree(new ArrayList<>(Arrays.asList(P6)));
-    	T7.addPlacesSortie(new ArrayList<>(Arrays.asList(P7)));
-    	T8.addPlacesEntree(new ArrayList<>(Arrays.asList(P7)));
-    	T8.addPlacesSortie(new ArrayList<>(Arrays.asList(P8)));
-    	T9.addPlacesEntree(new ArrayList<>(Arrays.asList(P8)));
-    	T9.addPlacesSortie(new ArrayList<>(Arrays.asList(P9)));
+    	T5.addPlaceEntree(P5);
+    	T6.addPlaceSortie(P6);
+    	T7.addPlaceEntree(P6);
+    	T7.addPlaceSortie(P7);
+    	T8.addPlaceEntree(P7);
+    	T8.addPlaceSortie(P8);
+    	T9.addPlaceEntree(P8);
+    	T9.addPlaceSortie(P9);
 
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P5);
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P6);
@@ -80,6 +90,4 @@ extends ReseauComponent<T, P>{
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T8);
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T9);
 	}
-
-	
 }

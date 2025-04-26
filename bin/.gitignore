@@ -1,6 +1,7 @@
-/placeCommune/
+/classes/
+/reseau/
+/backend/
+/interfaces/
 /reseauPlaceCommune/
 /test/
-/reseau/
-/interfaces/
-/classes/
+/semaphore/

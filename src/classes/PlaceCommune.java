@@ -27,7 +27,7 @@ public class PlaceCommune extends Thread implements PlaceI<Transition> {
         try {
         	if(this.nbJeton == 0) {
         		for(Transition t : this.transSorties) {
-        			t.updateIsActivable(this);
+        			t.updateIsActivable(this.getUri());
         		}
         	}
             while (true) {
@@ -35,7 +35,7 @@ public class PlaceCommune extends Thread implements PlaceI<Transition> {
                 System.out.println("Mise à jour des possibilités de transitions: " + uri);
 
                 for(Transition t: this.transSorties) {
-                	t.updateIsActivable(this);
+                	t.updateIsActivable(this.getUri());
                 }
             }
         } catch (InterruptedException e) {

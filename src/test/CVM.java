@@ -14,13 +14,17 @@ import reseau.ReseauEndpoint;
 
 public class CVM
 extends		AbstractCVM {
-	public final static String	RESEAU_COMPONENT_RIBP_URI = "reseau-ibp-uri";
+	public final static String	RESEAU_COMPONENT_A_RIBP_URI = "reseau-a-ibp-uri";
+	public final static String	RESEAU_COMPONENT_B_RIBP_URI = "reseau-b-ibp-uri";
 	public final static String	PLACE_COMMUNE_COMPONENT_RIBP_URI = "place-commune-ibp-uri";
 	
-	protected final static String	SEMAPHORE_AJOUT_A_URI = "semaphore-client-ajout-a";
-	protected final static String	SEMAPHORE_RETRAIT_A_URI = "semaphore-client-retrait-a";
-	protected final static String	SEMAPHORE_AJOUT_B_URI = "semaphore-client-ajout-b";
-	protected final static String	SEMAPHORE_RETRAIT_B_URI = "semaphore-client-retrait-b";
+	public static final String		RESEAU_A_PLUGIN_URI = "reseau-a-plugin-uri";
+	public static final String		RESEAU_B_PLUGIN_URI = "reseau-b-plugin-uri";
+	
+	protected final static String	SEMAPHORE_AVAILABILITY_URI = "semaphore-availability"; // availibility
+	protected final static String	SEMAPHORE_JETON_URI = "semaphore-jeton"; // jeton
+	
+	protected final static String	SEMC_URI = "semaphore-inboundPort"; // reflection inbound port URI
 
 	public				CVM() throws Exception
 	{
@@ -31,39 +35,47 @@ extends		AbstractCVM {
 	public void			deploy() throws Exception
 	{
 		ReseauPlaceCommuneEndpoint pc_ep = new ReseauPlaceCommuneEndpoint();
-		ReseauEndpoint r_epA = new ReseauEndpoint();
-		ReseauEndpoint r_epB = new ReseauEndpoint();
+		ReseauEndpoint r_epA = new ReseauEndpoint(RESEAU_A_PLUGIN_URI);
+		ReseauEndpoint r_epB = new ReseauEndpoint(RESEAU_B_PLUGIN_URI);
+		
+		ArrayList<String> semAvailabilityUriList = new ArrayList<String>();
+		ArrayList<String> semJetonUriList = new ArrayList<String>();
+		
+		for(int i = 1 ; i < 5 ;i++) {
+			String sem = SEMAPHORE_AVAILABILITY_URI + "-" + i;
+			semAvailabilityUriList.add(sem);
+			sem = SEMAPHORE_JETON_URI + "-" + i;
+			semJetonUriList.add(sem);
+		}
 		
 		AbstractComponent.createComponent(
 				SemaphoreComponent.class.getCanonicalName(),
-				new Object[]{SEMAPHORE_AJOUT_A_URI,	// imposed reflection inbound port URI
-							 1			// number of permits of the semaphore
+				new Object[]{SEMC_URI, // imposed reflection inbound port URI
+							 semAvailabilityUriList,	
+							 semJetonUriList
 							});
 		
 		AbstractComponent.createComponent(
-				SemaphoreComponent.class.getCanonicalName(),
-				new Object[]{SEMAPHORE_RETRAIT_A_URI,	// imposed reflection inbound port URI
-							 1			// number of permits of the semaphore
-							});
-		
-		AbstractComponent.createComponent(
-				SemaphoreComponent.class.getCanonicalName(),
-				new Object[]{SEMAPHORE_AJOUT_B_URI,	// imposed reflection inbound port URI
-							 1			// number of permits of the semaphore
-							});
-		
-		AbstractComponent.createComponent(
-				SemaphoreComponent.class.getCanonicalName(),
-				new Object[]{SEMAPHORE_RETRAIT_B_URI,	// imposed reflection inbound port URI
-							 1			// number of permits of the semaphore
-							});
+				ReseauPlaceCommuneComponent.class.getCanonicalName(),
+				new Object[]{
+						"RPC",
+						SEMC_URI,
+						semAvailabilityUriList,	
+						semJetonUriList,
+						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
+						new ArrayList<>(Arrays.asList(
+								((ReseauEndpoint) r_epA.copyWithSharable()),
+								((ReseauEndpoint) r_epB.copyWithSharable())
+						))
+				});
 		
 		AbstractComponent.createComponent(
 				ReseauAComponent.class.getCanonicalName(),
 				new Object[]{
 						"R_A",
-						SEMAPHORE_AJOUT_A_URI,
-						SEMAPHORE_RETRAIT_A_URI,
+						RESEAU_COMPONENT_A_RIBP_URI,
+						//SEMAPHORE_AJOUT_A_URI,
+						//SEMAPHORE_RETRAIT_A_URI,
 						((ReseauEndpoint) r_epA.copyWithSharable()),
 						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
 				});
@@ -72,26 +84,13 @@ extends		AbstractCVM {
 				ReseauBComponent.class.getCanonicalName(),
 				new Object[]{
 						"R_B",
-						SEMAPHORE_AJOUT_B_URI,
-						SEMAPHORE_RETRAIT_B_URI,
+						RESEAU_COMPONENT_B_RIBP_URI,
+						//SEMAPHORE_AJOUT_B_URI,
+						//SEMAPHORE_RETRAIT_B_URI,
 						((ReseauEndpoint) r_epB.copyWithSharable()),
 						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
 				});
 		
-	
-		AbstractComponent.createComponent(
-				ReseauPlaceCommuneComponent.class.getCanonicalName(),
-				new Object[]{
-						"RPC",
-						SEMAPHORE_AJOUT_A_URI,
-						SEMAPHORE_RETRAIT_A_URI,
-						SEMAPHORE_AJOUT_B_URI,
-						SEMAPHORE_RETRAIT_B_URI,
-						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
-						new ArrayList<>(Arrays.asList(
-								((ReseauEndpoint) r_epA.copyWithSharable()),
-								((ReseauEndpoint) r_epB.copyWithSharable())))
-				});
 
 		super.deploy();
 	}
@@ -104,7 +103,7 @@ extends		AbstractCVM {
 			Thread.sleep(1000L);
 			System.exit(0);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+            e.printStackTrace();
 		}
 	}
 }

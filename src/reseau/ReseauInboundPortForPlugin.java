@@ -1,6 +1,7 @@
 package reseau;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -9,6 +10,7 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.ReseauCI;
+import interfaces.ReseauI;
 
 public class ReseauInboundPortForPlugin<P>
 extends		AbstractInboundPort
@@ -21,6 +23,11 @@ implements	ReseauCI<P>{
 		) throws Exception
 	{
 		super(ReseauCI.class, owner, pluginURI, null);
+		
+		if (!(owner instanceof ReseauI)) {
+	        throw new Exception("Le composant " + owner.getClass().getName() +
+	                            " doit implémenter ReseauI.");
+	    }
 
 		assert	owner.isInstalled(pluginURI);
 	}
@@ -32,6 +39,11 @@ implements	ReseauCI<P>{
 		) throws Exception
 	{
 		super(uri, ReseauCI.class, owner, pluginURI, null);
+		
+		if (!(owner instanceof ReseauI)) {
+	        throw new Exception("Le composant " + owner.getClass().getName() +
+	                            " doit implémenter ReseauI.");
+	    }
 
 		assert	owner.isInstalled(pluginURI);
 	}
@@ -43,31 +55,31 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public String call() throws Exception {
-					return ((ReseauPlugin<P>) this.getServiceProviderReference()).getUri();
+					return ((ReseauI<P>) this.getServiceProviderReference()).getUri();
 				}
 			});
 	}
 
 	@Override
-	public ArrayList<P> getPlaces() throws Exception {
+	public Collection<P> getPlaces() throws Exception {
 		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<ArrayList<P>>(this.getPluginURI()) {
+			new AbstractComponent.AbstractService<Collection<P>>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
-				public ArrayList<P> call() throws Exception {
-					return ((ReseauPlugin<P>) this.getServiceProviderReference()).getPlaces();
+				public Collection<P> call() throws Exception {
+					return ((ReseauI<P>) this.getServiceProviderReference()).getPlaces();
 				}
 			});
 	}
 
 	@Override
-	public ArrayList<Transition> getTransitions() throws Exception {
+	public Collection<Transition> getTransitions() throws Exception {
 		return this.getOwner().handleRequest(
-			new AbstractComponent.AbstractService<ArrayList<Transition>>(this.getPluginURI()) {
+			new AbstractComponent.AbstractService<Collection<Transition>>(this.getPluginURI()) {
 				@SuppressWarnings("unchecked")
 				@Override
-				public ArrayList<Transition> call() throws Exception {
-					return ((ReseauPlugin<P>) this.getServiceProviderReference()).getTransitions();
+				public Collection<Transition> call() throws Exception {
+					return ((ReseauI<P>) this.getServiceProviderReference()).getTransitions();
 				}
 			});
 	}
@@ -79,7 +91,7 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<P>) this.getServiceProviderReference()).addPlace(place);
+					((ReseauI<P>) this.getServiceProviderReference()).addPlace(place);
 					return null;
 				}
 			});
@@ -93,7 +105,7 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<P>) this.getServiceProviderReference()).addTransition(transition);
+					((ReseauI<P>) this.getServiceProviderReference()).addTransition(transition);
 					return null;
 				}
 			});
@@ -106,7 +118,7 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Set<Transition> call() throws Exception {
-					return ((ReseauPlugin<P>) this.getServiceProviderReference()).update();
+					return ((ReseauI<P>) this.getServiceProviderReference()).update();
 				}
 			});
 	}
@@ -118,7 +130,7 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<P>) this.getServiceProviderReference()).showReseau();
+					((ReseauI<P>) this.getServiceProviderReference()).showReseau();
 					return null;
 				}
 			});
@@ -131,7 +143,7 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<P>) this.getServiceProviderReference()).randomTransition();
+					((ReseauI<P>) this.getServiceProviderReference()).randomTransition();
 					return null;
 				}
 			});
@@ -144,20 +156,58 @@ implements	ReseauCI<P>{
 				@SuppressWarnings("unchecked")
 				@Override
 				public Void call() throws Exception {
-					((ReseauPlugin<P>) this.getServiceProviderReference()).manualTransition(scanner);
+					((ReseauI<P>) this.getServiceProviderReference()).manualTransition(scanner);
 					return null;
 				}
 			});
 	}
 
 	@Override
-	public void linkPlacesTransition(ArrayList<P> entrees, String t, ArrayList<P> sorties) throws Exception {
+	public void activeTransition(Transition tr) throws Exception {
 		this.getOwner().handleRequest(
 				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
 					@SuppressWarnings("unchecked")
 					@Override
 					public Void call() throws Exception {
-						((ReseauPlugin<P>) this.getServiceProviderReference()).linkPlacesTransition(entrees, t, sorties);
+						((ReseauI<P>) this.getServiceProviderReference()).activeTransition(tr);
+						return null;
+					}
+				});
+	}
+
+	@Override
+	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+			String updatingJetons) throws Exception {
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@SuppressWarnings("unchecked")
+					@Override
+					public Void call() throws Exception {
+						((ReseauI<P>) this.getServiceProviderReference())
+						.linkEntreePlaceCommuneTransition(
+								transition,
+								placeCommune,
+								updatingAvailability,
+								updatingJetons);
+						return null;
+					}
+				});
+	}
+
+	@Override
+	public void linkSortiePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+			String updatingJetons) throws Exception {
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@SuppressWarnings("unchecked")
+					@Override
+					public Void call() throws Exception {
+						((ReseauI<P>) this.getServiceProviderReference())
+						.linkSortiePlaceCommuneTransition(
+								transition,
+								placeCommune,
+								updatingAvailability,
+								updatingJetons);
 						return null;
 					}
 				});
