@@ -58,6 +58,8 @@ implements ReseauI<P>{
     	Place P8 = new Place(p8);
     	Place P9 = new Place(p9);
     	
+    	P5.addJeton();
+    	
     	Function<String, String> fonction = input -> {
     	    System.out.println("Fonction activable de la transition: " + input);
     	    return "Transition activée: " + input;

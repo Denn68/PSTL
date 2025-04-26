@@ -63,6 +63,7 @@ implements ReseauI<P>{
 	
 	@Override
 	public void start() {
+		System.out.println("Start de " + this.pluginURI);
 		try {
 			super.start();
 		} catch (ComponentStartException e) {
@@ -81,8 +82,18 @@ implements ReseauI<P>{
 	}
 	
 	@Override
+	public void execute() throws Exception {
+		super.execute();
+		System.out.println("Execute de " + this.pluginURI);
+	}
+	
+	
+	@Override
 	public void finalise() throws Exception {
-	    StringBuilder sb = new StringBuilder();
+		
+		System.out.println("Finalise de " + this.pluginURI);
+		
+		StringBuilder sb = new StringBuilder();
 	    sb.append("------- DEBUT -------\n");
 
 	    for (P p : this.getPlaces()) {
@@ -160,26 +171,16 @@ implements ReseauI<P>{
 	    }
 
 	    System.out.println(sb.toString());
-
 		
-		/*System.out.println(pluginURI + this.getTransitions());
-		System.out.println(pluginURI + this.getPlaces());*/
-		/*this.runTask(new AbstractComponent.AbstractTask() {
-			
-			@SuppressWarnings("unchecked")
-			@Override
-		    public void run() {
-		    	System.out.println("------- DEBUT -------");
-		    	try {
-		    		((ReseauPlugin<P>) ((ReseauComponent<T, P>) this.getTaskOwner()).getPlugin(pluginURI)).showReseau();
-					((ReseauPlugin<P>) ((ReseauComponent<T, P>) this.getTaskOwner()).getPlugin(pluginURI)).randomTransition();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		    }
-
-		});*/
+		System.out.println("------- DEBUT -------");
+    	try {
+    		showReseau();
+			randomTransition();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
 	
 	
 
@@ -245,6 +246,13 @@ implements ReseauI<P>{
 			String updatingJetons) throws Exception {
 		((ReseauPlugin<P>) this.getPlugin(this.pluginURI))
 		.linkSortiePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
+	}
+
+	@Override
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+			throws Exception {
+		((ReseauPlugin<P>) this.getPlugin(this.pluginURI))
+		.updateTransitionsActivable(uri, transSorties, transitionsState);
 	}
 
 }

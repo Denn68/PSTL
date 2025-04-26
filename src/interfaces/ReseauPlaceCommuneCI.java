@@ -27,6 +27,18 @@ ReseauPlaceCommuneI<T>{
     public void addJeton(String uri) throws Exception;
     
     public void retrieveJeton(String uri) throws Exception;
+    
+    public void acquireJeton(String placeCommune) throws Exception;
+
+	public boolean tryAcquireJeton(String placeCommune) throws Exception;
+
+	public void releaseJeton(String placeCommune) throws Exception;
+	
+	public void acquireAvailability() throws Exception;
+
+	public boolean tryAcquireAvailability() throws Exception;
+	
+	public void releaseAvailability() throws Exception;
 }
 
 

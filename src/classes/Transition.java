@@ -44,9 +44,9 @@ public class Transition{
         return uri;
     }
     
-    public void updateIsActivable(String place) {
-    	boolean currentPlaceState = this.activable.get(place); 
-    	this.activable.put(place, !currentPlaceState);
+    public void updateIsActivable(String place, boolean state) {
+    	this.activable.put(place, state);
+    	System.out.println(this.activable);
     }
     
     public boolean isActivable() {
@@ -98,7 +98,7 @@ public class Transition{
     
     public void addPlaceCommuneEntree(String entree, String updatingAvailability, String updatingJetons) {    
 		this.placeCommuneEntrees.add(entree);
-		this.activable.put(entree, true);
+		this.activable.put(entree, false);
         this.updatingAvailability.put(entree, updatingAvailability);
         this.updatingJetons.put(entree, updatingJetons);
     }

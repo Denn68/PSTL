@@ -99,4 +99,44 @@ implements	ReseauPlaceCommuneCI<Transition>{
 				owner -> {((ReseauPlaceCommuneI) owner).retrieveJeton(uri);
 				return null;});
 	}
+
+	@Override
+	public void acquireJeton(String placeCommune) throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).acquireJeton(placeCommune);
+				return null;});
+	}
+
+	@Override
+	public boolean tryAcquireJeton(String placeCommune) throws Exception {
+		return this.getOwner().handleRequest(
+				owner -> ((ReseauPlaceCommuneI) owner).tryAcquireJeton(placeCommune));
+	}
+
+	@Override
+	public void releaseJeton(String placeCommune) throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).releaseJeton(placeCommune);
+				return null;});
+	}
+
+	@Override
+	public void acquireAvailability() throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).acquireAvailability();
+				return null;});
+	}
+
+	@Override
+	public boolean tryAcquireAvailability() throws Exception {
+		return this.getOwner().handleRequest(
+				owner -> ((ReseauPlaceCommuneI) owner).tryAcquireAvailability());
+	}
+
+	@Override
+	public void releaseAvailability() throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).releaseAvailability();
+				return null;});
+	}
 }

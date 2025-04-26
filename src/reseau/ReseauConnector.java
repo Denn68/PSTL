@@ -87,5 +87,12 @@ implements ReseauCI<P>{
 		((ReseauCI<P>)this.offering).linkSortiePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+			throws Exception {
+		((ReseauCI<P>)this.offering).updateTransitionsActivable(uri, transSorties, transitionsState);
+	}
+
 	
 }

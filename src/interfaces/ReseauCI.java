@@ -1,5 +1,6 @@
 package interfaces;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.Set;
@@ -46,5 +47,10 @@ ReseauI<P>{
     		String placeCommune,
     		String updatingAvailability,
     		String updatingJetons) throws Exception;
+
+	public void updateTransitionsActivable(
+			String uri,
+			ArrayList<String> transSorties,
+			boolean transitionsState) throws Exception;
     
 }

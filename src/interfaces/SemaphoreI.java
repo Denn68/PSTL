@@ -7,6 +7,6 @@ public interface SemaphoreI {
 	public boolean		hasQueuedThreads(String uri) throws Exception;
 	public void			release(String uri) throws Exception;
 	public void			release(String uri, int permits) throws Exception;
-	public void			tryAcquire(String uri) throws Exception;
-	public void			tryAcquire(String uri, int permits) throws Exception;
+	public boolean			tryAcquire(String uri) throws Exception;
+	public boolean			tryAcquire(String uri, int permits) throws Exception;
 }

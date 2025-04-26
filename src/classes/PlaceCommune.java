@@ -2,13 +2,15 @@ package classes;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
+
+import interfaces.PlaceCommuneI;
 import interfaces.PlaceI;
 
-public class PlaceCommune extends Thread implements PlaceI<Transition> {
+public class PlaceCommune extends Thread implements PlaceCommuneI<String> {
     private int nbJeton;
     private String uri;
-    private ArrayList<Transition> transEntrees;
-    private ArrayList<Transition> transSorties;
+    private ArrayList<String> transEntrees;
+    private ArrayList<String> transSorties;
     private Semaphore updatingAvailability;
     private Semaphore updatingJetons;
     //private volatile boolean running = true;
@@ -22,7 +24,7 @@ public class PlaceCommune extends Thread implements PlaceI<Transition> {
         this.updatingJetons = new Semaphore(1);
     }
 
-    @Override
+    /*@Override
     public void run() {
         try {
         	if(this.nbJeton == 0) {
@@ -42,7 +44,7 @@ public class PlaceCommune extends Thread implements PlaceI<Transition> {
             Thread.currentThread().interrupt();
         }
         System.out.println("Thread stoppé proprement : " + uri);
-    }
+    }*/
 
     @Override
     public int getNbJeton() {
@@ -60,22 +62,22 @@ public class PlaceCommune extends Thread implements PlaceI<Transition> {
     }
 
     @Override
-    public ArrayList<Transition> getTransEntrees() {
+    public ArrayList<String> getTransEntrees() {
         return transEntrees;
     }
 
     @Override
-    public void addTransEntree(Transition entree) {
+    public void addTransEntree(String entree) {
         transEntrees.add(entree);
     }
 
     @Override
-    public ArrayList<Transition> getTransSorties() {
+    public ArrayList<String> getTransSorties() {
         return transSorties;
     }
 
     @Override
-    public void addTransSortie(Transition sortie) {
+    public void addTransSortie(String sortie) {
         transSorties.add(sortie);
     }
     
@@ -96,4 +98,5 @@ public class PlaceCommune extends Thread implements PlaceI<Transition> {
     	System.out.printf("Retrieve dans %s\n", uri);
     	this.nbJeton--;
     }
+
 }

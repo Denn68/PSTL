@@ -72,7 +72,7 @@ implements	SemaphoreI
 	 */
 	protected			SemaphoreComponent(
 		String reflectionInboundPortURI,
-		ArrayList<String> semAvailabilityUriList,
+		String semAvailabilityUri,
 		ArrayList<String> semJetonUriList
 		) throws Exception
 	{
@@ -81,7 +81,7 @@ implements	SemaphoreI
 		this.semaphoreMap = new HashMap<String, Semaphore>();
 
 		//assert	permits > 0 : new PreconditionException("permits > 0");
-		this.init(/*permits*/semAvailabilityUriList, semJetonUriList);
+		this.init(/*permits*/semAvailabilityUri, semJetonUriList);
 	}
 
 	/**
@@ -98,12 +98,10 @@ implements	SemaphoreI
 	 * @throws Exception	<i>to do</i>.
 	 */
 	protected void		init(/*int permits*/
-							ArrayList<String> semAvailabilityUriList,
+							String semAvailabilityUri,
 							ArrayList<String> semJetonUriList) throws Exception
 	{
-		for (String sem : semAvailabilityUriList) {
-			this.semaphoreMap.put(sem, new Semaphore(0));
-		}
+		this.semaphoreMap.put(semAvailabilityUri, new Semaphore(0));
 		for (String sem : semJetonUriList) {
 			this.semaphoreMap.put(sem, new Semaphore(1));
 		}
@@ -194,17 +192,17 @@ implements	SemaphoreI
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire(String uri) throws Exception
+	public boolean			tryAcquire(String uri) throws Exception
 	{
-		this.semaphoreMap.get(uri).tryAcquire();
+		return this.semaphoreMap.get(uri).tryAcquire();
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(String uri, int permits) throws Exception
+	public boolean			tryAcquire(String uri, int permits) throws Exception
 	{
-		this.semaphoreMap.get(uri).tryAcquire(permits);
+		return this.semaphoreMap.get(uri).tryAcquire(permits);
 	}
 }

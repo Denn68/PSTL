@@ -1,5 +1,6 @@
 package reseau;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Scanner;
 import java.util.Set;
@@ -100,6 +101,13 @@ implements ReseauCI<P>{
 	public void linkSortiePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
 			String updatingJetons) throws Exception {
 		((ReseauCI<P>) this.getConnector()).linkSortiePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+			throws Exception {
+		((ReseauCI<P>) this.getConnector()).updateTransitionsActivable(uri, transSorties, transitionsState);
 	}
 
 	

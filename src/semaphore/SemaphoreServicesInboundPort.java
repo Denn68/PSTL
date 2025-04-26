@@ -157,14 +157,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire(String uri) throws Exception
+	public boolean			tryAcquire(String uri) throws Exception
 	{
-		this.owner.handleRequest(
-			new AbstractComponent.AbstractService<Void>() {
+		return this.owner.handleRequest(
+			new AbstractComponent.AbstractService<Boolean>() {
 				@Override
-				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).tryAcquire(uri);
-					return null;
+				public Boolean call() throws Exception {
+					return ((SemaphoreI)this.getServiceOwner()).tryAcquire(uri);
 				}
 			});
 	}
@@ -173,14 +172,13 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreServicesCI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(String uri, int permits) throws Exception
+	public boolean			tryAcquire(String uri, int permits) throws Exception
 	{
-		this.owner.handleRequest(
-			new AbstractComponent.AbstractService<Void>() {
+		return this.owner.handleRequest(
+			new AbstractComponent.AbstractService<Boolean>() {
 				@Override
-				public Void call() throws Exception {
-					((SemaphoreI)this.getServiceOwner()).tryAcquire(uri, permits);
-					return null;
+				public Boolean call() throws Exception {
+					return ((SemaphoreI)this.getServiceOwner()).tryAcquire(uri, permits);
 				}
 			});
 	}

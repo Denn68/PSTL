@@ -234,16 +234,16 @@ implements	SemaphoreI
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire(String uri) throws Exception {
-		this.ssop.tryAcquire(uri);
+	public boolean			tryAcquire(String uri) throws Exception {
+		return this.ssop.tryAcquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(String uri, int permits) throws Exception {
-		this.ssop.tryAcquire(uri, permits);
+	public boolean			tryAcquire(String uri, int permits) throws Exception {
+		return this.ssop.tryAcquire(uri, permits);
 	}
 }
 // -----------------------------------------------------------------------------

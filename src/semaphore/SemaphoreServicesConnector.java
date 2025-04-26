@@ -65,17 +65,17 @@ implements	SemaphoreCI
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire(String uri) throws Exception
+	public boolean			tryAcquire(String uri) throws Exception
 	{
-		((SemaphoreCI)this.offering).tryAcquire(uri);
+		return ((SemaphoreCI)this.offering).tryAcquire(uri);
 	}
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.interfaces.SemaphoreCI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(String uri, int permits) throws Exception
+	public boolean			tryAcquire(String uri, int permits) throws Exception
 	{
-		((SemaphoreCI)this.offering).tryAcquire(uri, permits);
+		return ((SemaphoreCI)this.offering).tryAcquire(uri, permits);
 	}
 }

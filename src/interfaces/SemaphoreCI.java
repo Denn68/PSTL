@@ -48,11 +48,11 @@ extends		OfferedCI,
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire()
 	 */
 	@Override
-	public void			tryAcquire(String uri) throws Exception;
+	public boolean			tryAcquire(String uri) throws Exception;
 
 	/**
 	 * @see fr.sorbonne_u.components.ext.sync.components.SemaphoreI#tryAcquire(int)
 	 */
 	@Override
-	public void			tryAcquire(String uri, int permits) throws Exception;
+	public boolean			tryAcquire(String uri, int permits) throws Exception;
 }

@@ -64,4 +64,34 @@ implements ReseauPlaceCommuneCI<Transition>{
 	public void retrieveJeton(String uri) throws Exception {
 		((ReseauPlaceCommuneCI<Transition>)this.offering).retrieveJeton(uri);
 	}
+
+	@Override
+	public void acquireJeton(String placeCommune) throws Exception {
+		((ReseauPlaceCommuneCI<Transition>)this.offering).acquireJeton(placeCommune);
+	}
+
+	@Override
+	public boolean tryAcquireJeton(String placeCommune) throws Exception {
+		return ((ReseauPlaceCommuneCI<Transition>)this.offering).tryAcquireJeton(placeCommune);
+	}
+
+	@Override
+	public void releaseJeton(String placeCommune) throws Exception {
+		((ReseauPlaceCommuneCI<Transition>)this.offering).releaseJeton(placeCommune);
+	}
+
+	@Override
+	public void acquireAvailability() throws Exception {
+		((ReseauPlaceCommuneCI<Transition>)this.offering).acquireAvailability();
+	}
+
+	@Override
+	public boolean tryAcquireAvailability() throws Exception {
+		return ((ReseauPlaceCommuneCI<Transition>)this.offering).tryAcquireAvailability();
+	}
+
+	@Override
+	public void releaseAvailability() throws Exception {
+		((ReseauPlaceCommuneCI<Transition>)this.offering).releaseAvailability();
+	}
 }

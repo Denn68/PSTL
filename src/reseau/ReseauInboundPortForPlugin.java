@@ -213,4 +213,22 @@ implements	ReseauCI<P>{
 				});
 	}
 
+	@Override
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+			throws Exception {
+		this.getOwner().handleRequest(
+				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
+					@SuppressWarnings("unchecked")
+					@Override
+					public Void call() throws Exception {
+						((ReseauI<P>) this.getServiceProviderReference())
+						.updateTransitionsActivable(
+								uri,
+								transSorties,
+								transitionsState);
+						return null;
+					}
+				});
+	}
+
 }

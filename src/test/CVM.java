@@ -35,23 +35,20 @@ extends		AbstractCVM {
 	public void			deploy() throws Exception
 	{
 		ReseauPlaceCommuneEndpoint pc_ep = new ReseauPlaceCommuneEndpoint();
-		ReseauEndpoint r_epA = new ReseauEndpoint(RESEAU_A_PLUGIN_URI);
 		ReseauEndpoint r_epB = new ReseauEndpoint(RESEAU_B_PLUGIN_URI);
+		ReseauEndpoint r_epA = new ReseauEndpoint(RESEAU_A_PLUGIN_URI);
 		
-		ArrayList<String> semAvailabilityUriList = new ArrayList<String>();
 		ArrayList<String> semJetonUriList = new ArrayList<String>();
 		
 		for(int i = 1 ; i < 5 ;i++) {
-			String sem = SEMAPHORE_AVAILABILITY_URI + "-" + i;
-			semAvailabilityUriList.add(sem);
-			sem = SEMAPHORE_JETON_URI + "-" + i;
+			String sem = SEMAPHORE_JETON_URI + "-" + i;
 			semJetonUriList.add(sem);
 		}
 		
 		AbstractComponent.createComponent(
 				SemaphoreComponent.class.getCanonicalName(),
 				new Object[]{SEMC_URI, // imposed reflection inbound port URI
-							 semAvailabilityUriList,	
+							 SEMAPHORE_AVAILABILITY_URI,	
 							 semJetonUriList
 							});
 		
@@ -60,24 +57,13 @@ extends		AbstractCVM {
 				new Object[]{
 						"RPC",
 						SEMC_URI,
-						semAvailabilityUriList,	
+						SEMAPHORE_AVAILABILITY_URI,	
 						semJetonUriList,
 						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
 						new ArrayList<>(Arrays.asList(
-								((ReseauEndpoint) r_epA.copyWithSharable()),
-								((ReseauEndpoint) r_epB.copyWithSharable())
+								((ReseauEndpoint) r_epB.copyWithSharable()),
+								((ReseauEndpoint) r_epA.copyWithSharable())
 						))
-				});
-		
-		AbstractComponent.createComponent(
-				ReseauAComponent.class.getCanonicalName(),
-				new Object[]{
-						"R_A",
-						RESEAU_COMPONENT_A_RIBP_URI,
-						//SEMAPHORE_AJOUT_A_URI,
-						//SEMAPHORE_RETRAIT_A_URI,
-						((ReseauEndpoint) r_epA.copyWithSharable()),
-						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
 				});
 		
 		AbstractComponent.createComponent(
@@ -85,9 +71,16 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_B",
 						RESEAU_COMPONENT_B_RIBP_URI,
-						//SEMAPHORE_AJOUT_B_URI,
-						//SEMAPHORE_RETRAIT_B_URI,
 						((ReseauEndpoint) r_epB.copyWithSharable()),
+						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
+				});
+		
+		AbstractComponent.createComponent(
+				ReseauAComponent.class.getCanonicalName(),
+				new Object[]{
+						"R_A",
+						RESEAU_COMPONENT_A_RIBP_URI,
+						((ReseauEndpoint) r_epA.copyWithSharable()),
 						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
 				});
 		
