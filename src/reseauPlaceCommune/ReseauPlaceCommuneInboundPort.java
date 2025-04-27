@@ -2,7 +2,6 @@ package reseauPlaceCommune;
 
 import java.util.ArrayList;
 
-import classes.Transition;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.PlaceCI;
@@ -11,7 +10,7 @@ import interfaces.ReseauPlaceCommuneI;
 
 public class ReseauPlaceCommuneInboundPort
 extends		AbstractInboundPort
-implements	ReseauPlaceCommuneCI<Transition>{
+implements	ReseauPlaceCommuneCI<String>{
 	private static final long serialVersionUID = 1L;
 
 	public				ReseauPlaceCommuneInboundPort(
@@ -56,14 +55,14 @@ implements	ReseauPlaceCommuneCI<Transition>{
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ArrayList<Transition> getTransEntrees(String uri) throws Exception {
+	public ArrayList<String> getTransEntrees(String uri) throws Exception {
 		return this.getOwner().handleRequest(
 				owner -> ((ReseauPlaceCommuneI) owner).getTransEntrees(uri));
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void addTransEntree(String uri, Transition entree) throws Exception {
+	public void addTransEntree(String uri, String entree) throws Exception {
 		this.getOwner().handleRequest(
 				owner -> {((ReseauPlaceCommuneI) owner).addTransEntree(uri, entree);
 				return null;});
@@ -71,7 +70,7 @@ implements	ReseauPlaceCommuneCI<Transition>{
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public void addTransSortie(String uri, Transition sortie) throws Exception {
+	public void addTransSortie(String uri, String sortie) throws Exception {
 		this.getOwner().handleRequest(
 				owner -> {((ReseauPlaceCommuneI) owner).addTransSortie(uri, sortie);
 				return null;});
@@ -79,7 +78,7 @@ implements	ReseauPlaceCommuneCI<Transition>{
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
-	public ArrayList<Transition> getTransSorties(String uri) throws Exception {
+	public ArrayList<String> getTransSorties(String uri) throws Exception {
 		return this.getOwner().handleRequest(
 				owner -> ((ReseauPlaceCommuneI) owner).getTransSorties(uri));
 	}
@@ -138,5 +137,11 @@ implements	ReseauPlaceCommuneCI<Transition>{
 		this.getOwner().handleRequest(
 				owner -> {((ReseauPlaceCommuneI) owner).releaseAvailability();
 				return null;});
+	}
+
+	@Override
+	public boolean isConnected() throws Exception {
+		return this.getOwner().handleRequest(
+				owner -> ((ReseauPlaceCommuneI) owner).isConnected());
 	}
 }

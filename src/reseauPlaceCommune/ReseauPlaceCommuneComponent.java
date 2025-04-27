@@ -15,9 +15,9 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.exceptions.ConnectionException;
-import interfaces.ReseauPlaceCommuneI;
-import interfaces.ReseauPlaceCommuneCI;
 import interfaces.ReseauCI;
+import interfaces.ReseauPlaceCommuneCI;
+import interfaces.ReseauPlaceCommuneI;
 import reseau.ReseauEndpoint;
 import reseau.ReseauPlugin;
 import semaphore.SemaphoreClientPlugin;
@@ -55,6 +55,8 @@ implements ReseauPlaceCommuneI<String>{
 				new SemaphoreClientPlugin(SEMAPHORE_PLUGIN_URI,
 										  this.semaphoreReflectionInboundPortURI);
 		
+		this.isConnected = false;
+		
 	}
 	
 	private ReseauPlaceCommuneEndpoint endPointServer;
@@ -69,6 +71,7 @@ implements ReseauPlaceCommuneI<String>{
     private ArrayList<String> semJetonUriList;
     
     protected String	semaphoreReflectionInboundPortURI;
+	private boolean isConnected;
     protected final static String	SEMAPHORE_PLUGIN_URI =
 			"semaphore-client-plugin";
 	
@@ -76,7 +79,6 @@ implements ReseauPlaceCommuneI<String>{
 	public void start() {
 		try {
 			super.start();
-			
 		} catch (ComponentStartException e) {
 			e.printStackTrace();
 		}
@@ -88,16 +90,8 @@ implements ReseauPlaceCommuneI<String>{
 					e.printStackTrace();
 				}
 			}
+			System.out.println(ep);
 		}
-		
-		/*try {
-			this.installPlugin(semaphorePluginAjout_A);
-			this.installPlugin(semaphorePluginRetrait_A);
-			this.installPlugin(semaphorePluginAjout_B);
-			this.installPlugin(semaphorePluginRetrait_B);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}*/
 		
 		String pc1 = "pc1";
     	String pc2 = "pc2";
@@ -185,49 +179,11 @@ implements ReseauPlaceCommuneI<String>{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Les semaphores :");
-		System.out.println(this.semAvailabilityUri);
-		System.out.println(this.updatingJetons);
+		this.isConnected = true;
 		
-
+		this.semaphorePlugin.release(semAvailabilityUri);
 		
-		System.out.println("Reseau A");
-		endPointClients.get(0).getClientSideReference().showReseau();
-		
-		System.out.println("Reseau B");
-		endPointClients.get(1).getClientSideReference().showReseau();
-		
-		StringBuilder sb = new StringBuilder();
-			
-		for (PlaceCommune p : this.placesCommunes.values()) {
-	        sb.append("URI : ").append((p).getUri()).append(" a ").append(p.getNbJeton()).append(" jeton\n");
-
-	        sb.append("Transitions entrantes : ");
-	        ArrayList<String> entrees = (p).getTransEntrees();
-	        if (entrees != null && !entrees.isEmpty()) {
-	            for (String t : entrees) {
-	                sb.append(t).append(" ");
-	            }
-	        } else {
-	            sb.append("Aucune");
-	        }
-	        sb.append("\n");
-
-	        sb.append("Transitions sortantes : ");
-	        ArrayList<String> sorties = (p).getTransSorties();
-	        if (sorties != null && !sorties.isEmpty()) {
-	            for (String t : sorties) {
-	                sb.append(t).append(" ");
-	            }
-	        } else {
-	            sb.append("Aucune");
-	        }
-	        sb.append("\n\n");
-	    }
-		
-		System.out.println(sb.toString());
-		
-		/*while (true) {
+		while (true) {
 			for (PlaceCommune pc : this.placesCommunes.values()) {
 				
 				System.out.println("Mise à jour des possibilités de transitions : " + pc.getUri());
@@ -239,8 +195,9 @@ implements ReseauPlaceCommuneI<String>{
 		        
 			}
 			
-			this.semaphorePlugin.acquire(semAvailabilityUri);
-		}*/
+			Thread.sleep(10000);
+			//this.semaphorePlugin.acquire(semAvailabilityUri);
+		}
 	}
 	
 	/*@Override
@@ -348,6 +305,11 @@ implements ReseauPlaceCommuneI<String>{
 	public void releaseAvailability() throws Exception {
 		System.out.println("Release Availability");
 		this.semaphorePlugin.release(semAvailabilityUri);
+	}
+
+	@Override
+	public boolean isConnected() throws Exception {
+		return this.isConnected;
 	}
 	
 }

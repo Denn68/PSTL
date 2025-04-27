@@ -111,4 +111,9 @@ implements	ReseauPlaceCommuneCI<Transition>{
 	public void releaseAvailability() throws Exception {
 		((ReseauPlaceCommuneCI) this.getConnector()).releaseAvailability();
 	}
+
+	@Override
+	public boolean isConnected() throws Exception {
+		return ((ReseauPlaceCommuneCI) this.getConnector()).isConnected();
+	}
 }

@@ -12,6 +12,8 @@ ReseauPlaceCommuneI<T>{
 	
 	public int getNbJeton(String uri) throws Exception;
 	
+	public boolean isConnected() throws Exception;
+	
 	public String getUri() throws Exception;
 
     public void setNbJeton(String uri, int nbJeton) throws Exception;

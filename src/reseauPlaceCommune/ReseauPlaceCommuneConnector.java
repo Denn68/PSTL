@@ -8,90 +8,95 @@ import interfaces.ReseauPlaceCommuneCI;
 
 public class ReseauPlaceCommuneConnector
 extends AbstractConnector
-implements ReseauPlaceCommuneCI<Transition>{
+implements ReseauPlaceCommuneCI<String>{
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public int getNbJeton(String uri) throws Exception {
-		return ((ReseauPlaceCommuneCI<Transition>)this.offering).getNbJeton(uri);
+		return ((ReseauPlaceCommuneCI<String>)this.offering).getNbJeton(uri);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public String getUri() throws Exception {
-		return ((ReseauPlaceCommuneCI<Transition>)this.offering).getUri();
+		return ((ReseauPlaceCommuneCI<String>)this.offering).getUri();
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setNbJeton(String uri, int nbJeton) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).setNbJeton(uri, nbJeton);
+		((ReseauPlaceCommuneCI<String>)this.offering).setNbJeton(uri, nbJeton);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Transition> getTransEntrees(String uri) throws Exception {
-		return ((ReseauPlaceCommuneCI<Transition>)this.offering).getTransEntrees(uri);
+	public ArrayList<String> getTransEntrees(String uri) throws Exception {
+		return ((ReseauPlaceCommuneCI<String>)this.offering).getTransEntrees(uri);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addTransEntree(String uri, Transition entree) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).addTransEntree(uri, entree);
+	public void addTransEntree(String uri, String entree) throws Exception {
+		((ReseauPlaceCommuneCI<String>)this.offering).addTransEntree(uri, entree);
 		
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addTransSortie(String uri, Transition sortie) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).addTransSortie(uri, sortie);
+	public void addTransSortie(String uri, String sortie) throws Exception {
+		((ReseauPlaceCommuneCI<String>)this.offering).addTransSortie(uri, sortie);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Transition> getTransSorties(String uri) throws Exception {
-		return ((ReseauPlaceCommuneCI<Transition>)this.offering).getTransSorties(uri);
+	public ArrayList<String> getTransSorties(String uri) throws Exception {
+		return ((ReseauPlaceCommuneCI<String>)this.offering).getTransSorties(uri);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void addJeton(String uri) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).addJeton(uri);
+		((ReseauPlaceCommuneCI<String>)this.offering).addJeton(uri);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void retrieveJeton(String uri) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).retrieveJeton(uri);
+		((ReseauPlaceCommuneCI<String>)this.offering).retrieveJeton(uri);
 	}
 
 	@Override
 	public void acquireJeton(String placeCommune) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).acquireJeton(placeCommune);
+		((ReseauPlaceCommuneCI<String>)this.offering).acquireJeton(placeCommune);
 	}
 
 	@Override
 	public boolean tryAcquireJeton(String placeCommune) throws Exception {
-		return ((ReseauPlaceCommuneCI<Transition>)this.offering).tryAcquireJeton(placeCommune);
+		return ((ReseauPlaceCommuneCI<String>)this.offering).tryAcquireJeton(placeCommune);
 	}
 
 	@Override
 	public void releaseJeton(String placeCommune) throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).releaseJeton(placeCommune);
+		((ReseauPlaceCommuneCI<String>)this.offering).releaseJeton(placeCommune);
 	}
 
 	@Override
 	public void acquireAvailability() throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).acquireAvailability();
+		((ReseauPlaceCommuneCI<String>)this.offering).acquireAvailability();
 	}
 
 	@Override
 	public boolean tryAcquireAvailability() throws Exception {
-		return ((ReseauPlaceCommuneCI<Transition>)this.offering).tryAcquireAvailability();
+		return ((ReseauPlaceCommuneCI<String>)this.offering).tryAcquireAvailability();
 	}
 
 	@Override
 	public void releaseAvailability() throws Exception {
-		((ReseauPlaceCommuneCI<Transition>)this.offering).releaseAvailability();
+		((ReseauPlaceCommuneCI<String>)this.offering).releaseAvailability();
+	}
+
+	@Override
+	public boolean isConnected() throws Exception {
+		return ((ReseauPlaceCommuneCI<String>)this.offering).isConnected();
 	}
 }

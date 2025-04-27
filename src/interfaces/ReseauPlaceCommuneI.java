@@ -33,6 +33,8 @@ public interface ReseauPlaceCommuneI<T> {
 	public boolean tryAcquireAvailability() throws Exception;
 	
 	public void releaseAvailability() throws Exception;
+	
+	public boolean isConnected() throws Exception;
 }
 
 
