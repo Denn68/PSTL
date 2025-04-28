@@ -27,7 +27,7 @@ implements	ReseauPlaceCommuneCI<String>{
 		String URI
 		) throws Exception
 	{
-		super(uri, PlaceCI.class, owner, URI, null);
+		super(uri, ReseauPlaceCommuneCI.class, owner, URI, null);
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -143,5 +143,12 @@ implements	ReseauPlaceCommuneCI<String>{
 	public boolean isConnected() throws Exception {
 		return this.getOwner().handleRequest(
 				owner -> ((ReseauPlaceCommuneI) owner).isConnected());
+	}
+
+	@Override
+	public void acquireInitialisation() throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).acquireInitialisation();
+				return null;});
 	}
 }

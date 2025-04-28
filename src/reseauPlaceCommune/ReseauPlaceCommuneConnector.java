@@ -99,4 +99,9 @@ implements ReseauPlaceCommuneCI<String>{
 	public boolean isConnected() throws Exception {
 		return ((ReseauPlaceCommuneCI<String>)this.offering).isConnected();
 	}
+
+	@Override
+	public void acquireInitialisation() throws Exception {
+		((ReseauPlaceCommuneCI<String>)this.offering).acquireInitialisation();
+	}
 }

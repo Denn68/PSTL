@@ -1,7 +1,8 @@
-/classes/
-/reseau/
 /backend/
+/classes/
+/frontend/
 /interfaces/
+/reseau/
 /reseauPlaceCommune/
-/test/
 /semaphore/
+/test/

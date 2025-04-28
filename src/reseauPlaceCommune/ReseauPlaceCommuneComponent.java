@@ -31,6 +31,7 @@ implements ReseauPlaceCommuneI<String>{
 	protected			ReseauPlaceCommuneComponent(String uri,
 			String semaphoreReflectionInboundPortURI,
 			String semAvailabilityUri,
+			String semInitialisationUri,
 			ArrayList<String> semJetonUriList,
 			ReseauPlaceCommuneEndpoint endPointServer,
 			ArrayList<ReseauEndpoint> endPointClients) throws Exception
@@ -46,6 +47,7 @@ implements ReseauPlaceCommuneI<String>{
 		this.updatingJetons = new HashMap<String, String>();
 		
 		this.semAvailabilityUri = semAvailabilityUri;
+		this.semInitialisationUri = semInitialisationUri;
 		this.semJetonUriList = semJetonUriList;
 		
 		this.semaphoreReflectionInboundPortURI =
@@ -68,6 +70,7 @@ implements ReseauPlaceCommuneI<String>{
     private Map<String, String> updatingJetons;
     
     private String semAvailabilityUri;
+    private String semInitialisationUri;
     private ArrayList<String> semJetonUriList;
     
     protected String	semaphoreReflectionInboundPortURI;
@@ -131,7 +134,7 @@ implements ReseauPlaceCommuneI<String>{
     	String pc4 = "pc4";
     	
 		try {
-			
+			/*
 			System.out.println("Connexion entre réseau A et réseau PlaceCommune...");
     		endPointClients.get(1).getClientSideReference()
     		.linkSortiePlaceCommuneTransition("t1", pc1, semAvailabilityUri, this.updatingJetons.get(pc1));
@@ -174,6 +177,7 @@ implements ReseauPlaceCommuneI<String>{
     		endPointClients.get(0).getClientSideReference()
     		.linkSortiePlaceCommuneTransition("t9", pc4, semAvailabilityUri, this.updatingJetons.get(pc4));
     		this.placesCommunes.get(pc4).addTransEntree("t9");
+    		*/
     		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -181,43 +185,32 @@ implements ReseauPlaceCommuneI<String>{
 		
 		this.isConnected = true;
 		
-		this.semaphorePlugin.release(semAvailabilityUri);
-		
+		boolean flag = true;
 		while (true) {
 			for (PlaceCommune pc : this.placesCommunes.values()) {
 				
 				System.out.println("Mise à jour des possibilités de transitions : " + pc.getUri());
-				
+				/*
 				boolean transitionsState = (pc.getNbJeton() > 0);
  				for(ReseauEndpoint ep : endPointClients) {
 					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), transitionsState);
 				}
-		        
+		        */
 			}
 			
-			Thread.sleep(10000);
-			//this.semaphorePlugin.acquire(semAvailabilityUri);
+			if (flag) {
+				this.semaphorePlugin.release(semInitialisationUri);
+				flag = false;
+			}
+			this.semaphorePlugin.acquire(semAvailabilityUri);
 		}
 	}
 	
-	/*@Override
+	@Override
 	public void finalise() throws Exception {
 		
-		while (true) {
-			for (PlaceCommune pc : this.placesCommunes.values()) {
-				
-				System.out.println("Mise à jour des possibilités de transitions : " + pc.getUri());
-				
-				boolean transitionsState = (pc.getNbJeton() > 0);
- 				for(ReseauEndpoint ep : endPointClients) {
-					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), transitionsState);
-				}
-		        
-			}
-			
-			this.semaphorePlugin.acquire(semAvailabilityUri);
-		}
-	}*/
+		System.out.println("Finalise de " + this.uri);
+	}
 
 	@Override
 	public int getNbJeton(String uri) throws Exception {
@@ -305,6 +298,12 @@ implements ReseauPlaceCommuneI<String>{
 	public void releaseAvailability() throws Exception {
 		System.out.println("Release Availability");
 		this.semaphorePlugin.release(semAvailabilityUri);
+	}
+	
+	@Override
+	public void acquireInitialisation() throws Exception {
+		System.out.println("acquireInitialisation");
+		this.semaphorePlugin.acquire(semInitialisationUri);
 	}
 
 	@Override

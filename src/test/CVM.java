@@ -14,6 +14,7 @@ import reseau.ReseauEndpoint;
 
 public class CVM
 extends		AbstractCVM {
+	public final static String	RESEAU_COMPONENT_RIBP_URI = "reseau-ibp-uri";
 	public final static String	RESEAU_COMPONENT_A_RIBP_URI = "reseau-a-ibp-uri";
 	public final static String	RESEAU_COMPONENT_B_RIBP_URI = "reseau-b-ibp-uri";
 	public final static String	PLACE_COMMUNE_COMPONENT_RIBP_URI = "place-commune-ibp-uri";
@@ -22,6 +23,7 @@ extends		AbstractCVM {
 	public static final String		RESEAU_B_PLUGIN_URI = "reseau-b-plugin-uri";
 	
 	protected final static String	SEMAPHORE_AVAILABILITY_URI = "semaphore-availability"; // availibility
+	protected final static String SEMAPHORE_INITIALISATION_URI = "semaphore-initialisation"; // initialisation
 	protected final static String	SEMAPHORE_JETON_URI = "semaphore-jeton"; // jeton
 	
 	protected final static String	SEMC_URI = "semaphore-inboundPort"; // reflection inbound port URI
@@ -49,6 +51,7 @@ extends		AbstractCVM {
 				SemaphoreComponent.class.getCanonicalName(),
 				new Object[]{SEMC_URI, // imposed reflection inbound port URI
 							 SEMAPHORE_AVAILABILITY_URI,	
+							 SEMAPHORE_INITIALISATION_URI,
 							 semJetonUriList
 							});
 		
@@ -58,6 +61,7 @@ extends		AbstractCVM {
 						"RPC",
 						SEMC_URI,
 						SEMAPHORE_AVAILABILITY_URI,	
+						SEMAPHORE_INITIALISATION_URI,
 						semJetonUriList,
 						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
 						new ArrayList<>(Arrays.asList(
@@ -92,7 +96,7 @@ extends		AbstractCVM {
 	{
 		try {
 			CVM c = new CVM();
-			c.startStandardLifeCycle(30000L);
+			c.startStandardLifeCycle(3000);
 			Thread.sleep(1000L);
 			System.exit(0);
 		} catch (Exception e) {

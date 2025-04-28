@@ -34,6 +34,8 @@ public interface ReseauPlaceCommuneI<T> {
 	
 	public void releaseAvailability() throws Exception;
 	
+	public void acquireInitialisation() throws Exception;
+	
 	public boolean isConnected() throws Exception;
 }
 

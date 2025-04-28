@@ -35,8 +35,6 @@ implements ReseauI<P>{
 	protected Map<String, Transition> 	transitions;
 	protected String 					uri;
 	
-	//private String semaphorePluginAjoutInboundPortURI;
-	//private String semaphorePluginRetraitInboundPortURI;
 	private ReseauPlaceCommuneEndpoint endPointClient;
 	private ReseauEndpoint endPointServer;
 
@@ -47,18 +45,10 @@ implements ReseauI<P>{
 	}
 	
 	public				ReseauPlugin(String uri,
-			//String semaphorePluginAjoutInboundPortURI,
-			//String semaphorePluginRetraitInboundPortURI,
-			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
 		super();
 		this.uri = uri;
-		//this.semaphorePluginAjoutInboundPortURI = semaphorePluginAjoutInboundPortURI;
-		//this.semaphorePluginRetraitInboundPortURI = semaphorePluginRetraitInboundPortURI;
-
-		//endPointServer.initialiseServerSide(this.getOwner());
-		this.endPointServer = endPointServer;
 		this.endPointClient = endPointClient;
 	}
 
@@ -68,19 +58,14 @@ implements ReseauI<P>{
 	{
 		super.installOn(owner);
 		
+		this.addOfferedInterface(ReseauCI.class);
 
-		// Add the interface
-		//this.addOfferedInterface(ReseauCI.class);
-		//this.addRequiredInterface(ReseauCI.class);
-
-		this.addRequiredInterface(ReseauPlaceCommuneCI.class);
 	}
 
 	@Override
 	public void			initialise() throws Exception
 	{
 		super.initialise();
-		endPointServer.initialiseServerSide(this.getOwner());
 		
 		if(!this.endPointClient.clientSideInitialised()) {
 			try {
@@ -182,6 +167,7 @@ implements ReseauI<P>{
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void showReseau() throws Exception {
+		System.out.println(this.endPointClient.getClientSideReference().isConnected());
 		StringBuilder sb = new StringBuilder();
         sb.append("Réseau ").append(uri).append("(");
 

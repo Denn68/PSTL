@@ -19,7 +19,7 @@ import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 @OfferedInterfaces(offered = { ReseauCI.class})
 @RequiredInterfaces(required = { ReseauCI.class})
 public class ReseauAComponent<T, P>
-extends ReseauComponent<T, P>
+extends ReseauClientComponent<T, P>
 implements ReseauI<P>{
 	
 	public static final String		RESEAU_A_PLUGIN_URI = "reseau-a-plugin-uri";
@@ -30,65 +30,71 @@ implements ReseauI<P>{
 			String reflectionInboundPortURI,
 			//String semaphorePluginAjoutInboundPortURI,
 			//String semaphorePluginRetraitInboundPortURI,
-			ReseauEndpoint endPointServer,
-			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
+			ReseauEndpoint endPointServer) throws Exception
 	{
 		
 		super(uri,
-				reflectionInboundPortURI,
 				RESEAU_A_PLUGIN_URI,
-				//semaphorePluginAjoutInboundPortURI,
-				//semaphorePluginRetraitInboundPortURI,
-				endPointServer,
-				endPointClient);
+				reflectionInboundPortURI,
+				endPointServer);
 		
 		this.uri = uri;
-		
-		String p1 = "p1";
-    	String p2 = "p2";
-    	String p3 = "p3";
-    	String p4 = "p4";
-    	
-    	String t1 = "t1";
-    	String t2 = "t2";
-    	String t3 = "t3";
-    	String t4 = "t4";
-    	
-    	Place P1 = new Place(p1);
-    	Place P2 = new Place(p2);
-    	Place P3 = new Place(p3);
-    	Place P4 = new Place(p4);
-    	
-    	P1.addJeton();
-    	
-    	Function<String, String> fonction = input -> {
-    	    System.out.println("Fonction activable de la transition: " + input);
-    	    return "Transition activée: " + input;
-    	};
-    	
-    	Transition T1 = new Transition(t1, (Function) fonction);
-    	Transition T2 = new Transition(t2, (Function) fonction);
-    	Transition T3 = new Transition(t3, (Function) fonction);
-    	Transition T4 = new Transition(t4, (Function) fonction);
-    	
-    	T1.addPlaceEntree(P1);
-    	T2.addPlaceSortie(P2);
-    	T3.addPlaceEntree(P2);
-    	T3.addPlaceSortie(P3);
-    	T4.addPlaceEntree(P3);
-    	T4.addPlaceSortie(P4);
-	
-	
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addPlace((P) P1);
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addPlace((P) P2);
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addPlace((P) P3);
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addPlace((P) P4);
-		
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T1);
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T2);
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T3);
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T4);
-		
 	}
 	
+	@SuppressWarnings("rawtypes")
+	@Override
+	public void init() {
+		try {
+			String p1 = "p1";
+	    	String p2 = "p2";
+	    	String p3 = "p3";
+	    	String p4 = "p4";
+	    	
+	    	String t1 = "t1";
+	    	String t2 = "t2";
+	    	String t3 = "t3";
+	    	String t4 = "t4";
+	    	
+	    	Place P1 = new Place(p1);
+	    	Place P2 = new Place(p2);
+	    	Place P3 = new Place(p3);
+	    	Place P4 = new Place(p4);
+	    	
+	    	P1.addJeton();
+	    	
+	    	Function<String, String> fonction = input -> {
+	    	    System.out.println("Fonction activable de la transition: " + input);
+	    	    return "Transition activée: " + input;
+	    	};
+	    	
+	    	Transition T1 = new Transition(t1, (Function) fonction);
+	    	Transition T2 = new Transition(t2, (Function) fonction);
+	    	Transition T3 = new Transition(t3, (Function) fonction);
+	    	Transition T4 = new Transition(t4, (Function) fonction);
+	    	
+	    	T1.addPlaceEntree(P1);
+	    	T2.addPlaceSortie(P2);
+	    	T3.addPlaceEntree(P2);
+	    	T3.addPlaceSortie(P3);
+	    	T4.addPlaceEntree(P3);
+	    	T4.addPlaceSortie(P4);
+	
+		
+			
+			this.getServerRef().addPlace((P) P1);
+			
+			this.getServerRef().addPlace((P) P2);
+			this.getServerRef().addPlace((P) P3);
+			this.getServerRef().addPlace((P) P4);
+			
+			this.getServerRef().addTransition(T1);
+			this.getServerRef().addTransition(T2);
+			this.getServerRef().addTransition(T3);
+			this.getServerRef().addTransition(T4);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

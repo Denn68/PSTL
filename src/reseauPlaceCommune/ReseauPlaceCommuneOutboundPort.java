@@ -116,4 +116,10 @@ implements	ReseauPlaceCommuneCI<Transition>{
 	public boolean isConnected() throws Exception {
 		return ((ReseauPlaceCommuneCI) this.getConnector()).isConnected();
 	}
+
+	@Override
+	public void acquireInitialisation() throws Exception {
+		((ReseauPlaceCommuneCI) this.getConnector()).acquireInitialisation();
+		
+	}
 }
