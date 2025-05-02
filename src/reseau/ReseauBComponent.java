@@ -11,6 +11,7 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import interfaces.ReseauCI;
 import interfaces.ReseauI;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
+import test.CVM;
 
 @OfferedInterfaces(offered = { ReseauCI.class})
 @RequiredInterfaces(required = { ReseauCI.class})
@@ -18,20 +19,19 @@ public class ReseauBComponent<T, P>
 extends ReseauClientComponent<T, P>
 implements ReseauI<P>{
 	
-	public static final String		RESEAU_B_PLUGIN_URI = "reseau-b-plugin-uri";
 	private String uri;
 
 	@SuppressWarnings("unchecked")
 	protected			ReseauBComponent(String uri,
 			String reflectionInboundPortURI,
-			//String semaphorePluginAjoutInboundPortURI,
-			//String semaphorePluginRetraitInboundPortURI,
+			ReseauPlaceCommuneEndpoint endPointClient,
 			ReseauEndpoint endPointServer) throws Exception
 	{
 		
 		super(uri,
+				CVM.RESEAU_B_PLUGIN_URI,
 				reflectionInboundPortURI,
-				RESEAU_B_PLUGIN_URI,
+				endPointClient,
 				endPointServer);
 		
 		this.uri = uri;

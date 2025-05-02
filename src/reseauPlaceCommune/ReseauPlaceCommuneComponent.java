@@ -36,7 +36,7 @@ implements ReseauPlaceCommuneI<String>{
 			ReseauPlaceCommuneEndpoint endPointServer,
 			ArrayList<ReseauEndpoint> endPointClients) throws Exception
 	{
-		super(1, 0);
+		super(2, 0);
 		
         this.uri = uri;
         this.placesCommunes = new HashMap<>();
@@ -85,16 +85,6 @@ implements ReseauPlaceCommuneI<String>{
 		} catch (ComponentStartException e) {
 			e.printStackTrace();
 		}
-		for (ReseauEndpoint ep : endPointClients) {
-			if(!ep.clientSideInitialised()) {
-				try {
-					ep.initialiseClientSide(this);
-				} catch (ConnectionException e) {
-					e.printStackTrace();
-				}
-			}
-			System.out.println(ep);
-		}
 		
 		String pc1 = "pc1";
     	String pc2 = "pc2";
@@ -133,8 +123,19 @@ implements ReseauPlaceCommuneI<String>{
     	String pc3 = "pc3";
     	String pc4 = "pc4";
     	
+    	Thread.sleep(5000); // On attend le initialise server side
+    	for (ReseauEndpoint ep : endPointClients) {
+			if(!ep.clientSideInitialised()) {
+				try {
+					ep.initialiseClientSide(this);
+				} catch (ConnectionException e) {
+					e.printStackTrace();
+				}
+			}
+			System.out.println(ep);
+		}
+    	
 		try {
-			/*
 			System.out.println("Connexion entre réseau A et réseau PlaceCommune...");
     		endPointClients.get(1).getClientSideReference()
     		.linkSortiePlaceCommuneTransition("t1", pc1, semAvailabilityUri, this.updatingJetons.get(pc1));
@@ -177,7 +178,6 @@ implements ReseauPlaceCommuneI<String>{
     		endPointClients.get(0).getClientSideReference()
     		.linkSortiePlaceCommuneTransition("t9", pc4, semAvailabilityUri, this.updatingJetons.get(pc4));
     		this.placesCommunes.get(pc4).addTransEntree("t9");
-    		*/
     		
 		} catch (Exception e) {
 			e.printStackTrace();

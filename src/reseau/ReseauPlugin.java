@@ -66,14 +66,6 @@ implements ReseauI<P>{
 	public void			initialise() throws Exception
 	{
 		super.initialise();
-		
-		if(!this.endPointClient.clientSideInitialised()) {
-			try {
-				this.endPointClient.initialiseClientSide(this.getOwner());
-			} catch (ConnectionException e) {
-				e.printStackTrace();
-			}
-		}
 
 		this.places = new HashMap<>();
 		this.transitions = new HashMap<>();
@@ -167,7 +159,6 @@ implements ReseauI<P>{
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void showReseau() throws Exception {
-		System.out.println(this.endPointClient.getClientSideReference().isConnected());
 		StringBuilder sb = new StringBuilder();
         sb.append("Réseau ").append(uri).append("(");
 
@@ -252,7 +243,13 @@ implements ReseauI<P>{
 
 	@Override
 	public void activeTransition(Transition tr) throws Exception {
-
+		if(!this.endPointClient.clientSideInitialised()) {
+			try {
+				this.endPointClient.initialiseClientSide(this.getOwner());
+			} catch (ConnectionException e) {
+				e.printStackTrace();
+			}
+		}
 		if(tr.isActivable()) {
 			
 			System.out.println("activeTransition " + tr.getUri() + " a placeCommunesEntrantes : " + tr.getPlacesCommuneEntrees());

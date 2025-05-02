@@ -7,6 +7,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="BCM4Java-21022025.jar"/>
-	<classpathentry kind="lib" path="CPS-2025-DHT-etape4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

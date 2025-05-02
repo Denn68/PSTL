@@ -23,12 +23,8 @@ implements	ReseauCI<P>{
 		) throws Exception
 	{
 		super(ReseauCI.class, owner, pluginURI, null);
-		
-		if (!(owner instanceof ReseauI)) {
-	        throw new Exception("Le composant " + owner.getClass().getName() +
-	                            " doit implémenter ReseauI.");
-	    }
 
+		System.out.println(this.owner.hasInstalledPlugins());
 		assert	owner.isInstalled(pluginURI);
 	}
 
@@ -39,12 +35,8 @@ implements	ReseauCI<P>{
 		) throws Exception
 	{
 		super(uri, ReseauCI.class, owner, pluginURI, null);
-		
-		if (!(owner instanceof ReseauI)) {
-	        throw new Exception("Le composant " + owner.getClass().getName() +
-	                            " doit implémenter ReseauI.");
-	    }
 
+		System.out.println(this.owner.hasInstalledPlugins());
 		assert	owner.isInstalled(pluginURI);
 	}
 

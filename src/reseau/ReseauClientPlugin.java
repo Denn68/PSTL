@@ -1,44 +1,31 @@
 package reseau;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import classes.Place;
-import classes.Transition;
 import fr.sorbonne_u.components.AbstractPlugin;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
-import fr.sorbonne_u.components.exceptions.ConnectionException;
 import fr.sorbonne_u.components.reflection.connectors.ReflectionConnector;
 import fr.sorbonne_u.components.reflection.interfaces.ReflectionCI;
 import fr.sorbonne_u.components.reflection.ports.ReflectionOutboundPort;
 import interfaces.ReseauCI;
-import interfaces.ReseauPlaceCommuneCI;
-import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
-import test.CVM;
-import interfaces.ReseauI;
 
+@RequiredInterfaces(required = { ReseauCI.class})
 public class ReseauClientPlugin<P>
 extends 	AbstractPlugin{
 	private static final long serialVersionUID = 1L;
 
 	protected ReseauOutboundPort<P>	rop;
+	private String ripbUri;
 
+	protected			ReseauClientPlugin(String ripbUri) throws Exception
+	{
+		this.ripbUri = ripbUri;
+	}
+	
 	@Override
 	public void			installOn(ComponentI owner) throws Exception
 	{
 		super.installOn(owner);
 		
-		this.addRequiredInterface(ReseauCI.class);
 		this.rop = new ReseauOutboundPort<P>(this.getOwner());
 		this.rop.publishPort();
 	}
@@ -51,7 +38,7 @@ extends 	AbstractPlugin{
 		rop.publishPort();
 		this.getOwner().doPortConnection(
 				rop.getPortURI(),
-				CVM.RESEAU_COMPONENT_RIBP_URI,
+				this.ripbUri,
 				ReflectionConnector.class.getCanonicalName());
 		String[] uris = rop.findPortURIsFromInterface(ReseauCI.class);
 		assert	uris != null && uris.length == 1;

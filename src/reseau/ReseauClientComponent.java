@@ -8,12 +8,15 @@ import java.util.Set;
 import classes.Place;
 import classes.Transition;
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.exceptions.ConnectionException;
 import interfaces.ReseauCI;
 import interfaces.ReseauI;
+import interfaces.ReseauPlaceCommuneCI;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 import test.CVM;
+
 
 public class ReseauClientComponent<T, P>
 extends AbstractComponent
@@ -28,12 +31,14 @@ implements ReseauI<P>{
 	}
 	
 	protected			ReseauClientComponent(String uri, String pluginURI, 
-			String reflectionInboundPortURI, ReseauEndpoint endPointServer) throws Exception
+			String reflectionInboundPortURI, ReseauPlaceCommuneEndpoint endPointClient,
+			ReseauEndpoint endPointServer) throws Exception
 	{
 		super(reflectionInboundPortURI, 1, 0);
-		this.endPointServer = endPointServer;
 		this.pluginURI = pluginURI;
-		endPointServer.initialiseServerSide(this);
+		this.endPointClient = endPointClient;
+		this.endPointServer = endPointServer;
+		this.addRequiredInterface(ReseauPlaceCommuneCI.class);
 	}
 	
 	private ReseauPlaceCommuneEndpoint endPointClient;
@@ -50,28 +55,31 @@ implements ReseauI<P>{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*
 		if(!this.endPointClient.clientSideInitialised()) {
 			try {
+				System.out.println(this.endPointClient.getClientSideInterface());
 				this.endPointClient.initialiseClientSide(this);
 			} catch (ConnectionException e) {
 				e.printStackTrace();
 			}
 		}
-		*/
 	}
 	
 	@Override
 	public void execute() throws Exception {
 		super.execute();
 		
+		System.out.println("Execute de " + this.pluginURI);
+		
 		// Install the plugin
-		ReseauClientPlugin<P> plugin = new ReseauClientPlugin<P>();
+		ReseauClientPlugin<P> plugin = new ReseauClientPlugin<P>(this.pluginURI);
 		plugin.setPluginURI(this.pluginURI);
 		this.installPlugin(plugin);
 		this.serverRef = plugin.getReseauServicesReference();
+		this.init();
 		
-		System.out.println("Execute de " + this.pluginURI);
+		this.endPointServer.initialiseServerSide(this);
+				
 		StringBuilder sb = new StringBuilder();
 		System.out.println("------- ATTENTE DE L'INITIALISATION -------\n");
 

@@ -7,6 +7,7 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import reseau.ReseauAComponent;
 import reseau.ReseauBComponent;
+import reseau.ReseauComponent;
 import reseauPlaceCommune.ReseauPlaceCommuneComponent;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 import semaphore.SemaphoreComponent;
@@ -47,6 +48,8 @@ extends		AbstractCVM {
 			semJetonUriList.add(sem);
 		}
 		
+		// PLUGINS
+		
 		AbstractComponent.createComponent(
 				SemaphoreComponent.class.getCanonicalName(),
 				new Object[]{SEMC_URI, // imposed reflection inbound port URI
@@ -54,6 +57,22 @@ extends		AbstractCVM {
 							 SEMAPHORE_INITIALISATION_URI,
 							 semJetonUriList
 							});
+		
+		AbstractComponent.createComponent(
+				ReseauComponent.class.getCanonicalName(),
+				new Object[]{
+						"R_PLUG_B",
+						RESEAU_B_PLUGIN_URI,
+						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
+				});
+		
+		AbstractComponent.createComponent(
+				ReseauComponent.class.getCanonicalName(),
+				new Object[]{
+						"R_PLUG_A",
+						RESEAU_A_PLUGIN_URI,
+						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
+				});
 		
 		AbstractComponent.createComponent(
 				ReseauPlaceCommuneComponent.class.getCanonicalName(),
@@ -70,13 +89,15 @@ extends		AbstractCVM {
 						))
 				});
 		
+		
+		
 		AbstractComponent.createComponent(
 				ReseauBComponent.class.getCanonicalName(),
 				new Object[]{
 						"R_B",
 						RESEAU_COMPONENT_B_RIBP_URI,
-						((ReseauEndpoint) r_epB.copyWithSharable()),
-						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
+						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
+						((ReseauEndpoint) r_epB.copyWithSharable())
 				});
 		
 		AbstractComponent.createComponent(
@@ -84,8 +105,9 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_A",
 						RESEAU_COMPONENT_A_RIBP_URI,
-						((ReseauEndpoint) r_epA.copyWithSharable()),
-						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable())
+						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
+						((ReseauEndpoint) r_epA.copyWithSharable())
+						
 				});
 		
 
