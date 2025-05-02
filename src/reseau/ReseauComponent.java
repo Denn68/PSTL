@@ -22,7 +22,7 @@ implements ReseauI<P>{
 
 	protected			ReseauComponent(String uri) throws Exception
 	{
-		super("URI", 1, 0);
+		super("URI", 2, 0);
 
 		ReseauPlugin<P> plugin = new ReseauPlugin<P>(uri);
 		plugin.setPluginURI(RESEAU_PLUGIN_URI);
@@ -38,7 +38,7 @@ implements ReseauI<P>{
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
-		super(reflectionInboundPortURI, 1, 0);
+		super(reflectionInboundPortURI, 3, 0);
 
 		ReseauPlugin<P> plugin = new ReseauPlugin<P>(pluginURI,
 				//semaphorePluginAjoutInboundPortURI,
@@ -85,16 +85,9 @@ implements ReseauI<P>{
 	public void execute() throws Exception {
 		super.execute();
 		System.out.println("Execute de " + this.pluginURI);
-	}
-	
-	
-	@Override
-	public void finalise() throws Exception {
-		
-		System.out.println("Finalise de " + this.pluginURI);
 		
 		StringBuilder sb = new StringBuilder();
-	    sb.append("------- DEBUT -------\n");
+	    sb.append("------- AFFICHAGE RESEAU -------\n");
 
 	    for (P p : this.getPlaces()) {
 	        sb.append("URI : ").append(((Place) p).getUri()).append("\n");
@@ -179,6 +172,16 @@ implements ReseauI<P>{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	@Override
+	public void finalise() throws Exception {
+		
+		System.out.println("Finalise de " + this.pluginURI);
+		
+		((ReseauPlugin<P>) this.getPlugin(this.pluginURI))
+		.showReseau();
 	}
 	
 	

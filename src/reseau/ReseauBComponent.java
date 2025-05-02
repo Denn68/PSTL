@@ -2,6 +2,7 @@ package reseau;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.function.Function;
 
 import classes.Place;
@@ -24,8 +25,9 @@ implements ReseauI<P>{
 	@SuppressWarnings("unchecked")
 	protected			ReseauBComponent(String uri,
 			String reflectionInboundPortURI,
-			//String semaphorePluginAjoutInboundPortURI,
-			//String semaphorePluginRetraitInboundPortURI,
+			String semaphoreUpdatingAvailibility,
+			String semaphoreUpdatingJeton,
+			ArrayList<String> semJetonUriList,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
@@ -39,6 +41,18 @@ implements ReseauI<P>{
 				endPointClient);
 		
 		this.uri = uri;
+		
+		HashMap<String, String> updatingJetons = new HashMap<String, String>();
+		
+		String pc1 = "pc1";
+    	String pc2 = "pc2";
+    	String pc3 = "pc3";
+    	String pc4 = "pc4";
+    	
+    	updatingJetons.put(pc1, semJetonUriList.get(0));
+    	updatingJetons.put(pc2, semJetonUriList.get(1));
+    	updatingJetons.put(pc3, semJetonUriList.get(2));
+    	updatingJetons.put(pc4, semJetonUriList.get(3));
 		
 		String p5 = "p5";
     	String p6 = "p6";
@@ -91,5 +105,14 @@ implements ReseauI<P>{
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T7);
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T8);
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addTransition(T9);
+		
+		
+		System.out.println("Connexion entre réseau B et réseau PlaceCommune...");
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t5", pc2, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t6", pc1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t6", pc2, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t6", pc3, semaphoreUpdatingAvailibility, updatingJetons.get(pc3));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t8", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t9", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
 	}
 }

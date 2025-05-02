@@ -46,7 +46,6 @@ public class Transition{
     
     public void updateIsActivable(String place, boolean state) {
     	this.activable.put(place, state);
-    	System.out.println(this.activable);
     }
     
     public boolean isActivable() {

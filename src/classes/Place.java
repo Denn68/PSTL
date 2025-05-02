@@ -52,12 +52,12 @@ public class Place implements PlaceI<Transition> {
     }
     
     public void addJeton() {
-    	System.out.printf("Add dans %s\n", uri);
+    	//System.out.printf("Add dans %s\n", uri);
     	this.nbJeton ++;
     }
     
     public void retrieveJeton() {
-    	System.out.printf("Retrieve dans %s\n", uri);
+    	//System.out.printf("Retrieve dans %s\n", uri);
     	this.nbJeton--;
     }
     

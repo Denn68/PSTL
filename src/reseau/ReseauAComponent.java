@@ -2,11 +2,13 @@ package reseau;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.function.Function;
 
 import classes.Place;
+import classes.PlaceCommune;
 import classes.Transition;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -28,8 +30,9 @@ implements ReseauI<P>{
 	@SuppressWarnings("unchecked")
 	protected			ReseauAComponent(String uri,
 			String reflectionInboundPortURI,
-			//String semaphorePluginAjoutInboundPortURI,
-			//String semaphorePluginRetraitInboundPortURI,
+			String semaphoreUpdatingAvailibility,
+			String semaphoreUpdatingJeton,
+			ArrayList<String> semJetonUriList,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
@@ -37,12 +40,22 @@ implements ReseauI<P>{
 		super(uri,
 				reflectionInboundPortURI,
 				RESEAU_A_PLUGIN_URI,
-				//semaphorePluginAjoutInboundPortURI,
-				//semaphorePluginRetraitInboundPortURI,
 				endPointServer,
 				endPointClient);
 		
 		this.uri = uri;
+		
+		HashMap<String, String> updatingJetons = new HashMap<String, String>();
+		
+		String pc1 = "pc1";
+    	String pc2 = "pc2";
+    	String pc3 = "pc3";
+    	String pc4 = "pc4";
+    	
+    	updatingJetons.put(pc1, semJetonUriList.get(0));
+    	updatingJetons.put(pc2, semJetonUriList.get(1));
+    	updatingJetons.put(pc3, semJetonUriList.get(2));
+    	updatingJetons.put(pc4, semJetonUriList.get(3));
 		
 		String p1 = "p1";
     	String p2 = "p2";
@@ -88,6 +101,12 @@ implements ReseauI<P>{
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T2);
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T3);
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).addTransition(T4);
+		
+		System.out.println("Connexion entre réseau A et réseau PlaceCommune...");
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t1", pc1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t2", pc3, semaphoreUpdatingAvailibility, updatingJetons.get(pc3));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t3", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t4", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
 		
 	}
 	

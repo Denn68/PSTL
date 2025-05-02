@@ -90,12 +90,12 @@ public class PlaceCommune extends Thread implements PlaceCommuneI<String> {
     }
     
     public void addJeton() {
-    	System.out.printf("Add dans %s\n", uri);
+    	//System.out.printf("Add dans %s\n", uri);
     	this.nbJeton ++;
     }
     
     public void retrieveJeton() {
-    	System.out.printf("Retrieve dans %s\n", uri);
+    	//System.out.printf("Retrieve dans %s\n", uri);
     	this.nbJeton--;
     }
 

@@ -161,15 +161,11 @@ implements ReseauI<P>{
 	        boolean appendTrans = true;
 
 	        for (String place : transition.getPlacesEntrees()) {
-	            if (transition.getUri().equals("t8")) {
-	                System.out.println("ETAT T8 " + transition.isActivable());
-	            }
 	            
 	            if (((Place) this.places.get(place)).getNbJeton() == 0) {
 	            	appendTrans = false;
 	            }
 	        }
-
 	        if (appendTrans && transition.isActivable())
 	            transitionsPossibles.add(transition);
 	    }
@@ -198,9 +194,8 @@ implements ReseauI<P>{
 
 	@Override
 	public void randomTransition() throws Exception {
-		int i = 0;
 		Random random = new Random();
-        while(i<10) {
+        while(true) {
         	StringBuilder sb = new StringBuilder();
             Set<Transition> transitionsPossibles = update();
             sb.append("Transitions possible : ");
@@ -216,11 +211,11 @@ implements ReseauI<P>{
             if (transitionsPossibles.isEmpty()) {
             	sb.append("Aucune transition possible.\n");
                 try {
-					Thread.sleep(300);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-                System.out.println(sb.toString());
+                //System.out.println(sb.toString());
             } else {
             	List<Transition> listeTransitions = new ArrayList<>(transitionsPossibles);
 
@@ -228,13 +223,10 @@ implements ReseauI<P>{
 
                 message = String.format("Transition choisie : %s\n", transitionChoisie.getUri());
                 sb.append(message).append("\n");
-                System.out.println(sb.toString());
+                //System.out.println(sb.toString());
 
                 activeTransition(transitionChoisie);
             }
-            
-            showReseau();
-        	i++;
         }
 	}
 
@@ -269,21 +261,26 @@ implements ReseauI<P>{
 
 		if(tr.isActivable()) {
 			
+			/*
 			System.out.println("activeTransition " + tr.getUri() + " a placeCommunesEntrantes : " + tr.getPlacesCommuneEntrees());
+			System.out.println("activeTransition " + tr.getUri() + " a placeCommunesSortantes : " + tr.getPlacesCommuneSorties());
+			System.out.println("activeTransition " + tr.getUri() + " a placeEntrantes : " + tr.getPlacesEntrees());
+			System.out.println("activeTransition " + tr.getUri() + " a placeSortantes : " + tr.getPlacesSorties());
+			*/
     		boolean notSkip = true;
     		
     		for (String placeCommune : tr.getPlacesCommuneEntrees()) {
-    			System.out.println("Check de "+ tr.getUri() + " : " + placeCommune + " = " +
-    					endPointClient.getClientSideReference().getNbJeton(placeCommune));
+    			// System.out.println("Check de "+ tr.getUri() + " : " + placeCommune + " = " +
+    			//		endPointClient.getClientSideReference().getNbJeton(placeCommune));
     			notSkip = endPointClient.getClientSideReference().tryAcquireJeton(placeCommune);
-    			System.out.println("SKIP = " + notSkip);
+    			//System.out.println("NOT SKIP = " + notSkip + " " + Thread.currentThread().getName() + " " + placeCommune);
     			if (!notSkip) {
     				break;
     			}
 	        }
     		
     		if(notSkip) {
-    			System.out.println("Not Skip - " + tr.getUri());
+    			//System.out.println("Not Skip - " + tr.getUri());
 				for (String placeCommune : tr.getPlacesCommuneEntrees()) {
 					endPointClient.getClientSideReference().retrieveJeton(placeCommune);
 					endPointClient.getClientSideReference().releaseAvailability();
@@ -293,8 +290,8 @@ implements ReseauI<P>{
 		        for (String place : tr.getPlacesEntrees())
 		        	((Place) places.get(place)).retrieveJeton();
 		        
-		        for (String place : tr.getPlacesSorties())
-		        	((Place) places.get(place)).addJeton();
+		        for (String place : tr.getPlacesSorties()) {
+		        	((Place) places.get(place)).addJeton();}
 		        
 		        for (String placeCommune : tr.getPlacesCommuneSorties()) {
 		        	endPointClient.getClientSideReference().addJeton(placeCommune);
@@ -304,7 +301,7 @@ implements ReseauI<P>{
 		        
 		        tr.getActivableFunction().apply(null);
     		} else {
-    			System.out.println("La transition a été prise par un autre thread");
+    			//System.out.println("La transition a été prise par un autre thread " + Thread.currentThread().getName());
     		}
     	}
 	}
@@ -324,8 +321,7 @@ implements ReseauI<P>{
 	@Override
 	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
 			throws Exception {
-		System.out.println("updateTransition de " + this.uri);
-		System.out.println(uri + " a comme transSorties " + transSorties + " et état : " + transitionsState);
+		//System.out.println(uri + " a comme transSorties " + transSorties + " et état : " + transitionsState);
 		for(String t : transSorties) {
 			if(this.transitions.containsKey(t)) {
 				this.transitions.get(t).updateIsActivable(uri, transitionsState);

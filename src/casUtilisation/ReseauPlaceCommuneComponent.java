@@ -1,4 +1,4 @@
-package reseauPlaceCommune;
+package casUtilisation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,6 +20,7 @@ import interfaces.ReseauPlaceCommuneCI;
 import interfaces.ReseauPlaceCommuneI;
 import reseau.ReseauEndpoint;
 import reseau.ReseauPlugin;
+import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 import semaphore.SemaphoreClientPlugin;
 
 @OfferedInterfaces(offered = { ReseauPlaceCommuneCI.class })
@@ -97,23 +98,35 @@ implements ReseauPlaceCommuneI<String>{
     	String pc2 = "pc2";
     	String pc3 = "pc3";
     	String pc4 = "pc4";
+    	String pc5 = "pc5";
+    	String pc6 = "pc6";
+    	String pc7 = "pc7";
     	
     	PlaceCommune PC1 = new PlaceCommune(pc1);
     	PlaceCommune PC2 = new PlaceCommune(pc2);
     	PlaceCommune PC3 = new PlaceCommune(pc3);
     	PlaceCommune PC4 = new PlaceCommune(pc4);
+    	PlaceCommune PC5 = new PlaceCommune(pc5);
+    	PlaceCommune PC6 = new PlaceCommune(pc6);
+    	PlaceCommune PC7 = new PlaceCommune(pc7);
     	
-    	PC4.addJeton();
+    	PC7.addJeton();
     	
     	this.placesCommunes.put(pc1, PC1);
     	this.placesCommunes.put(pc2, PC2);
     	this.placesCommunes.put(pc3, PC3);
     	this.placesCommunes.put(pc4, PC4);
+    	this.placesCommunes.put(pc5, PC5);
+    	this.placesCommunes.put(pc6, PC6);
+    	this.placesCommunes.put(pc7, PC7);
     	
     	this.updatingJetons.put(pc1, this.semJetonUriList.get(0));
     	this.updatingJetons.put(pc2, this.semJetonUriList.get(1));
     	this.updatingJetons.put(pc3, this.semJetonUriList.get(2));
     	this.updatingJetons.put(pc4, this.semJetonUriList.get(3));
+    	this.updatingJetons.put(pc5, this.semJetonUriList.get(4));
+    	this.updatingJetons.put(pc6, this.semJetonUriList.get(5));
+    	this.updatingJetons.put(pc7, this.semJetonUriList.get(6));
 		
 		this.id = URIGenerator.generateURI();
 	}
@@ -131,20 +144,45 @@ implements ReseauPlaceCommuneI<String>{
     	String pc2 = "pc2";
     	String pc3 = "pc3";
     	String pc4 = "pc4";
+    	String pc5 = "pc5";
+    	String pc6 = "pc6";
+    	String pc7 = "pc7";
     	
 		try {
 			
-    		this.placesCommunes.get(pc1).addTransEntree("t1");
-    		this.placesCommunes.get(pc3).addTransSortie("t2");
-    		this.placesCommunes.get(pc4).addTransSortie("t3");
-    		this.placesCommunes.get(pc4).addTransEntree("t4");
+    		this.placesCommunes.get(pc1).addTransEntree("tA1");
+    		this.placesCommunes.get(pc1).addTransEntree("tB1");
+    		this.placesCommunes.get(pc1).addTransSortie("tA2");
+    		this.placesCommunes.get(pc1).addTransSortie("tB2");
     		
-    		this.placesCommunes.get(pc2).addTransEntree("t5");
-    		this.placesCommunes.get(pc1).addTransSortie("t6");
-    		this.placesCommunes.get(pc2).addTransSortie("t6");
-    		this.placesCommunes.get(pc3).addTransEntree("t6");
-    		this.placesCommunes.get(pc4).addTransSortie("t8");
-    		this.placesCommunes.get(pc4).addTransEntree("t9");
+    		this.placesCommunes.get(pc2).addTransEntree("tA2");
+    		this.placesCommunes.get(pc2).addTransEntree("tB2");
+    		this.placesCommunes.get(pc2).addTransSortie("tA3");
+    		this.placesCommunes.get(pc2).addTransSortie("tB3");
+    		
+    		this.placesCommunes.get(pc3).addTransEntree("tA3");
+    		this.placesCommunes.get(pc3).addTransEntree("tB3");
+    		this.placesCommunes.get(pc3).addTransSortie("tA4");
+    		this.placesCommunes.get(pc3).addTransSortie("tB4");
+    		
+    		this.placesCommunes.get(pc4).addTransEntree("tA4");
+    		this.placesCommunes.get(pc4).addTransEntree("tB4");
+    		this.placesCommunes.get(pc4).addTransSortie("tA5");
+    		this.placesCommunes.get(pc4).addTransSortie("tB5");
+    		
+    		this.placesCommunes.get(pc5).addTransEntree("tA5");
+    		this.placesCommunes.get(pc5).addTransEntree("tB5");
+    		this.placesCommunes.get(pc5).addTransSortie("tCONV");
+    		this.placesCommunes.get(pc5).addTransSortie("tCONV");
+    		
+    		this.placesCommunes.get(pc6).addTransEntree("tCONV");
+    		this.placesCommunes.get(pc6).addTransSortie("tC2");
+    		this.placesCommunes.get(pc6).addTransSortie("tD2");
+    		
+    		this.placesCommunes.get(pc7).addTransEntree("tC3");
+    		this.placesCommunes.get(pc7).addTransEntree("tD3");
+    		this.placesCommunes.get(pc7).addTransSortie("tC2");
+    		this.placesCommunes.get(pc7).addTransSortie("tD2");
     		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -153,12 +191,13 @@ implements ReseauPlaceCommuneI<String>{
 		this.isConnected = true;
 		
 		this.semaphorePlugin.release(semAvailabilityUri);
-		
+		// TODO : MOUFEES gérer la synchro pour toujours avoir les 2 drops des robots mobile avant le convoyeur
 		while (true) {
+
+			//System.out.println("Mise à jour des possibilités de transitions");
 			for (PlaceCommune pc : this.placesCommunes.values()) {
 				
-				System.out.println("Mise à jour des possibilités de transitions : " + pc.getUri());
-				
+				// System.out.println("Nbjeton :" + pc.getNbJeton());
 				boolean transitionsState = (pc.getNbJeton() > 0);
  				for(ReseauEndpoint ep : endPointClients) {
 					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), transitionsState);
@@ -239,7 +278,6 @@ implements ReseauPlaceCommuneI<String>{
 
 	@Override
 	public boolean tryAcquireJeton(String placeCommune) throws Exception {
-		System.out.println("tryAcquireJetons Jetons");
 		waitUntilPluginIsReady();
 		return this.semaphorePlugin.tryAcquire(this.updatingJetons.get(placeCommune));
 	}
@@ -252,14 +290,12 @@ implements ReseauPlaceCommuneI<String>{
 
 	@Override
 	public void acquireAvailability() throws Exception {
-		System.out.println("acquireAvailability Availability");
 		waitUntilPluginIsReady();
 		this.semaphorePlugin.acquire(semAvailabilityUri);
 	}
 
 	@Override
 	public boolean tryAcquireAvailability() throws Exception {
-		System.out.println("tryAcquireAvailability Availability");
 		waitUntilPluginIsReady();
 		return this.semaphorePlugin.tryAcquire(semAvailabilityUri);
 	}
@@ -267,7 +303,6 @@ implements ReseauPlaceCommuneI<String>{
 	@Override
 	public void releaseAvailability() throws Exception {
 		waitUntilPluginIsReady();
-		System.out.println("Release Availability " + Thread.currentThread().getName());
 		this.semaphorePlugin.release(semAvailabilityUri);
 	}
 
@@ -278,7 +313,7 @@ implements ReseauPlaceCommuneI<String>{
 	
 	private synchronized void waitUntilPluginIsReady() throws InterruptedException {
 		while (this.semaphorePlugin == null || !(this.semaphorePlugin.isInitialised())) {
-			System.out.println("J'ATTEND LA SEMAPHORE " + Thread.currentThread().getName());
+			//System.out.println("J'ATTEND LA SEMAPHORE " + Thread.currentThread().getName());
 			wait();
 		}
 	}
