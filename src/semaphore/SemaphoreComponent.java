@@ -73,6 +73,7 @@ implements	SemaphoreI
 	protected			SemaphoreComponent(
 		String reflectionInboundPortURI,
 		String semAvailabilityUri,
+		String semUpdateUri,
 		ArrayList<String> semJetonUriList
 		) throws Exception
 	{
@@ -81,7 +82,7 @@ implements	SemaphoreI
 		this.semaphoreMap = new HashMap<String, Semaphore>();
 
 		//assert	permits > 0 : new PreconditionException("permits > 0");
-		this.init(/*permits*/semAvailabilityUri, semJetonUriList);
+		this.init(/*permits*/semAvailabilityUri, semUpdateUri, semJetonUriList);
 	}
 
 	/**
@@ -99,9 +100,11 @@ implements	SemaphoreI
 	 */
 	protected void		init(/*int permits*/
 							String semAvailabilityUri,
+							String semUpdateUri,
 							ArrayList<String> semJetonUriList) throws Exception
 	{
 		this.semaphoreMap.put(semAvailabilityUri, new Semaphore(0));
+		this.semaphoreMap.put(semUpdateUri, new Semaphore(0));
 		for (String sem : semJetonUriList) {
 			this.semaphoreMap.put(sem, new Semaphore(1));
 		}

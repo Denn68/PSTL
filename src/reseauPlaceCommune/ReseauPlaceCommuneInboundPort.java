@@ -133,12 +133,32 @@ implements	ReseauPlaceCommuneCI<String>{
 	}
 
 	@Override
+	public void releaseUpdate() throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).releaseUpdate();
+				return null;});
+	}
+
+	@Override
+	public void acquireUpdate() throws Exception {
+		this.getOwner().handleRequest(
+				owner -> {((ReseauPlaceCommuneI) owner).acquireUpdate();
+				return null;});
+	}
+
+	@Override
+	public boolean tryAcquireUpdate() throws Exception {
+		return this.getOwner().handleRequest(
+				owner -> ((ReseauPlaceCommuneI) owner).tryAcquireUpdate());
+	}
+
+	@Override
 	public void releaseAvailability() throws Exception {
 		this.getOwner().handleRequest(
 				owner -> {((ReseauPlaceCommuneI) owner).releaseAvailability();
 				return null;});
 	}
-
+	
 	@Override
 	public boolean isConnected() throws Exception {
 		return this.getOwner().handleRequest(

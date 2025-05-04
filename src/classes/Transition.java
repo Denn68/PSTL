@@ -1,24 +1,16 @@
 package classes;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
 import java.util.function.Function;
 
 @SuppressWarnings("rawtypes")
 public class Transition{
-	/*
-	private ArrayList<Place> placeEntrees;
-    private ArrayList<Place> placeSorties;
-	private ArrayList<PlaceCommune> placeCommuneEntrees;
-    private ArrayList<PlaceCommune> placeCommuneSorties;
-    private Map<PlaceCommune, Boolean> activable;
-    private Map<PlaceCommune, Semaphore> updatingAvailability;
-    private Map<PlaceCommune, Semaphore> updatingJetons;
-    */
-    private ArrayList<String> placeEntrees;
+
+    private Map<String, Integer> placeEntrees;
     private ArrayList<String> placeSorties;
-	private ArrayList<String> placeCommuneEntrees;
+	private Map<String, Integer> placeCommuneEntrees;
     private ArrayList<String> placeCommuneSorties;
     private Map<String, Boolean> activable;
     private Map<String, String> updatingAvailability;
@@ -28,9 +20,9 @@ public class Transition{
 
     // Constructor
     public Transition(String uri, Function function) {
-        this.placeEntrees = new ArrayList<String>();
+        this.placeEntrees = new HashMap<String, Integer>();
         this.placeSorties = new ArrayList<String>();
-        this.placeCommuneEntrees = new ArrayList<String>();
+        this.placeCommuneEntrees = new HashMap<String, Integer>();
         this.placeCommuneSorties = new ArrayList<String>();
         this.activable = new HashMap<String, Boolean>();
         this.updatingJetons = new HashMap<String, String>();
@@ -44,12 +36,14 @@ public class Transition{
         return uri;
     }
     
-    public void updateIsActivable(String place, boolean state) {
+    public void updateIsActivable(String place, int nbJeton) {
+    	//System.out.println(place + " a " + nbJeton + " et il faut " + placeCommuneEntrees.get(place) + " donc " + (nbJeton >= placeCommuneEntrees.get(place)));
+    	boolean state = (nbJeton >= placeCommuneEntrees.get(place));
     	this.activable.put(place, state);
     }
     
     public boolean isActivable() {
-    	for(String p : this.placeCommuneEntrees) {
+    	for(String p : this.placeCommuneEntrees.keySet()) {
     		if(this.activable.get(p) != true) {
     			return false;
     		}
@@ -57,18 +51,16 @@ public class Transition{
     	return true;
     }
     
-    public ArrayList<String> getPlacesEntrees() {
+    public Map<String, Integer> getPlacesEntrees() {
         return this.placeEntrees;
     }
     
-    public void addPlacesEntree(ArrayList<Place> entrees) {
-    	for(Place p : entrees) {
-    		this.placeEntrees.add(p.getUri());
-    	}
+    public void addPlacesEntree(Map<String, Integer> entrees) {
+    	this.placeEntrees.putAll(entrees);
     }
     
-    public void addPlaceEntree(Place entree) {
-    	this.placeEntrees.add(entree.getUri());
+    public void addPlaceEntree(Place entree, int thresHold) {
+    	this.placeEntrees.put(entree.getUri(), thresHold);
     	entree.addTransSortie(this);
     }
 
@@ -87,7 +79,7 @@ public class Transition{
     	sortie.addTransEntree(this);
     }
     
-    public ArrayList<String> getPlacesCommuneEntrees() {
+    public Map<String, Integer> getPlacesCommuneEntrees() {
         return this.placeCommuneEntrees;
     }
     
@@ -95,8 +87,8 @@ public class Transition{
         return this.placeCommuneSorties;
     }
     
-    public void addPlaceCommuneEntree(String entree, String updatingAvailability, String updatingJetons) {    
-		this.placeCommuneEntrees.add(entree);
+    public void addPlaceCommuneEntree(String entree, int thresHold, String updatingAvailability, String updatingJetons) {    
+		this.placeCommuneEntrees.put(entree, thresHold);
 		this.activable.put(entree, false);
         this.updatingAvailability.put(entree, updatingAvailability);
         this.updatingJetons.put(entree, updatingJetons);
@@ -116,36 +108,4 @@ public class Transition{
 	public void setActivableFunction(Function activableFunction) {
 		this.activableFunction = activableFunction;
 	}
-    
-    /*@SuppressWarnings("unchecked")
-	public void activateTransition() {
-    	if (this.isActivable()) {
-    		boolean skip = false;
-    		for (String placeCommune : this.getPlacesCommuneEntrees()) {
-				skip = this.updatingJetons.get(placeCommune).tryAcquire();
-	        }
-    		if(!skip) {
-    			System.out.printf("Not Skip - %s\n", uri);
-				for (PlaceCommune placeCommune : this.getPlacesCommuneEntrees()) {
-					placeCommune.retrieveJeton();
-					this.updatingAvailability.get(placeCommune).release();
-					this.updatingJetons.get(placeCommune).release();
-		        }
-		        for (Place place : this.getPlacesEntrees())
-		        	place.retrieveJeton();
-		        for (Place place : this.getPlacesSorties())
-		        	place.addJeton();
-		        for (PlaceCommune placeCommune : this.getPlacesCommuneSorties()) {
-		        	placeCommune.addJeton();
-		        	this.updatingAvailability.get(placeCommune).release();
-	        	}
-		        this.activableFunction.apply(null);
-    		} else {
-    			System.out.println("La transition a été prise par un autre thread");
-    		}
-    	}
-    	else {
-    		System.out.println("La transition n'est pas activable, la place commune n'a pas de jeton");
-    	}
-    }*/
 }

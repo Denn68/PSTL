@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 import interfaces.PlaceCommuneI;
-import interfaces.PlaceI;
 
 public class PlaceCommune extends Thread implements PlaceCommuneI<String> {
     private int nbJeton;
@@ -23,28 +22,6 @@ public class PlaceCommune extends Thread implements PlaceCommuneI<String> {
         this.updatingAvailability = new Semaphore(0);
         this.updatingJetons = new Semaphore(1);
     }
-
-    /*@Override
-    public void run() {
-        try {
-        	if(this.nbJeton == 0) {
-        		for(Transition t : this.transSorties) {
-        			t.updateIsActivable(this.getUri());
-        		}
-        	}
-            while (true) {
-            	updatingAvailability.acquire(); // Attente ici, pas d'attente active
-                System.out.println("Mise à jour des possibilités de transitions: " + uri);
-
-                for(Transition t: this.transSorties) {
-                	t.updateIsActivable(this.getUri());
-                }
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        System.out.println("Thread stoppé proprement : " + uri);
-    }*/
 
     @Override
     public int getNbJeton() {
@@ -90,12 +67,10 @@ public class PlaceCommune extends Thread implements PlaceCommuneI<String> {
     }
     
     public void addJeton() {
-    	//System.out.printf("Add dans %s\n", uri);
     	this.nbJeton ++;
     }
     
     public void retrieveJeton() {
-    	//System.out.printf("Retrieve dans %s\n", uri);
     	this.nbJeton--;
     }
 

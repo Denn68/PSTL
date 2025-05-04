@@ -1,19 +1,13 @@
 package casUtilisation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Function;
 
 import classes.Place;
-import classes.PlaceCommune;
 import classes.Transition;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
-import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.exceptions.ConnectionException;
 import interfaces.ReseauCI;
 import interfaces.ReseauI;
 import reseau.ReseauComponent;
@@ -28,13 +22,13 @@ extends ReseauComponent<T, P>
 implements ReseauI<P>{
 	
 	public static final String		FORKLIFT_C_PLUGIN_URI = "forklift-c-plugin-uri";
+	
 	private String uri;
 	
 	@SuppressWarnings("unchecked")
 	protected			ForkliftC(String uri,
 			String reflectionInboundPortURI,
 			String semaphoreUpdatingAvailibility,
-			String semaphoreUpdatingJeton,
 			ArrayList<String> semJetonUriList,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
@@ -79,41 +73,41 @@ implements ReseauI<P>{
     	
     	  	
     	
-    	Function<String, String> gotoPosition = input -> {
+    	Function<Void, Void> gotoPosition = input -> {
     	    System.out.println("gotoPosition pb ");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> lift = input -> {
+    	Function<Void, Void> lift = input -> {
     	    System.out.println("lift");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> gotoPositionBis = input -> {
+    	Function<Void, Void> gotoPositionBis = input -> {
     	    System.out.println("gotoPosition pc");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> drop = input -> {
+    	Function<Void, Void> drop = input -> {
     	    System.out.println("drop");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Transition TC1 = new Transition(tC1, (Function) gotoPosition);
-    	Transition TC2 = new Transition(tC2, (Function) lift);
-    	Transition TC3 = new Transition(tC3, (Function) gotoPositionBis);
-    	Transition TC4 = new Transition(tC4, (Function) drop);
-    	Transition TC5 = new Transition(tC5, (Function) gotoPosition);
+    	Transition TC1 = new Transition(tC1, (Function<Void, Void>) gotoPosition);
+    	Transition TC2 = new Transition(tC2, (Function<Void, Void>) lift);
+    	Transition TC3 = new Transition(tC3, (Function<Void, Void>) gotoPositionBis);
+    	Transition TC4 = new Transition(tC4, (Function<Void, Void>) drop);
+    	Transition TC5 = new Transition(tC5, (Function<Void, Void>) gotoPosition);
     	
-    	TC1.addPlaceEntree(P1);
+    	TC1.addPlaceEntree(P1,1);
     	TC1.addPlaceSortie(P2);
-    	TC2.addPlaceEntree(P2);
+    	TC2.addPlaceEntree(P2,1);
     	TC2.addPlaceSortie(P3);
-    	TC3.addPlaceEntree(P3);
+    	TC3.addPlaceEntree(P3,1);
     	TC3.addPlaceSortie(P4);
-    	TC4.addPlaceEntree(P4);
+    	TC4.addPlaceEntree(P4,1);
     	TC4.addPlaceSortie(P5);
-    	TC5.addPlaceEntree(P5);
+    	TC5.addPlaceEntree(P5,1);
     	TC5.addPlaceSortie(P2);
 	
 	
@@ -130,8 +124,8 @@ implements ReseauI<P>{
 		((ReseauPlugin<P>) this.getPlugin(FORKLIFT_C_PLUGIN_URI)).addTransition(TC5);
 		
 		System.out.println("Connexion entre forklift C et réseau PlaceCommune...");
-		((ReseauPlugin<P>) this.getPlugin(FORKLIFT_C_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tC2", pc6, semaphoreUpdatingAvailibility, updatingJetons.get(pc6));
-		((ReseauPlugin<P>) this.getPlugin(FORKLIFT_C_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tC2", pc7, semaphoreUpdatingAvailibility, updatingJetons.get(pc7));
+		((ReseauPlugin<P>) this.getPlugin(FORKLIFT_C_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tC2", pc6, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc6));
+		((ReseauPlugin<P>) this.getPlugin(FORKLIFT_C_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tC2", pc7, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc7));
 		((ReseauPlugin<P>) this.getPlugin(FORKLIFT_C_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tC3", pc7, semaphoreUpdatingAvailibility, updatingJetons.get(pc7));
 	}
 	

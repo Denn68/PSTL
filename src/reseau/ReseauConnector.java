@@ -75,9 +75,9 @@ implements ReseauCI<P>{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, int seuil, String updatingAvailability,
 			String updatingJetons) throws Exception {
-		((ReseauCI<P>)this.offering).linkEntreePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
+		((ReseauCI<P>)this.offering).linkEntreePlaceCommuneTransition(transition, placeCommune, seuil, updatingAvailability, updatingJetons);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -89,9 +89,9 @@ implements ReseauCI<P>{
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, int nbJeton)
 			throws Exception {
-		((ReseauCI<P>)this.offering).updateTransitionsActivable(uri, transSorties, transitionsState);
+		((ReseauCI<P>)this.offering).updateTransitionsActivable(uri, transSorties, nbJeton);
 	}
 
 	

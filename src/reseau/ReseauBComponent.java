@@ -1,7 +1,6 @@
 package reseau;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Function;
 
@@ -26,7 +25,6 @@ implements ReseauI<P>{
 	protected			ReseauBComponent(String uri,
 			String reflectionInboundPortURI,
 			String semaphoreUpdatingAvailibility,
-			String semaphoreUpdatingJeton,
 			ArrayList<String> semJetonUriList,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
@@ -35,8 +33,6 @@ implements ReseauI<P>{
 		super(uri,
 				reflectionInboundPortURI,
 				RESEAU_B_PLUGIN_URI,
-				//semaphorePluginAjoutInboundPortURI,
-				//semaphorePluginRetraitInboundPortURI,
 				endPointServer,
 				endPointClient);
 		
@@ -79,19 +75,19 @@ implements ReseauI<P>{
     	    return "Transition activée: " + input;
     	};
     	
-    	Transition T5 = new Transition(t5, (Function) fonction);
-    	Transition T6 = new Transition(t6, (Function) fonction);
-    	Transition T7 = new Transition(t7, (Function) fonction);
-    	Transition T8 = new Transition(t8, (Function) fonction);
-    	Transition T9 = new Transition(t9, (Function) fonction);
+    	Transition T5 = new Transition(t5, (Function<String, String>) fonction);
+    	Transition T6 = new Transition(t6, (Function<String, String>) fonction);
+    	Transition T7 = new Transition(t7, (Function<String, String>) fonction);
+    	Transition T8 = new Transition(t8, (Function<String, String>) fonction);
+    	Transition T9 = new Transition(t9, (Function<String, String>) fonction);
     	
-    	T5.addPlaceEntree(P5);
+    	T5.addPlaceEntree(P5,1);
     	T6.addPlaceSortie(P6);
-    	T7.addPlaceEntree(P6);
+    	T7.addPlaceEntree(P6,1);
     	T7.addPlaceSortie(P7);
-    	T8.addPlaceEntree(P7);
+    	T8.addPlaceEntree(P7,1);
     	T8.addPlaceSortie(P8);
-    	T9.addPlaceEntree(P8);
+    	T9.addPlaceEntree(P8,1);
     	T9.addPlaceSortie(P9);
 
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).addPlace((P) P5);
@@ -109,10 +105,10 @@ implements ReseauI<P>{
 		
 		System.out.println("Connexion entre réseau B et réseau PlaceCommune...");
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t5", pc2, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t6", pc1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t6", pc2, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t6", pc1, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t6", pc2, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t6", pc3, semaphoreUpdatingAvailibility, updatingJetons.get(pc3));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t8", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkEntreePlaceCommuneTransition("t8", pc4, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_B_PLUGIN_URI)).linkSortiePlaceCommuneTransition("t9", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
 	}
 }

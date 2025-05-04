@@ -1,19 +1,13 @@
 package casUtilisation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Function;
 
 import classes.Place;
-import classes.PlaceCommune;
 import classes.Transition;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
-import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.exceptions.ConnectionException;
 import interfaces.ReseauCI;
 import interfaces.ReseauI;
 import reseau.ReseauComponent;
@@ -34,7 +28,6 @@ implements ReseauI<P>{
 	protected			MobileRobotA(String uri,
 			String reflectionInboundPortURI,
 			String semaphoreUpdatingAvailibility,
-			String semaphoreUpdatingJeton,
 			ArrayList<String> semJetonUriList,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
@@ -62,7 +55,7 @@ implements ReseauI<P>{
     	updatingJetons.put(pc4, semJetonUriList.get(3));
     	updatingJetons.put(pc5, semJetonUriList.get(4));
     	
-    	System.out.println("[" + this.uri + "] Updating jetons: " + updatingJetons);
+    	//System.out.println("[" + this.uri + "] Updating jetons: " + updatingJetons);
 		
 		String p1 = "p1";
     	String p2 = "p2";
@@ -91,54 +84,54 @@ implements ReseauI<P>{
     	
     	  	
     	
-    	Function<String, String> gotoPosition = input -> {
-    	    System.out.println("gotoPosition p1 ");
-    	    return "Test";
+    	Function<Void, Void> gotoPosition = input -> {
+    	    System.out.println("gotoPosition p1");
+    	    return null;
     	};
     	
-    	Function<String, String> pick = input -> {
+    	Function<Void, Void> pick = input -> {
     	    System.out.println("pick");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> lift = input -> {
+    	Function<Void, Void> lift = input -> {
     	    System.out.println("lift");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> gotoPositionBis = input -> {
+    	Function<Void, Void> gotoPositionBis = input -> {
     	    System.out.println("gotoPosition pa");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> drop = input -> {
+    	Function<Void, Void> drop = input -> {
     	    System.out.println("drop");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Function<String, String> gotoBase = input -> {
+    	Function<Void, Void> gotoBase = input -> {
     	    System.out.println("gotoBase");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Transition TA1 = new Transition(tA1, (Function) gotoPosition);
-    	Transition TA2 = new Transition(tA2, (Function) pick);
-    	Transition TA3 = new Transition(tA3, (Function) lift);
-    	Transition TA4 = new Transition(tA4, (Function) gotoPositionBis);
-    	Transition TA5 = new Transition(tA5, (Function) drop);
-    	Transition TA6 = new Transition(tA6, (Function) gotoBase);
+    	Transition TA1 = new Transition(tA1, (Function<Void, Void>) gotoPosition);
+    	Transition TA2 = new Transition(tA2, (Function<Void, Void>) pick);
+    	Transition TA3 = new Transition(tA3, (Function<Void, Void>) lift);
+    	Transition TA4 = new Transition(tA4, (Function<Void, Void>) gotoPositionBis);
+    	Transition TA5 = new Transition(tA5, (Function<Void, Void>) drop);
+    	Transition TA6 = new Transition(tA6, (Function<Void, Void>) gotoBase);
     	
-    	TA1.addPlaceEntree(P1);
+    	TA1.addPlaceEntree(P1,1);
     	TA1.addPlaceSortie(P2);
-    	TA2.addPlaceEntree(P2);
+    	TA2.addPlaceEntree(P2,1);
     	TA2.addPlaceSortie(P3);
-    	TA3.addPlaceEntree(P3);
+    	TA3.addPlaceEntree(P3,1);
     	TA3.addPlaceSortie(P4);
-    	TA4.addPlaceEntree(P4);
+    	TA4.addPlaceEntree(P4,1);
     	TA4.addPlaceSortie(P5);
-    	TA5.addPlaceEntree(P5);
+    	TA5.addPlaceEntree(P5,1);
     	TA5.addPlaceSortie(P6);
-    	TA6.addPlaceEntree(P6);
+    	TA6.addPlaceEntree(P6,1);
     	TA6.addPlaceSortie(P7);
 	
 	
@@ -159,13 +152,13 @@ implements ReseauI<P>{
 		
 		System.out.println("Connexion entre robot A et réseau PlaceCommune...");
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tA1", pc1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA2", pc1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA2", pc1, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc1));
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tA2", pc2, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA3", pc2, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA3", pc2, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc2));
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tA3", pc3, semaphoreUpdatingAvailibility, updatingJetons.get(pc3));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA4", pc3, semaphoreUpdatingAvailibility, updatingJetons.get(pc3));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA4", pc3, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc3));
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tA4", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
-		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA5", pc4, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
+		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tA5", pc4, 1, semaphoreUpdatingAvailibility, updatingJetons.get(pc4));
 		((ReseauPlugin<P>) this.getPlugin(RESEAU_A_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tA5", pc5, semaphoreUpdatingAvailibility, updatingJetons.get(pc5));
 		
 	}

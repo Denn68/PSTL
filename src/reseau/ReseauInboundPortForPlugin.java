@@ -176,7 +176,7 @@ implements	ReseauCI<P>{
 	}
 
 	@Override
-	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, int seuil, String updatingAvailability,
 			String updatingJetons) throws Exception {
 		this.getOwner().handleRequest(
 				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
@@ -187,6 +187,7 @@ implements	ReseauCI<P>{
 						.linkEntreePlaceCommuneTransition(
 								transition,
 								placeCommune,
+								seuil,
 								updatingAvailability,
 								updatingJetons);
 						return null;
@@ -214,7 +215,7 @@ implements	ReseauCI<P>{
 	}
 
 	@Override
-	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, int nbJeton)
 			throws Exception {
 		this.getOwner().handleRequest(
 				new AbstractComponent.AbstractService<Void>(this.getPluginURI()) {
@@ -225,7 +226,7 @@ implements	ReseauCI<P>{
 						.updateTransitionsActivable(
 								uri,
 								transSorties,
-								transitionsState);
+								nbJeton);
 						return null;
 					}
 				});

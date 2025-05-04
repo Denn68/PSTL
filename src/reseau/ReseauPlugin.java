@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import classes.Place;
 import classes.Transition;
@@ -35,10 +34,9 @@ implements ReseauI<P>{
 	protected Map<String, Transition> 	transitions;
 	protected String 					uri;
 	
-	//private String semaphorePluginAjoutInboundPortURI;
-	//private String semaphorePluginRetraitInboundPortURI;
 	private ReseauPlaceCommuneEndpoint endPointClient;
 	private ReseauEndpoint endPointServer;
+	private Transition oldTransition; 
 
 	public				ReseauPlugin(String uri) throws Exception
 	{
@@ -47,17 +45,12 @@ implements ReseauI<P>{
 	}
 	
 	public				ReseauPlugin(String uri,
-			//String semaphorePluginAjoutInboundPortURI,
-			//String semaphorePluginRetraitInboundPortURI,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
 		super();
 		this.uri = uri;
-		//this.semaphorePluginAjoutInboundPortURI = semaphorePluginAjoutInboundPortURI;
-		//this.semaphorePluginRetraitInboundPortURI = semaphorePluginRetraitInboundPortURI;
 
-		//endPointServer.initialiseServerSide(this.getOwner());
 		this.endPointServer = endPointServer;
 		this.endPointClient = endPointClient;
 	}
@@ -151,16 +144,14 @@ implements ReseauI<P>{
 		
 	}
 
-
-	@SuppressWarnings("rawtypes")
 	@Override
 	public Set<Transition> update() throws Exception {
 	    Set<Transition> transitionsPossibles = new HashSet<>();
 
 	    for (Transition transition : this.transitions.values()) {
-	        boolean appendTrans = true;
+	        boolean appendTrans = (oldTransition != transition);
 
-	        for (String place : transition.getPlacesEntrees()) {
+	        for (String place : transition.getPlacesEntrees().keySet()) {
 	            
 	            if (((Place) this.places.get(place)).getNbJeton() == 0) {
 	            	appendTrans = false;
@@ -174,8 +165,6 @@ implements ReseauI<P>{
 	}
 
 
-
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void showReseau() throws Exception {
 		StringBuilder sb = new StringBuilder();
@@ -226,6 +215,7 @@ implements ReseauI<P>{
                 //System.out.println(sb.toString());
 
                 activeTransition(transitionChoisie);
+                showReseau();
             }
         }
 	}
@@ -256,24 +246,17 @@ implements ReseauI<P>{
         showReseau();		
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void activeTransition(Transition tr) throws Exception {
 
 		if(tr.isActivable()) {
 			
-			/*
-			System.out.println("activeTransition " + tr.getUri() + " a placeCommunesEntrantes : " + tr.getPlacesCommuneEntrees());
-			System.out.println("activeTransition " + tr.getUri() + " a placeCommunesSortantes : " + tr.getPlacesCommuneSorties());
-			System.out.println("activeTransition " + tr.getUri() + " a placeEntrantes : " + tr.getPlacesEntrees());
-			System.out.println("activeTransition " + tr.getUri() + " a placeSortantes : " + tr.getPlacesSorties());
-			*/
     		boolean notSkip = true;
+    		//boolean hasPlaceCommune = false;
     		
-    		for (String placeCommune : tr.getPlacesCommuneEntrees()) {
-    			// System.out.println("Check de "+ tr.getUri() + " : " + placeCommune + " = " +
-    			//		endPointClient.getClientSideReference().getNbJeton(placeCommune));
+    		for (String placeCommune : tr.getPlacesCommuneEntrees().keySet()) {
     			notSkip = endPointClient.getClientSideReference().tryAcquireJeton(placeCommune);
-    			//System.out.println("NOT SKIP = " + notSkip + " " + Thread.currentThread().getName() + " " + placeCommune);
     			if (!notSkip) {
     				break;
     			}
@@ -281,25 +264,33 @@ implements ReseauI<P>{
     		
     		if(notSkip) {
     			//System.out.println("Not Skip - " + tr.getUri());
-				for (String placeCommune : tr.getPlacesCommuneEntrees()) {
+				for (String placeCommune : tr.getPlacesCommuneEntrees().keySet()) {
+					//hasPlaceCommune = true;
 					endPointClient.getClientSideReference().retrieveJeton(placeCommune);
 					endPointClient.getClientSideReference().releaseAvailability();
 					endPointClient.getClientSideReference().releaseJeton(placeCommune);
 		        }
 				
-		        for (String place : tr.getPlacesEntrees())
+		        for (String place : tr.getPlacesEntrees().keySet())
 		        	((Place) places.get(place)).retrieveJeton();
 		        
 		        for (String place : tr.getPlacesSorties()) {
 		        	((Place) places.get(place)).addJeton();}
 		        
 		        for (String placeCommune : tr.getPlacesCommuneSorties()) {
+					//hasPlaceCommune = true;
 		        	endPointClient.getClientSideReference().addJeton(placeCommune);
 		        	endPointClient.getClientSideReference().releaseAvailability();
 	        	}
 		        
 		        
-		        tr.getActivableFunction().apply(null);
+		        tr.getActivableFunction().apply(tr.getUri());
+		        oldTransition = tr;
+		        
+		        /*if(hasPlaceCommune) {
+		        	System.out.println("----------------------------hasPlaceCommune");
+			        endPointClient.getClientSideReference().acquireUpdate();
+		        }*/
     		} else {
     			//System.out.println("La transition a été prise par un autre thread " + Thread.currentThread().getName());
     		}
@@ -307,9 +298,9 @@ implements ReseauI<P>{
 	}
 
 	@Override
-	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, int seuil, String updatingAvailability,
 			String updatingJetons) throws Exception {
-		this.transitions.get(transition).addPlaceCommuneEntree(placeCommune, updatingAvailability, updatingJetons);
+		this.transitions.get(transition).addPlaceCommuneEntree(placeCommune, seuil, updatingAvailability, updatingJetons);
 	}
 
 	@Override
@@ -319,12 +310,11 @@ implements ReseauI<P>{
 	}
 
 	@Override
-	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, int nbJeton)
 			throws Exception {
-		//System.out.println(uri + " a comme transSorties " + transSorties + " et état : " + transitionsState);
 		for(String t : transSorties) {
 			if(this.transitions.containsKey(t)) {
-				this.transitions.get(t).updateIsActivable(uri, transitionsState);
+				this.transitions.get(t).updateIsActivable(uri, nbJeton);
 			}
 		}
 	}

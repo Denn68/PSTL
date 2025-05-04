@@ -41,6 +41,12 @@ ReseauPlaceCommuneI<T>{
 	public boolean tryAcquireAvailability() throws Exception;
 	
 	public void releaseAvailability() throws Exception;
+	
+	public void acquireUpdate() throws Exception;
+
+	public boolean tryAcquireUpdate() throws Exception;
+	
+	public void releaseUpdate() throws Exception;
 }
 
 

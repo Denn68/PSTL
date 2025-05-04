@@ -11,15 +11,15 @@ import classes.Reseau;
 import classes.Transition;
 
 public class Backend<I, R>{
-	Map<String, Reseau<I, R, Place>> reseaux;
+	Map<String, Reseau<I, R>> reseaux;
     Map<String, PlaceCommune> placesCommunes;
 
 	public Backend() {
-		this.reseaux = new HashMap<String, Reseau<I, R, Place>>();
+		this.reseaux = new HashMap<String, Reseau<I, R>>();
 		this.placesCommunes = new HashMap<String, PlaceCommune>();
     }
 	public void CreateNetwork(String uri) {
-		this.reseaux.put(uri, new Reseau<I, R, Place>(uri));
+		this.reseaux.put(uri, new Reseau<I, R>(uri));
 	}
 
 	public void CreatePlace(String reseauUri, String placeUri) {
@@ -77,24 +77,25 @@ public class Backend<I, R>{
 				}
 			}
 			if(!notFound) {
-				Transition<String, String> transition = new Transition<String, String>(transitionUri, activablefunction);
-				transition.addPlacesEntree(placeEntrees);
+				Transition transition = new Transition(transitionUri, activablefunction);
+				//transition.addPlacesEntree(placeEntrees);
 				transition.addPlacesSortie(placeSorties);
-				transition.addPlacesCommuneEntree(placeCommuneEntrees);
-				transition.addPlacesCommuneSortie(placeCommuneSorties);
+				//transition.addPlacesCommuneEntrees(placeCommuneEntrees);
+				//transition.addPlacesCommuneSorties(placeCommuneSorties);
 				for(Place p: placeEntrees) {
+					transition.addPlaceEntree(p, 1);
 					p.addTransSortie(transition);
 				}
 				for(Place p: placeSorties) {
 					p.addTransEntree(transition);
 				}
 				for(PlaceCommune p: placeCommuneEntrees) {
-					p.addTransSortie(transition);
+					p.addTransSortie(transition.getUri());
 				}
 				for(PlaceCommune p: placeCommuneSorties) {
-					p.addTransEntree(transition);
+					p.addTransEntree(transition.getUri());
 				}
-				this.reseaux.get(reseauUri).addTransition((Transition<I, R>) transition);
+				this.reseaux.get(reseauUri).addTransition((Transition) transition);
 			}
 			else {
 				System.out.printf("L'uri %s n'a pas été trouvée", notFoundUri);

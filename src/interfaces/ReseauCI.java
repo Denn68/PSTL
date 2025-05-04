@@ -37,8 +37,9 @@ ReseauI<P>{
     public void manualTransition(Scanner scanner) throws Exception;
     
     public void linkEntreePlaceCommuneTransition(
-    		String transition, 
+    		String transition,
     		String placeCommune,
+    		int seuil,
     		String updatingAvailability,
     		String updatingJetons) throws Exception;
     
@@ -51,6 +52,6 @@ ReseauI<P>{
 	public void updateTransitionsActivable(
 			String uri,
 			ArrayList<String> transSorties,
-			boolean transitionsState) throws Exception;
+			int nbJeton) throws Exception;
     
 }

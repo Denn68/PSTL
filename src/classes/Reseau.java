@@ -82,7 +82,7 @@ extends Thread{
         for (Transition transition: this.transitions) {
             AtomicBoolean appendTrans = new AtomicBoolean(true);
 
-            for(String place: transition.getPlacesEntrees()) {
+            for(String place: transition.getPlacesEntrees().keySet()) {
                 if(transition.getUri().equals("t8")) {
                     System.out.println("ETAT T8 " + transition.isActivable());
                 }
@@ -104,17 +104,18 @@ extends Thread{
         return transitionsPossibles;
     }
     
+    @SuppressWarnings({ "unused", "unchecked" })
     public void activeTransition(Transition tr) {
     	if(tr.isActivable()) {
     		boolean skip = false;
-    		for (String placeCommune : tr.getPlacesCommuneEntrees()) {
+    		for ( String placeCommune : tr.getPlacesCommuneEntrees().keySet()) {
 				// skip = this.updatingJetons.get(placeCommune).tryAcquire();
     			// => tryAcquire dans le composant Semaphore updatingJeton avec l'URI placeCommune
     			// transition -> uriPlacesCommunes -> ReseauPlaceCommune-> Semaphore correspondante
 	        }
     		if(!skip) {
     			System.out.printf("Not Skip - %s\n", uri);
-				for (String placeCommune : tr.getPlacesCommuneEntrees()) {
+				for (String placeCommune : tr.getPlacesCommuneEntrees().keySet()) {
 					// placeCommune.retrieveJeton(uri); => retrieveJeton dans le composant ReseauPlaceCommune
 					
 					// this.updatingAvailability.get(placeCommune).release();
@@ -126,7 +127,7 @@ extends Thread{
 	    			// transition -> uriPlacesCommunes -> ReseauPlaceCommune-> Semaphore correspondante
 		        }
 				
-		        for (String place : tr.getPlacesEntrees())
+		        for (String place : tr.getPlacesEntrees().keySet())
 		        	places.get(place).retrieveJeton();
 		        
 		        for (String place : tr.getPlacesSorties())

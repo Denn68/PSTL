@@ -1,14 +1,10 @@
 package casUtilisation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import classes.Place;
 import classes.PlaceCommune;
-import classes.Transition;
 import classes.URIGenerator;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
@@ -19,7 +15,6 @@ import interfaces.ReseauCI;
 import interfaces.ReseauPlaceCommuneCI;
 import interfaces.ReseauPlaceCommuneI;
 import reseau.ReseauEndpoint;
-import reseau.ReseauPlugin;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 import semaphore.SemaphoreClientPlugin;
 
@@ -32,6 +27,7 @@ implements ReseauPlaceCommuneI<String>{
 	protected			ReseauPlaceCommuneComponent(String uri,
 			String semaphoreReflectionInboundPortURI,
 			String semAvailabilityUri,
+			String semUpdateUri,
 			ArrayList<String> semJetonUriList,
 			ReseauPlaceCommuneEndpoint endPointServer,
 			ArrayList<ReseauEndpoint> endPointClients) throws Exception
@@ -41,12 +37,13 @@ implements ReseauPlaceCommuneI<String>{
         this.uri = uri;
         this.placesCommunes = new HashMap<>();
 		endPointServer.initialiseServerSide(this);
-		this.endPointServer = endPointServer;
+		//this.endPointServer = endPointServer;
 		this.endPointClients = endPointClients;
 		
 		this.updatingJetons = new HashMap<String, String>();
 		
 		this.semAvailabilityUri = semAvailabilityUri;
+		this.semUpdateUri = semUpdateUri;
 		this.semJetonUriList = semJetonUriList;
 		
 		this.semaphoreReflectionInboundPortURI =
@@ -60,7 +57,7 @@ implements ReseauPlaceCommuneI<String>{
 		
 	}
 	
-	private ReseauPlaceCommuneEndpoint endPointServer;
+	//private ReseauPlaceCommuneEndpoint endPointServer;
 	private ArrayList<ReseauEndpoint> endPointClients;
 	private Map<String, PlaceCommune> placesCommunes;
     private String uri;
@@ -69,6 +66,7 @@ implements ReseauPlaceCommuneI<String>{
     private Map<String, String> updatingJetons;
     
     private String semAvailabilityUri;
+    private String semUpdateUri;
     private ArrayList<String> semJetonUriList;
     
     protected String	semaphoreReflectionInboundPortURI;
@@ -131,12 +129,12 @@ implements ReseauPlaceCommuneI<String>{
 		this.id = URIGenerator.generateURI();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void execute() throws Exception {
 		
 		synchronized (this) {
 			this.installPlugin(semaphorePlugin);
-			System.out.println("Dans ReseauPLaceCommune.java, le plugin " + semaphorePlugin.getPluginURI() + " est installé");
 			notifyAll(); 
 		}
 		
@@ -191,16 +189,14 @@ implements ReseauPlaceCommuneI<String>{
 		this.isConnected = true;
 		
 		this.semaphorePlugin.release(semAvailabilityUri);
-		// TODO : MOUFEES gérer la synchro pour toujours avoir les 2 drops des robots mobile avant le convoyeur
+		
 		while (true) {
 
-			//System.out.println("Mise à jour des possibilités de transitions");
 			for (PlaceCommune pc : this.placesCommunes.values()) {
 				
-				// System.out.println("Nbjeton :" + pc.getNbJeton());
-				boolean transitionsState = (pc.getNbJeton() > 0);
- 				for(ReseauEndpoint ep : endPointClients) {
-					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), transitionsState);
+				int nbJeton = pc.getNbJeton();
+				for(ReseauEndpoint ep : endPointClients) {
+					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), nbJeton);
 				}
 		        
 			}
@@ -307,13 +303,30 @@ implements ReseauPlaceCommuneI<String>{
 	}
 
 	@Override
+	public void acquireUpdate() throws Exception {
+		waitUntilPluginIsReady();
+		this.semaphorePlugin.acquire(semUpdateUri);
+	}
+
+	@Override
+	public boolean tryAcquireUpdate() throws Exception {
+		waitUntilPluginIsReady();
+		return this.semaphorePlugin.tryAcquire(semUpdateUri);
+	}
+
+	@Override
+	public void releaseUpdate() throws Exception {
+		waitUntilPluginIsReady();
+		this.semaphorePlugin.release(semUpdateUri);
+	}
+
+	@Override
 	public boolean isConnected() throws Exception {
 		return this.isConnected;
 	}
 	
 	private synchronized void waitUntilPluginIsReady() throws InterruptedException {
 		while (this.semaphorePlugin == null || !(this.semaphorePlugin.isInitialised())) {
-			//System.out.println("J'ATTEND LA SEMAPHORE " + Thread.currentThread().getName());
 			wait();
 		}
 	}

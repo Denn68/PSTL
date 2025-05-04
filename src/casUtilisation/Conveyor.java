@@ -1,19 +1,13 @@
 package casUtilisation;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
-import java.util.Set;
 import java.util.function.Function;
 
 import classes.Place;
-import classes.PlaceCommune;
 import classes.Transition;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
-import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.exceptions.ConnectionException;
 import interfaces.ReseauCI;
 import interfaces.ReseauI;
 import reseau.ReseauComponent;
@@ -34,7 +28,6 @@ implements ReseauI<P>{
 	protected			Conveyor(String uri,
 			String reflectionInboundPortURI,
 			String semaphoreUpdatingAvailibility,
-			String semaphoreUpdatingJeton,
 			ArrayList<String> semJetonUriList,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
@@ -56,7 +49,7 @@ implements ReseauI<P>{
     	updatingJetons.put(pc5, semJetonUriList.get(4));
     	updatingJetons.put(pc6, semJetonUriList.get(5));
     	
-    	System.out.println("[" + this.uri + "] Updating jetons: " + updatingJetons);
+    	//System.out.println("[" + this.uri + "] Updating jetons: " + updatingJetons);
 		
 		String p1 = "p1";
     	String p2 = "p2";
@@ -70,14 +63,14 @@ implements ReseauI<P>{
     	
     	  	
     	
-    	Function<String, String> move = input -> {
+    	Function<Void, Void> move = input -> {
     	    System.out.println("move");
-    	    return "Test";
+    	    return null;
     	};
     	
-    	Transition TCONV = new Transition(tCONV, (Function) move);
+    	Transition TCONV = new Transition(tCONV, (Function<Void, Void>) move);
     	
-    	TCONV.addPlaceEntree(P1);
+    	TCONV.addPlaceEntree(P1,1);
     	TCONV.addPlaceSortie(P2);
 	
 	
@@ -87,8 +80,7 @@ implements ReseauI<P>{
 		((ReseauPlugin<P>) this.getPlugin(CONVOYEUR_PLUGIN_URI)).addTransition(TCONV);
 		
 		System.out.println("Connexion entre convoyeur et réseau PlaceCommune...");
-		((ReseauPlugin<P>) this.getPlugin(CONVOYEUR_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tCONV", pc5, semaphoreUpdatingAvailibility, updatingJetons.get(pc5));
-		//((ReseauPlugin<P>) this.getPlugin(CONVOYEUR_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tCONV", pc5, semaphoreUpdatingAvailibility, updatingJetons.get(pc5));
+		((ReseauPlugin<P>) this.getPlugin(CONVOYEUR_PLUGIN_URI)).linkEntreePlaceCommuneTransition("tCONV", pc5, 2, semaphoreUpdatingAvailibility, updatingJetons.get(pc5));
 		((ReseauPlugin<P>) this.getPlugin(CONVOYEUR_PLUGIN_URI)).linkSortiePlaceCommuneTransition("tCONV", pc6, semaphoreUpdatingAvailibility, updatingJetons.get(pc6));
 		
 	}

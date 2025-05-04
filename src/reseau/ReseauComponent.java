@@ -32,17 +32,15 @@ implements ReseauI<P>{
 		assert	this.getPlugin(RESEAU_PLUGIN_URI) == plugin;
 	}
 	
-	protected			ReseauComponent(String uri, String reflectionInboundPortURI, String pluginURI,
-			//String semaphorePluginAjoutInboundPortURI,
-			//String semaphorePluginRetraitInboundPortURI,
+	protected			ReseauComponent(String uri,
+			String reflectionInboundPortURI,
+			String pluginURI,
 			ReseauEndpoint endPointServer,
 			ReseauPlaceCommuneEndpoint endPointClient) throws Exception
 	{
-		super(reflectionInboundPortURI, 3, 0);
+		super(reflectionInboundPortURI, 2, 0);
 
 		ReseauPlugin<P> plugin = new ReseauPlugin<P>(pluginURI,
-				//semaphorePluginAjoutInboundPortURI,
-				//semaphorePluginRetraitInboundPortURI,
 				endPointServer,
 				endPointClient);
 		
@@ -53,13 +51,13 @@ implements ReseauI<P>{
 		assert	this.getPlugin(pluginURI) == plugin;
 		
 		this.pluginURI = pluginURI;
-		this.endPointServer = endPointServer;
+		//this.endPointServer = endPointServer;
 		this.endPointClient = endPointClient;
 		
 	}
 	
 	private ReseauPlaceCommuneEndpoint endPointClient;
-	private ReseauEndpoint endPointServer;
+	//private ReseauEndpoint endPointServer;
 	
 	@Override
 	public void start() {
@@ -69,7 +67,6 @@ implements ReseauI<P>{
 		} catch (ComponentStartException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		if(!endPointClient.clientSideInitialised()) {
@@ -119,7 +116,7 @@ implements ReseauI<P>{
 	        sb.append("URI : ").append(t.getUri()).append("\n");
 
 	        sb.append("Places entrantes : ");
-	        ArrayList<String> placesEntrees = t.getPlacesEntrees();
+	        Set<String> placesEntrees = t.getPlacesEntrees().keySet();
 	        if (placesEntrees != null && !placesEntrees.isEmpty()) {
 	            for (String p : placesEntrees) {
 	                sb.append(p).append(" ");
@@ -130,7 +127,7 @@ implements ReseauI<P>{
 	        sb.append("\n");
 
 	        sb.append("Places Communes entrantes : ");
-	        ArrayList<String> entreesCommune = t.getPlacesCommuneEntrees();
+	        Set<String> entreesCommune = t.getPlacesCommuneEntrees().keySet();
 	        if (entreesCommune != null && !entreesCommune.isEmpty()) {
 	            for (String p : entreesCommune) {
 	                sb.append(p).append(" ");
@@ -175,16 +172,13 @@ implements ReseauI<P>{
 	}
 	
 	
+	
 	@Override
 	public void finalise() throws Exception {
-		
 		System.out.println("Finalise de " + this.pluginURI);
-		
 		((ReseauPlugin<P>) this.getPlugin(this.pluginURI))
 		.showReseau();
 	}
-	
-	
 	
 
 	@Override
@@ -238,10 +232,10 @@ implements ReseauI<P>{
 	}
 
 	@Override
-	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, String updatingAvailability,
+	public void linkEntreePlaceCommuneTransition(String transition, String placeCommune, int seuil, String updatingAvailability,
 			String updatingJetons) throws Exception {
 		((ReseauPlugin<P>) this.getPlugin(this.pluginURI))
-		.linkEntreePlaceCommuneTransition(transition, placeCommune, updatingAvailability, updatingJetons);
+		.linkEntreePlaceCommuneTransition(transition, placeCommune, seuil, updatingAvailability, updatingJetons);
 	}
 
 	@Override
@@ -252,10 +246,10 @@ implements ReseauI<P>{
 	}
 
 	@Override
-	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, boolean transitionsState)
+	public void updateTransitionsActivable(String uri, ArrayList<String> transSorties, int nbJeton)
 			throws Exception {
 		((ReseauPlugin<P>) this.getPlugin(this.pluginURI))
-		.updateTransitionsActivable(uri, transSorties, transitionsState);
+		.updateTransitionsActivable(uri, transSorties, nbJeton);
 	}
 
 }

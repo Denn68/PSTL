@@ -1,14 +1,10 @@
 package reseauPlaceCommune;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import classes.Place;
 import classes.PlaceCommune;
-import classes.Transition;
 import classes.URIGenerator;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
@@ -19,7 +15,6 @@ import interfaces.ReseauCI;
 import interfaces.ReseauPlaceCommuneCI;
 import interfaces.ReseauPlaceCommuneI;
 import reseau.ReseauEndpoint;
-import reseau.ReseauPlugin;
 import semaphore.SemaphoreClientPlugin;
 
 @OfferedInterfaces(offered = { ReseauPlaceCommuneCI.class })
@@ -31,6 +26,7 @@ implements ReseauPlaceCommuneI<String>{
 	protected			ReseauPlaceCommuneComponent(String uri,
 			String semaphoreReflectionInboundPortURI,
 			String semAvailabilityUri,
+			String semUpdateUri,
 			ArrayList<String> semJetonUriList,
 			ReseauPlaceCommuneEndpoint endPointServer,
 			ArrayList<ReseauEndpoint> endPointClients) throws Exception
@@ -40,12 +36,13 @@ implements ReseauPlaceCommuneI<String>{
         this.uri = uri;
         this.placesCommunes = new HashMap<>();
 		endPointServer.initialiseServerSide(this);
-		this.endPointServer = endPointServer;
+		//this.endPointServer = endPointServer;
 		this.endPointClients = endPointClients;
 		
 		this.updatingJetons = new HashMap<String, String>();
 		
 		this.semAvailabilityUri = semAvailabilityUri;
+		this.semUpdateUri = semUpdateUri;
 		this.semJetonUriList = semJetonUriList;
 		
 		this.semaphoreReflectionInboundPortURI =
@@ -59,7 +56,7 @@ implements ReseauPlaceCommuneI<String>{
 		
 	}
 	
-	private ReseauPlaceCommuneEndpoint endPointServer;
+	//private ReseauPlaceCommuneEndpoint endPointServer;
 	private ArrayList<ReseauEndpoint> endPointClients;
 	private Map<String, PlaceCommune> placesCommunes;
     private String uri;
@@ -68,6 +65,7 @@ implements ReseauPlaceCommuneI<String>{
     private Map<String, String> updatingJetons;
     
     private String semAvailabilityUri;
+    private String semUpdateUri;
     private ArrayList<String> semJetonUriList;
     
     protected String	semaphoreReflectionInboundPortURI;
@@ -90,7 +88,7 @@ implements ReseauPlaceCommuneI<String>{
 					e.printStackTrace();
 				}
 			}
-			System.out.println(ep);
+			//System.out.println(ep);
 		}
 		
 		String pc1 = "pc1";
@@ -118,12 +116,13 @@ implements ReseauPlaceCommuneI<String>{
 		this.id = URIGenerator.generateURI();
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public void execute() throws Exception {
 		
 		synchronized (this) {
 			this.installPlugin(semaphorePlugin);
-			System.out.println("Dans ReseauPLaceCommune.java, le plugin " + semaphorePlugin.getPluginURI() + " est installé");
+			//System.out.println("Dans ReseauPLaceCommune.java, le plugin " + semaphorePlugin.getPluginURI() + " est installé");
 			notifyAll(); 
 		}
 		
@@ -155,17 +154,26 @@ implements ReseauPlaceCommuneI<String>{
 		this.semaphorePlugin.release(semAvailabilityUri);
 		
 		while (true) {
+			/*while(this.semaphorePlugin.availablePermits(semUpdateUri) > 1) {
+				this.semaphorePlugin.tryAcquire(semUpdateUri);
+			}*/
 			for (PlaceCommune pc : this.placesCommunes.values()) {
 				
-				System.out.println("Mise à jour des possibilités de transitions : " + pc.getUri());
+				//System.out.println("Mise à jour des possibilités de transitions : " + pc.getUri());
+				//System.out.println("Nombre de permits : " + this.semaphorePlugin.availablePermits(semAvailabilityUri));
 				
-				boolean transitionsState = (pc.getNbJeton() > 0);
+				int nbJeton = pc.getNbJeton();
  				for(ReseauEndpoint ep : endPointClients) {
-					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), transitionsState);
+					ep.getClientSideReference().updateTransitionsActivable(pc.getUri(), pc.getTransSorties(), nbJeton);
 				}
 		        
 			}
-			
+
+			/*if(this.semaphorePlugin.availablePermits(semUpdateUri) == 0) {
+				for(ReseauEndpoint ep : endPointClients) {
+					this.semaphorePlugin.release(semUpdateUri);
+				}
+			}*/
 			this.semaphorePlugin.acquire(semAvailabilityUri);
 		}
 	}
@@ -239,7 +247,6 @@ implements ReseauPlaceCommuneI<String>{
 
 	@Override
 	public boolean tryAcquireJeton(String placeCommune) throws Exception {
-		System.out.println("tryAcquireJetons Jetons");
 		waitUntilPluginIsReady();
 		return this.semaphorePlugin.tryAcquire(this.updatingJetons.get(placeCommune));
 	}
@@ -269,6 +276,27 @@ implements ReseauPlaceCommuneI<String>{
 		waitUntilPluginIsReady();
 		System.out.println("Release Availability " + Thread.currentThread().getName());
 		this.semaphorePlugin.release(semAvailabilityUri);
+	}
+	
+	@Override
+	public void acquireUpdate() throws Exception {
+		System.out.println("acquireUpdate");
+		waitUntilPluginIsReady();
+		this.semaphorePlugin.acquire(semUpdateUri);
+	}
+
+	@Override
+	public boolean tryAcquireUpdate() throws Exception {
+		System.out.println("tryAcquireUpdate");
+		waitUntilPluginIsReady();
+		return this.semaphorePlugin.tryAcquire(semUpdateUri);
+	}
+
+	@Override
+	public void releaseUpdate() throws Exception {
+		waitUntilPluginIsReady();
+		System.out.println("Release Update " + Thread.currentThread().getName());
+		this.semaphorePlugin.release(semUpdateUri);
 	}
 
 	@Override

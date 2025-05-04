@@ -27,22 +27,19 @@ implements	ReseauPlaceCommuneCI<Transition>{
 		super(ReseauPlaceCommuneCI.class, owner);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public int getNbJeton(String uri) throws Exception {
-		return ((ReseauPlaceCommuneCI) this.getConnector()).getNbJeton(uri);
+		return ((ReseauPlaceCommuneCI<?>) this.getConnector()).getNbJeton(uri);
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public String getUri() throws Exception {
-		return ((ReseauPlaceCommuneCI) this.getConnector()).getUri();
+		return ((ReseauPlaceCommuneCI<?>) this.getConnector()).getUri();
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void setNbJeton(String uri, int nbJeton) throws Exception {
-		((ReseauPlaceCommuneCI) this.getConnector()).setNbJeton(uri, nbJeton);
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).setNbJeton(uri, nbJeton);
 		
 	}
 
@@ -84,36 +81,51 @@ implements	ReseauPlaceCommuneCI<Transition>{
 
 	@Override
 	public void acquireJeton(String placeCommune) throws Exception {
-		((ReseauPlaceCommuneCI) this.getConnector()).acquireJeton(placeCommune);
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).acquireJeton(placeCommune);
 	}
 
 	@Override
 	public boolean tryAcquireJeton(String placeCommune) throws Exception {
-		return ((ReseauPlaceCommuneCI) this.getConnector()).tryAcquireJeton(placeCommune);
+		return ((ReseauPlaceCommuneCI<?>) this.getConnector()).tryAcquireJeton(placeCommune);
 	}
 
 	@Override
 	public void releaseJeton(String placeCommune) throws Exception {
-		((ReseauPlaceCommuneCI) this.getConnector()).releaseJeton(placeCommune);
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).releaseJeton(placeCommune);
 	}
 
 	@Override
 	public void acquireAvailability() throws Exception {
-		((ReseauPlaceCommuneCI) this.getConnector()).acquireAvailability();
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).acquireAvailability();
 	}
 
 	@Override
 	public boolean tryAcquireAvailability() throws Exception {
-		return ((ReseauPlaceCommuneCI) this.getConnector()).tryAcquireAvailability();
+		return ((ReseauPlaceCommuneCI<?>) this.getConnector()).tryAcquireAvailability();
 	}
 
 	@Override
 	public void releaseAvailability() throws Exception {
-		((ReseauPlaceCommuneCI) this.getConnector()).releaseAvailability();
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).releaseAvailability();
 	}
 
 	@Override
 	public boolean isConnected() throws Exception {
-		return ((ReseauPlaceCommuneCI) this.getConnector()).isConnected();
+		return ((ReseauPlaceCommuneCI<?>) this.getConnector()).isConnected();
+	}
+
+	@Override
+	public void acquireUpdate() throws Exception {
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).acquireUpdate();
+	}
+
+	@Override
+	public boolean tryAcquireUpdate() throws Exception {
+		return ((ReseauPlaceCommuneCI<?>) this.getConnector()).tryAcquireUpdate();
+	}
+
+	@Override
+	public void releaseUpdate() throws Exception {
+		((ReseauPlaceCommuneCI<?>) this.getConnector()).releaseUpdate();
 	}
 }

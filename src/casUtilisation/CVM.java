@@ -5,9 +5,6 @@ import java.util.Arrays;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
-import reseau.ReseauAComponent;
-import reseau.ReseauBComponent;
-import casUtilisation.ReseauPlaceCommuneComponent;
 import reseauPlaceCommune.ReseauPlaceCommuneEndpoint;
 import semaphore.SemaphoreComponent;
 import reseau.ReseauEndpoint;
@@ -29,6 +26,7 @@ extends		AbstractCVM {
 	
 	protected final static String	SEMAPHORE_AVAILABILITY_URI = "semaphore-availability"; // availibility
 	protected final static String	SEMAPHORE_JETON_URI = "semaphore-jeton"; // jeton
+	protected final static String	SEMAPHORE_UPDATE_URI = "semaphore-update"; // availibility
 	
 	protected final static String	SEMC_URI = "semaphore-inboundPort"; // reflection inbound port URI
 
@@ -57,7 +55,8 @@ extends		AbstractCVM {
 		AbstractComponent.createComponent(
 				SemaphoreComponent.class.getCanonicalName(),
 				new Object[]{SEMC_URI, // imposed reflection inbound port URI
-							 SEMAPHORE_AVAILABILITY_URI,	
+							 SEMAPHORE_AVAILABILITY_URI,
+							 SEMAPHORE_UPDATE_URI,
 							 semJetonUriList
 							});
 		
@@ -66,7 +65,8 @@ extends		AbstractCVM {
 				new Object[]{
 						"RPC",
 						SEMC_URI,
-						SEMAPHORE_AVAILABILITY_URI,	
+						SEMAPHORE_AVAILABILITY_URI,
+						SEMAPHORE_UPDATE_URI,
 						semJetonUriList,
 						((ReseauPlaceCommuneEndpoint) pc_ep.copyWithSharable()),
 						new ArrayList<>(Arrays.asList(
@@ -83,7 +83,6 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_B",
 						RESEAU_COMPONENT_B_RIBP_URI,
-						SEMC_URI,
 						SEMAPHORE_AVAILABILITY_URI,	
 						semJetonUriList,
 						((ReseauEndpoint) r_epB.copyWithSharable()),
@@ -95,7 +94,6 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_A",
 						RESEAU_COMPONENT_A_RIBP_URI,
-						SEMC_URI,
 						SEMAPHORE_AVAILABILITY_URI,	
 						semJetonUriList,
 						((ReseauEndpoint) r_epA.copyWithSharable()),
@@ -107,7 +105,6 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_C",
 						CONVOYEUR_RIBP_URI,
-						SEMC_URI,
 						SEMAPHORE_AVAILABILITY_URI,	
 						semJetonUriList,
 						((ReseauEndpoint) r_epC.copyWithSharable()),
@@ -119,7 +116,6 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_FC",
 						FORKLIFT_C_RIBP_URI,
-						SEMC_URI,
 						SEMAPHORE_AVAILABILITY_URI,	
 						semJetonUriList,
 						((ReseauEndpoint) r_epFC.copyWithSharable()),
@@ -131,7 +127,6 @@ extends		AbstractCVM {
 				new Object[]{
 						"R_FD",
 						FORKLIFT_D_RIBP_URI,
-						SEMC_URI,
 						SEMAPHORE_AVAILABILITY_URI,	
 						semJetonUriList,
 						((ReseauEndpoint) r_epFD.copyWithSharable()),

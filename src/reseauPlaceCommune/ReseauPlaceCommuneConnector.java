@@ -2,7 +2,6 @@ package reseauPlaceCommune;
 
 import java.util.ArrayList;
 
-import classes.Transition;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.ReseauPlaceCommuneCI;
 
@@ -65,36 +64,61 @@ implements ReseauPlaceCommuneCI<String>{
 		((ReseauPlaceCommuneCI<String>)this.offering).retrieveJeton(uri);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void acquireJeton(String placeCommune) throws Exception {
 		((ReseauPlaceCommuneCI<String>)this.offering).acquireJeton(placeCommune);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean tryAcquireJeton(String placeCommune) throws Exception {
 		return ((ReseauPlaceCommuneCI<String>)this.offering).tryAcquireJeton(placeCommune);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void releaseJeton(String placeCommune) throws Exception {
 		((ReseauPlaceCommuneCI<String>)this.offering).releaseJeton(placeCommune);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void acquireAvailability() throws Exception {
 		((ReseauPlaceCommuneCI<String>)this.offering).acquireAvailability();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean tryAcquireAvailability() throws Exception {
 		return ((ReseauPlaceCommuneCI<String>)this.offering).tryAcquireAvailability();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void releaseAvailability() throws Exception {
 		((ReseauPlaceCommuneCI<String>)this.offering).releaseAvailability();
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void acquireUpdate() throws Exception {
+		((ReseauPlaceCommuneCI<String>)this.offering).acquireUpdate();
+	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public boolean tryAcquireUpdate() throws Exception {
+		return ((ReseauPlaceCommuneCI<String>)this.offering).tryAcquireUpdate();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void releaseUpdate() throws Exception {
+		((ReseauPlaceCommuneCI<String>)this.offering).releaseUpdate();
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean isConnected() throws Exception {
 		return ((ReseauPlaceCommuneCI<String>)this.offering).isConnected();
